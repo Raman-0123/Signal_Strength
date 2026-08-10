@@ -186,8 +186,21 @@ def role_definition_matches(designation: str, requested_role: str) -> int:
         if (
             requested.seniority != "unspecified"
             and candidate.seniority == requested.seniority
-            and candidate.function == requested.function
+            and (
+                candidate.function == requested.function
+                or requested.function in {"generic_director", "generic_vp"}
+            )
         ):
+            requested_is_senior_director = (
+                requested.function == "generic_director"
+                and "senior" in requested_key
+            )
+            candidate_is_senior_director = (
+                "senior" in designation_key
+                or designation_key.startswith("svp ")
+            )
+            if requested_is_senior_director and not candidate_is_senior_director:
+                continue
             return 2
     return 0
 

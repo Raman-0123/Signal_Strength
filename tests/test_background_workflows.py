@@ -7,6 +7,7 @@ from speedy_scraper.background_jobs import clear_stop, create_job, job_is_stale,
 from speedy_scraper.company_pocs import build_company_poc_tasks, run_company_poc_job
 from speedy_scraper.lead_job import load_lead_job_checkpoint, run_lead_job
 from speedy_scraper.models import SearchPage, SearchResult
+from speedy_scraper.sources import SourceError
 from speedy_scraper.url_people_job import load_checkpoint_speakers, run_url_people_job
 
 
@@ -216,6 +217,143 @@ def test_company_poc_job_rejects_role_or_company_found_only_in_blended_evidence(
     pocs = run_company_poc_job(job_dir, source_builder=lambda _names: [BlendedEvidenceSource()])
 
     assert pocs == []
+
+
+class ChallengeDdgsSource:
+    name = "ddgs"
+
+    def search(self, query, *, max_results, headless=True):
+        raise SourceError("DDG challenge", disable_source=True, challenge=True)
+
+
+class SuccessfulGoogleSource:
+    name = "google_browser"
+
+    def search(self, query, *, max_results, headless=True):
+        return [
+            SearchResult(
+                title="Meera Iyer - Senior Director of Customer Experience - MUFG | LinkedIn",
+                body="Meera Iyer is a Senior Director of Customer Experience at MUFG in Singapore.",
+                href="https://www.linkedin.com/in/meera-iyer/",
+                source="google_browser",
+                query=query,
+            )
+        ]
+
+
+def test_company_poc_retries_ddg_failure_with_google_and_keeps_warning_telemetry(tmp_path: Path):
+    job_dir = create_job(
+        "company_pocs",
+        {
+            "companies": ["MUFG Bank Singapore"],
+            "designations": ["Senior Director"],
+            "locations": ["Singapore"],
+            "sources": ["ddgs"],
+            "retry_attempts": 1,
+            "target_count": 10,
+        },
+        jobs_root=tmp_path,
+    )
+    pocs = run_company_poc_job(
+        job_dir,
+        source_builder=lambda _names: [ChallengeDdgsSource(), SuccessfulGoogleSource()],
+    )
+    status = read_status(job_dir)
+    assert len(pocs) == 1
+    assert status["state"] == "completed_with_warnings"
+    assert status["provider_outcomes"]["ddgs"]["challenges"] >= 1
+    assert status["provider_outcomes"]["google_browser"]["results"] >= 1
+    assert status["failed_searches"] == 0
+
+
+class AlwaysFailSource:
+    def __init__(self, name):
+        self.name = name
+
+    def search(self, query, *, max_results, headless=True):
+        raise SourceError(f"{self.name} unavailable", disable_source=True)
+
+
+def test_company_poc_all_provider_failures_finish_with_warnings_and_retry_queue(tmp_path: Path):
+    job_dir = create_job(
+        "company_pocs",
+        {
+            "companies": ["MUFG"],
+            "designations": ["Senior Director"],
+            "sources": ["google_browser", "ddgs"],
+            "retry_attempts": 1,
+        },
+        jobs_root=tmp_path,
+    )
+    run_company_poc_job(
+        job_dir,
+        source_builder=lambda _names: [AlwaysFailSource("google_browser"), AlwaysFailSource("ddgs")],
+    )
+    status = read_status(job_dir)
+    checkpoint = json.loads((job_dir / "checkpoint.json").read_text())
+    assert status["state"] == "completed_with_warnings"
+    assert status["matched"] == 0
+    assert status["failed_searches"] > 0
+    assert checkpoint["warning_state"] == "completed_with_warnings"
+
+
+def test_company_poc_warning_checkpoint_can_retry_same_provider_after_recovery(tmp_path: Path):
+    job_dir = create_job(
+        "company_pocs",
+        {
+            "companies": ["MUFG Bank Singapore"],
+            "designations": ["Senior Director"],
+            "sources": ["google_browser"],
+            "retry_attempts": 1,
+        },
+        jobs_root=tmp_path,
+    )
+    run_company_poc_job(
+        job_dir,
+        source_builder=lambda _names: [AlwaysFailSource("google_browser")],
+    )
+    config = json.loads((job_dir / "config.json").read_text())
+    config["retry_failed_searches"] = True
+    config["browser_headless"] = False
+    (job_dir / "config.json").write_text(json.dumps(config))
+    pocs = run_company_poc_job(
+        job_dir,
+        source_builder=lambda _names: [SuccessfulGoogleSource()],
+    )
+    status = read_status(job_dir)
+    assert len(pocs) == 1
+    assert status["failed_searches"] == 0
+
+
+def test_company_poc_migrates_old_error_only_checkpoint_for_retry(tmp_path: Path):
+    job_dir = create_job(
+        "company_pocs",
+        {
+            "companies": ["MUFG Bank Singapore"],
+            "designations": ["Senior Director"],
+            "sources": ["google_browser"],
+            "retry_attempts": 1,
+            "retry_failed_searches": True,
+        },
+        jobs_root=tmp_path,
+    )
+    (job_dir / "checkpoint.json").write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "task_index": 1,
+                "source_index": 0,
+                "pocs": [],
+                "rejections": [],
+                "errors": ["google_browser: old challenge"],
+            }
+        )
+    )
+    pocs = run_company_poc_job(
+        job_dir,
+        source_builder=lambda _names: [SuccessfulGoogleSource()],
+    )
+    assert len(pocs) == 1
 
 
 def test_job_without_a_live_pid_becomes_recoverable():

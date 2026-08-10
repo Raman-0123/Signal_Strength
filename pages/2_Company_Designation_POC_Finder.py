@@ -14,13 +14,19 @@ from speedy_scraper.background_jobs import (
     launch_job,
     list_jobs,
     read_status,
+    read_json,
     request_stop,
     write_json,
 )
-from speedy_scraper.company_pocs import company_pocs_frame, load_company_poc_checkpoint
+from speedy_scraper.company_pocs import (
+    company_poc_review_frame,
+    company_pocs_frame,
+    load_company_poc_checkpoint,
+)
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
 from speedy_scraper.ui import (
     captcha_recovery_panel,
+    is_streamlit_cloud,
     light_mode_css,
     render_theme_toggle,
     download_gsheet,
@@ -42,6 +48,7 @@ _all_roles = list(_role_tax.keys())
 
 st.set_page_config(page_title="Company + Designation POC Finder", layout="wide")
 light_mode = render_theme_toggle("company_poc_light_mode")
+cloud_runtime = is_streamlit_cloud()
 st.markdown(
     """
     <style>
@@ -154,18 +161,32 @@ with st.form("company_poc_form"):
         placeholder="Select locations...",
     )
     target_count = st.number_input("Maximum matched POCs", min_value=1, max_value=1000, value=150)
+    retry_attempts = st.number_input(
+        "Automatic fallback retries per failed search",
+        min_value=1,
+        max_value=5,
+        value=2,
+        help="Each failed provider search gets targeted fallback attempts before warning completion.",
+    )
     sources = st.multiselect(
         "Public search sources",
         ["google_browser", "ddgs", "bing_browser", "duckduckgo_browser"],
         default=["google_browser", "ddgs"],
     )
-    headful = st.checkbox("Show browser windows", value=False)
+    headful = st.checkbox(
+        "Show browser windows (local only)",
+        value=False,
+        disabled=cloud_runtime,
+        help="Streamlit Cloud workers cannot expose a remote Chrome window to your computer.",
+    )
     manual_google_recovery = st.checkbox(
         "Manual Google recovery (wait up to 180 seconds)",
         value=False,
-        disabled=not headful or "google_browser" not in sources,
+        disabled=cloud_runtime or not headful or "google_browser" not in sources,
         help="Off by default: Google challenges fail fast and the other sources continue.",
     )
+    if cloud_runtime:
+        st.caption("Hosted mode: provider fallback and retry are automatic; manual Chrome recovery is local-only.")
     include_terms_text = st.text_area(
         "Required search terms — one per line",
         placeholder="e.g. payments\ncustomer experience",
@@ -223,9 +244,10 @@ if start:
             "locations": locations,
             "target_count": int(target_count),
             "sources": sources or list(DEFAULT_SOURCE_NAMES),
-            "browser_headless": not headful,
-            "google_manual_challenge_seconds": 180 if headful and manual_google_recovery else 0,
+            "browser_headless": cloud_runtime or not headful,
+            "google_manual_challenge_seconds": 180 if headful and manual_google_recovery and not cloud_runtime else 0,
             "max_results_per_search": 25,
+            "retry_attempts": int(retry_attempts),
             "include_terms": _lines(include_terms_text),
             "exclude_terms": _lines(exclude_terms_text),
             "existing_files": [],
@@ -328,16 +350,50 @@ def job_monitor() -> None:
     right.button("Refresh now", width="stretch")
 
     pocs, rejections = load_company_poc_checkpoint(job_dir)
+    checkpoint = read_json(job_dir / "checkpoint.json", default={})
+    checkpoint = checkpoint if isinstance(checkpoint, dict) else {}
     c1, c2, c3 = st.columns(3)
     c1.metric("Matched POCs", len(pocs))
     c2.metric("Searches complete", searches_completed or processed)
     c3.metric("Searches remaining", max((searches_total or total) - (searches_completed or processed), 0))
 
-    if pocs:
-        st.dataframe(company_pocs_frame(pocs), width="stretch", hide_index=True)
-    if rejections:
-        with st.expander(f"Rejected search candidates ({len(rejections)})"):
-            st.dataframe(rejections, width="stretch", hide_index=True)
+    verified_tab, review_tab, health_tab = st.tabs(
+        ["Verified POCs", "Review queue", "Provider health"]
+    )
+    with verified_tab:
+        if pocs:
+            st.dataframe(company_pocs_frame(pocs), width="stretch", hide_index=True)
+        else:
+            st.caption("No verified POCs have cleared the company and designation gates yet.")
+    with review_tab:
+        review_frame = company_poc_review_frame(rejections)
+        if not review_frame.empty:
+            st.caption("Near-matches are reviewable here and are not included in verified exports.")
+            st.dataframe(review_frame, width="stretch", hide_index=True)
+        else:
+            st.caption("No reviewable near-matches were recorded.")
+        non_reviewable = [
+            item for item in rejections
+            if not bool(item.get("Reviewable", str(item.get("Reason") or "") in {"company_mismatch", "designation_mismatch", "invalid_name"}))
+        ]
+        if non_reviewable:
+            with st.expander(f"Other rejected candidates ({len(non_reviewable)})"):
+                st.dataframe(non_reviewable, width="stretch", hide_index=True)
+    with health_tab:
+        outcomes = status.get("provider_outcomes") or checkpoint.get("provider_outcomes") or {}
+        health_rows = [
+            {"Provider": name, **dict(outcome)}
+            for name, outcome in outcomes.items()
+        ]
+        if health_rows:
+            st.dataframe(health_rows, width="stretch", hide_index=True)
+        st.metric("Retry attempts", int(status.get("retry_count") or 0))
+        st.metric("Failed searches remaining", int(status.get("failed_searches") or len(checkpoint.get("retry_queue") or [])))
+        source_errors = status.get("source_errors") or checkpoint.get("source_errors") or checkpoint.get("errors") or []
+        if source_errors:
+            with st.expander(f"Source errors ({len(source_errors)})"):
+                for error in source_errors:
+                    st.error(str(error))
 
     csv_path = Path(str(status.get("csv_path") or ""))
     xlsx_path = Path(str(status.get("xlsx_path") or ""))

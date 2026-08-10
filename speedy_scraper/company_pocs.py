@@ -35,6 +35,10 @@ from speedy_scraper.validator import (
     role_matches,
 )
 
+COMPLETED_WITH_WARNINGS = "completed_with_warnings"
+DEFAULT_RETRY_ATTEMPTS = 2
+REVIEWABLE_REASONS = {"company_mismatch", "designation_mismatch", "invalid_name"}
+
 
 @dataclass(frozen=True)
 class CompanyPoc:
@@ -110,10 +114,11 @@ def run_company_poc_job(
     )
     if not tasks:
         raise ValueError("Enter at least one company and one designation")
+    requested_sources = _strings(config.get("sources")) or list(DEFAULT_SOURCE_NAMES)
+    if any(name in {"ddgs", "duckduckgo_browser"} for name in requested_sources) and "google_browser" not in requested_sources:
+        requested_sources = ["google_browser", *requested_sources]
     sources: list[SearchSource] = configure_google_challenge_wait(
-        (source_builder or build_sources)(
-            _strings(config.get("sources")) or list(DEFAULT_SOURCE_NAMES)
-        ),
+        (source_builder or build_sources)(requested_sources),
         int(config.get("google_manual_challenge_seconds") or 0),
     )
     target_count = max(1, int(config.get("target_count") or 100))
@@ -126,15 +131,50 @@ def run_company_poc_job(
     )
     rejections = list(checkpoint.get("rejections", [])) if checkpoint else []
     errors = list(checkpoint.get("errors", [])) if checkpoint else []
+    source_errors = list(
+        (checkpoint.get("source_errors") or checkpoint.get("errors") or [])
+    ) if checkpoint else []
     task_index = int(checkpoint.get("task_index") or 0) if checkpoint else 0
     source_index = int(checkpoint.get("source_index") or 0) if checkpoint else 0
+    retry_queue = [
+        dict(item) for item in checkpoint.get("retry_queue", [])
+        if isinstance(item, dict)
+    ] if checkpoint else []
+    if config.get("retry_failed_searches") and not retry_queue and source_errors:
+        # Migrate pre-v2 completed jobs that only stored provider errors. Their
+        # exact failed cursor was not persisted, so replay each task once through
+        # the current fallback policy instead of silently doing nothing.
+        failed_source = str(source_errors[0]).split(":", 1)[0].strip() or "google_browser"
+        for index, task in enumerate(tasks):
+            retry_queue = _upsert_retry(
+                retry_queue,
+                task_index=index,
+                task=task,
+                failed_source=failed_source,
+                reason="Migrated from a pre-recovery checkpoint",
+                challenge="challenge" in " ".join(source_errors).lower(),
+            )
+    if config.get("retry_failed_searches") and retry_queue:
+        # A targeted recovery is allowed to revisit the provider that previously
+        # failed; the user may have solved its CAPTCHA or the provider may have
+        # recovered since the original attempt.
+        for item in retry_queue:
+            item["attempted_sources"] = []
+            item["attempts"] = 0
+        config["retry_failed_searches"] = False
+        write_json(path / "config.json", config)
+    retry_attempts = max(1, int(config.get("retry_attempts") or DEFAULT_RETRY_ATTEMPTS))
+    provider_outcomes = _provider_outcomes(
+        checkpoint.get("provider_outcomes") if checkpoint else None,
+        [source.name for source in sources],
+    )
     existing_files = [Path(item) for item in _strings(config.get("existing_files"))]
     existing_urls = load_existing_urls(existing_files)
     existing_people = load_existing_people_keys(existing_files)
     seen = {poc.linkedin_url for poc in pocs if poc.linkedin_url} | existing_urls
     seen_people = {f"{normalize_text(poc.name)}|{normalize_text(poc.company)}" for poc in pocs}
     seen_people |= existing_people
-    captcha_required = False
+    captcha_required = bool(checkpoint.get("captcha_required")) if checkpoint else False
     try:
         _write_poc_status(
             path,
@@ -145,11 +185,23 @@ def run_company_poc_job(
             "POC search running",
             searches_completed=task_index * len(sources) + source_index,
             searches_total=len(tasks) * len(sources),
+            provider_outcomes=provider_outcomes,
+            retry_count=sum(int(item.get("attempts") or 0) for item in retry_queue),
+            failed_searches=len(retry_queue),
         )
         while task_index < len(tasks) and len(pocs) < target_count:
             if stop_requested(path):
                 _save_poc_checkpoint(
-                    checkpoint_path, pocs, rejections, errors, task_index, source_index
+                    checkpoint_path,
+                    pocs,
+                    rejections,
+                    errors,
+                    task_index,
+                    source_index,
+                    retry_queue=retry_queue,
+                    provider_outcomes=provider_outcomes,
+                    source_errors=source_errors,
+                    captcha_required=captcha_required,
                 )
                 csv_path, xlsx_path = write_company_poc_exports(
                     pocs, rejections, path / "Company_Designation_POCs_partial"
@@ -182,6 +234,9 @@ def run_company_poc_job(
                 current_designation=task["designation"],
                 current_source=source.name,
                 current_query=task["query"],
+                provider_outcomes=provider_outcomes,
+                retry_count=sum(int(item.get("attempts") or 0) for item in retry_queue),
+                failed_searches=len(retry_queue),
             )
             try:
                 results = []
@@ -195,47 +250,69 @@ def run_company_poc_job(
                     results = source.search(
                         task["query"], max_results=max_results, headless=headless
                     )
+                _record_provider_outcome(
+                    provider_outcomes,
+                    source.name,
+                    result_count=len(results),
+                    empty=not results,
+                )
             except SourceError as exc:
                 message = f"{source.name}: {exc}"
                 if message not in errors:
                     errors.append(message)
+                if message not in source_errors:
+                    source_errors.append(message)
                 results = []
                 captcha_required = captcha_required or exc.challenge
+                _record_provider_outcome(
+                    provider_outcomes,
+                    source.name,
+                    attempt=True,
+                    error=True,
+                    challenge=exc.challenge,
+                )
+                retry_queue = _upsert_retry(
+                    retry_queue,
+                    task_index=task_index,
+                    task=task,
+                    failed_source=source.name,
+                    reason=str(exc),
+                    challenge=exc.challenge,
+                )
                 update_status(
                     path,
-                    source_errors=errors,
+                    source_errors=source_errors,
                     captcha_required=captcha_required,
                     captcha_source=source.name,
                     fallback_recommended=True,
+                    provider_outcomes=provider_outcomes,
+                    failed_searches=len(retry_queue),
                 )
-            for candidate in candidates_from_results(results):
-                canonical = normalize_linkedin_url(candidate.linkedin_url)
-                identity = f"{normalize_text(candidate.name)}|{normalize_text(candidate.company)}"
-                if not canonical or canonical in seen or identity in seen_people:
-                    continue
-                poc, reason = _match_candidate(candidate, task["company"], task["designation"])
-                if poc:
-                    pocs.append(poc)
-                    seen.add(canonical)
-                    seen_people.add(f"{normalize_text(poc.name)}|{normalize_text(poc.company)}")
-                    if len(pocs) >= target_count:
-                        break
-                else:
-                    rejections.append(
-                        {
-                            "Name": candidate.name,
-                            "LinkedIn URL": canonical,
-                            "Requested Company": task["company"],
-                            "Requested Designation": task["designation"],
-                            "Reason": reason,
-                        }
-                    )
+            _consume_results(
+                results,
+                task,
+                pocs,
+                rejections,
+                seen,
+                seen_people,
+            )
 
             source_index += 1
             if source_index >= len(sources):
                 source_index = 0
                 task_index += 1
-            _save_poc_checkpoint(checkpoint_path, pocs, rejections, errors, task_index, source_index)
+            _save_poc_checkpoint(
+                checkpoint_path,
+                pocs,
+                rejections,
+                errors,
+                task_index,
+                source_index,
+                retry_queue=retry_queue,
+                provider_outcomes=provider_outcomes,
+                source_errors=source_errors,
+                captcha_required=captcha_required,
+            )
             _write_poc_status(
                 path,
                 "running",
@@ -250,28 +327,340 @@ def run_company_poc_job(
                 current_source=source.name,
                 captcha_required=captcha_required,
                 captcha_source=source.name if captcha_required else "",
+                provider_outcomes=provider_outcomes,
+                retry_count=sum(int(item.get("attempts") or 0) for item in retry_queue),
+                failed_searches=len(retry_queue),
+                source_errors=source_errors,
             )
+
+        retry_queue, captcha_required = _retry_failed_searches(
+            path,
+            tasks,
+            sources,
+            pocs,
+            rejections,
+            seen,
+            seen_people,
+            retry_queue,
+            provider_outcomes,
+            errors,
+            source_errors,
+            captcha_required,
+            max_results=max_results,
+            headless=headless,
+            max_attempts=retry_attempts,
+            checkpoint_path=checkpoint_path,
+        )
 
         csv_path, xlsx_path = write_company_poc_exports(
             pocs, rejections, path / "Company_Designation_POCs"
         )
+        final_state = COMPLETED_WITH_WARNINGS if retry_queue or errors else "completed"
+        final_message = (
+            f"Completed with warnings: {len(pocs)} matched POCs; "
+            f"{len(retry_queue)} searches still need recovery"
+            if final_state == COMPLETED_WITH_WARNINGS
+            else f"Completed with {len(pocs)} matched POCs"
+        )
+        _save_poc_checkpoint(
+            checkpoint_path,
+            pocs,
+            rejections,
+            errors,
+            task_index,
+            source_index,
+            retry_queue=retry_queue,
+            provider_outcomes=provider_outcomes,
+            source_errors=source_errors,
+            captcha_required=captcha_required,
+            warning_state=final_state,
+        )
         _write_poc_status(
             path,
-            "completed",
+            final_state,
             pocs,
             task_index,
             len(tasks),
-            f"Completed with {len(pocs)} matched POCs",
+            final_message,
             csv_path=str(csv_path),
             xlsx_path=str(xlsx_path),
+            provider_outcomes=provider_outcomes,
+            retry_count=sum(int(item.get("attempts") or 0) for item in retry_queue),
+            failed_searches=len(retry_queue),
+            source_errors=source_errors,
+            captcha_required=captcha_required,
+            manual_recovery_available=bool(captcha_required),
+            cloud_manual_recovery=False,
+            fallback_recommended=bool(source_errors),
         )
         return pocs
     except Exception as exc:
-        _save_poc_checkpoint(checkpoint_path, pocs, rejections, errors, task_index, source_index)
+        _save_poc_checkpoint(
+            checkpoint_path,
+            pocs,
+            rejections,
+            errors,
+            task_index,
+            source_index,
+            retry_queue=retry_queue,
+            provider_outcomes=provider_outcomes,
+            source_errors=source_errors,
+            captcha_required=captcha_required,
+        )
         _write_poc_status(path, "failed", pocs, task_index, len(tasks), str(exc))
         raise
     finally:
         close_sources(sources)
+
+
+def _provider_outcomes(value: object, source_names: list[str]) -> dict[str, dict[str, int]]:
+    raw = value if isinstance(value, dict) else {}
+    outcomes: dict[str, dict[str, int]] = {}
+    for name in unique_terms(source_names):
+        existing = raw.get(name) if isinstance(raw.get(name), dict) else {}
+        outcomes[name] = {
+            "attempts": int(existing.get("attempts") or 0),
+            "successful_searches": int(existing.get("successful_searches") or 0),
+            "empty_searches": int(existing.get("empty_searches") or 0),
+            "errors": int(existing.get("errors") or 0),
+            "challenges": int(existing.get("challenges") or 0),
+            "results": int(existing.get("results") or 0),
+        }
+    return outcomes
+
+
+def _record_provider_outcome(
+    outcomes: dict[str, dict[str, int]],
+    source_name: str,
+    *,
+    attempt: bool = False,
+    result_count: int | None = None,
+    empty: bool = False,
+    error: bool = False,
+    challenge: bool = False,
+) -> None:
+    bucket = outcomes.setdefault(
+        source_name,
+        {
+            "attempts": 0,
+            "successful_searches": 0,
+            "empty_searches": 0,
+            "errors": 0,
+            "challenges": 0,
+            "results": 0,
+        },
+    )
+    if attempt or result_count is not None:
+        bucket["attempts"] += 1
+    if result_count is not None:
+        bucket["results"] += max(0, int(result_count))
+        if result_count:
+            bucket["successful_searches"] += 1
+    if empty:
+        bucket["empty_searches"] += 1
+    if error:
+        bucket["errors"] += 1
+    if challenge:
+        bucket["challenges"] += 1
+
+
+def _upsert_retry(
+    queue: list[dict[str, Any]],
+    *,
+    task_index: int,
+    task: dict[str, str],
+    failed_source: str,
+    reason: str,
+    challenge: bool,
+) -> list[dict[str, Any]]:
+    key = (int(task_index), str(failed_source), str(task.get("query") or ""))
+    for item in queue:
+        item_key = (
+            int(item.get("task_index") or 0),
+            str(item.get("failed_source") or ""),
+            str(item.get("query") or ""),
+        )
+        if item_key == key:
+            item["reason"] = reason
+            item["challenge"] = bool(item.get("challenge") or challenge)
+            attempted = [str(value) for value in item.get("attempted_sources") or []]
+            if failed_source not in attempted:
+                attempted.append(failed_source)
+            item["attempted_sources"] = attempted
+            return queue
+    queue.append(
+        {
+            "task_index": int(task_index),
+            "company": str(task.get("company") or ""),
+            "designation": str(task.get("designation") or ""),
+            "location": str(task.get("location") or ""),
+            "query": str(task.get("query") or ""),
+            "failed_source": failed_source,
+            "attempted_sources": [failed_source],
+            "attempts": 0,
+            "reason": reason,
+            "challenge": bool(challenge),
+        }
+    )
+    return queue
+
+
+def _consume_results(
+    results: list,
+    task: dict[str, str],
+    pocs: list[CompanyPoc],
+    rejections: list[dict[str, Any]],
+    seen: set[str],
+    seen_people: set[str],
+) -> None:
+    rejected_urls = {
+        str(item.get("LinkedIn URL") or "")
+        for item in rejections
+        if isinstance(item, dict)
+    }
+    for candidate in candidates_from_results(results):
+        canonical = normalize_linkedin_url(candidate.linkedin_url)
+        identity = f"{normalize_text(candidate.name)}|{normalize_text(candidate.company)}"
+        if not canonical or canonical in seen or identity in seen_people:
+            continue
+        poc, reason = _match_candidate(candidate, task["company"], task["designation"])
+        if poc:
+            pocs.append(poc)
+            seen.add(canonical)
+            seen_people.add(f"{normalize_text(poc.name)}|{normalize_text(poc.company)}")
+            continue
+        if canonical in rejected_urls:
+            continue
+        rejected_urls.add(canonical)
+        rejections.append(
+            {
+                "Name": candidate.name,
+                "Designation": candidate.designation,
+                "Company": candidate.company,
+                "LinkedIn URL": canonical,
+                "Source": candidate.source,
+                "Evidence": clean_spaces(f"{candidate.title} {candidate.body}")[:700],
+                "Requested Company": task["company"],
+                "Requested Designation": task["designation"],
+                "Reason": reason,
+                "Reviewable": reason in REVIEWABLE_REASONS,
+            }
+        )
+
+
+def _retry_failed_searches(
+    path: Path,
+    tasks: list[dict[str, str]],
+    sources: list[SearchSource],
+    pocs: list[CompanyPoc],
+    rejections: list[dict[str, Any]],
+    seen: set[str],
+    seen_people: set[str],
+    queue: list[dict[str, Any]],
+    provider_outcomes: dict[str, dict[str, int]],
+    errors: list[str],
+    source_errors: list[str],
+    captcha_required: bool,
+    *,
+    max_results: int,
+    headless: bool,
+    max_attempts: int,
+    checkpoint_path: Path,
+) -> tuple[list[dict[str, Any]], bool]:
+    source_by_name = {source.name: source for source in sources}
+    remaining: list[dict[str, Any]] = []
+    for item in queue:
+        task = {
+            "company": str(item.get("company") or ""),
+            "designation": str(item.get("designation") or ""),
+            "location": str(item.get("location") or ""),
+            "query": str(item.get("query") or ""),
+        }
+        attempted = [str(value) for value in item.get("attempted_sources") or []]
+        attempts = int(item.get("attempts") or 0)
+        while attempts < max_attempts:
+            fallback = next(
+                (
+                    source for source in sources
+                    if source.name not in attempted
+                    and source.name in source_by_name
+                ),
+                None,
+            )
+            if fallback is None:
+                break
+            attempted.append(fallback.name)
+            attempts += 1
+            _write_poc_status(
+                path,
+                "running",
+                pocs,
+                int(item.get("task_index") or 0),
+                len(tasks),
+                f"Retrying {task['company']} · {task['designation']} with {fallback.name}",
+                current_company=task["company"],
+                current_designation=task["designation"],
+                current_source=fallback.name,
+                current_query=task["query"],
+                provider_outcomes=provider_outcomes,
+                retry_count=attempts,
+                failed_searches=len(queue),
+            )
+            try:
+                with JobHeartbeat(
+                    path,
+                    activity="Retrying a failed public search",
+                    current_company=task["company"],
+                    current_designation=task["designation"],
+                    current_source=fallback.name,
+                ):
+                    results = fallback.search(task["query"], max_results=max_results, headless=headless)
+                _record_provider_outcome(
+                    provider_outcomes,
+                    fallback.name,
+                    result_count=len(results),
+                    empty=not results,
+                )
+                _consume_results(results, task, pocs, rejections, seen, seen_people)
+                if results:
+                    item["resolved_by"] = fallback.name
+                    item["attempts"] = attempts
+                    break
+            except SourceError as exc:
+                message = f"{fallback.name}: {exc}"
+                if message not in errors:
+                    errors.append(message)
+                if message not in source_errors:
+                    source_errors.append(message)
+                captcha_required = captcha_required or exc.challenge
+                item["reason"] = str(exc)
+                _record_provider_outcome(
+                    provider_outcomes,
+                    fallback.name,
+                    attempt=True,
+                    error=True,
+                    challenge=exc.challenge,
+                )
+                item["challenge"] = bool(item.get("challenge") or exc.challenge)
+            item["attempted_sources"] = attempted
+            item["attempts"] = attempts
+            _save_poc_checkpoint(
+                checkpoint_path,
+                pocs,
+                rejections,
+                errors,
+                len(tasks),
+                0,
+                retry_queue=queue,
+                provider_outcomes=provider_outcomes,
+                source_errors=source_errors,
+                captcha_required=captcha_required,
+            )
+        if not item.get("resolved_by"):
+            item["attempted_sources"] = attempted
+            item["attempts"] = attempts
+            remaining.append(item)
+    return remaining, captcha_required
 
 
 def load_company_poc_checkpoint(job_dir: Path | str) -> tuple[list[CompanyPoc], list[dict[str, str]]]:
@@ -311,6 +700,28 @@ def company_pocs_frame(pocs: list[CompanyPoc]) -> pd.DataFrame:
         "Requested Designation",
     ]
     return pd.DataFrame([poc.as_row() for poc in pocs], columns=columns)
+
+
+def company_poc_review_frame(rejections: list[dict[str, Any]]) -> pd.DataFrame:
+    """Return near-matches separately so strict verified output stays clean."""
+    columns = [
+        "Name",
+        "Designation",
+        "Company",
+        "LinkedIn URL",
+        "Source",
+        "Evidence",
+        "Requested Company",
+        "Requested Designation",
+        "Reason",
+    ]
+    rows = [
+        {column: item.get(column, "") for column in columns}
+        for item in rejections
+        if isinstance(item, dict)
+        and bool(item.get("Reviewable", str(item.get("Reason") or "") in REVIEWABLE_REASONS))
+    ]
+    return pd.DataFrame(rows, columns=columns)
 
 
 def write_company_poc_exports(
@@ -384,16 +795,27 @@ def _save_poc_checkpoint(
     errors: list[str],
     task_index: int,
     source_index: int,
+    *,
+    retry_queue: list[dict[str, Any]] | None = None,
+    provider_outcomes: dict[str, dict[str, int]] | None = None,
+    source_errors: list[str] | None = None,
+    captcha_required: bool = False,
+    warning_state: str = "",
 ) -> None:
     write_json(
         path,
         {
-            "version": 1,
+            "version": 2,
             "task_index": task_index,
             "source_index": source_index,
             "pocs": [asdict(poc) for poc in pocs],
             "rejections": rejections,
             "errors": errors,
+            "source_errors": source_errors or errors,
+            "retry_queue": retry_queue or [],
+            "provider_outcomes": provider_outcomes or {},
+            "captcha_required": captcha_required,
+            "warning_state": warning_state,
         },
     )
 

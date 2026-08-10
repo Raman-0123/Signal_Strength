@@ -70,6 +70,11 @@ _COMPANY_NOISE_TOKENS = {
     "systems",
     "technologies",
     "technology",
+    "bank",
+    "banks",
+    "singapore",
+    "india",
+    "asia",
 }
 
 
@@ -175,8 +180,15 @@ def _company_variants(value: str) -> set[str]:
     core_tokens = [token for token in tokens if token not in _COMPANY_NOISE_TOKENS]
     variants = {key, compact}
     if core_tokens:
-        variants.add(" ".join(core_tokens))
-        variants.add("".join(core_tokens))
+        core_phrase = " ".join(core_tokens)
+        core_compact = "".join(core_tokens)
+        if len(core_tokens) > 1 or len(core_tokens[0]) >= 4:
+            variants.add(core_phrase)
+            variants.add(core_compact)
+        variants.update(
+            token for token in core_tokens
+            if len(token) >= 4 and token not in _COMPANY_NOISE_TOKENS
+        )
     return {variant for variant in variants if len(variant.replace(" ", "")) >= 3}
 
 

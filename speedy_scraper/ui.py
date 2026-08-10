@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import urllib.request
 from pathlib import Path
@@ -63,6 +64,44 @@ def enable_manual_recovery(job_dir: Path, *, extra_sources: list[str] | None = N
     return config
 
 
+def is_streamlit_cloud() -> bool:
+    """Detect the hosted Streamlit runtime without making local recovery unavailable."""
+    if any(key in os.environ for key in ("STREAMLIT_SHARING_MODE", "STREAMLIT_CLOUD")):
+        return True
+    try:
+        host = str(st.context.headers.get("host") or "").lower()
+    except Exception:
+        host = ""
+    return host.endswith("streamlit.app") or host.endswith("streamlit.io")
+
+
+def prepare_failed_search_retry(job_dir: Path, *, local_manual: bool) -> dict[str, Any]:
+    """Mark a warning job for a targeted retry without resetting its checkpoint."""
+    config = enable_manual_recovery(job_dir) if local_manual else _read_job_config(job_dir)
+    if not local_manual:
+        sources = [str(item) for item in config.get("sources") or []]
+        if "google_browser" not in sources:
+            sources.insert(0, "google_browser")
+        config.update(
+            {
+                "sources": sources,
+                "browser_headless": True,
+                "google_manual_challenge_seconds": 0,
+            }
+        )
+    config["retry_failed_searches"] = True
+    (job_dir / "config.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
+    return config
+
+
+def _read_job_config(job_dir: Path) -> dict[str, Any]:
+    try:
+        value = json.loads((job_dir / "config.json").read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
 def captcha_recovery_panel(
     status: dict[str, Any],
     *,
@@ -77,30 +116,53 @@ def captcha_recovery_panel(
     message = str(status.get("message") or "")
     errors = " ".join(str(item) for item in status.get("source_errors") or [])
     source = str(status.get("captcha_source") or "")
+    warning_state = str(status.get("state") or "") == "completed_with_warnings"
     flagged = bool(status.get("captcha_required")) or "challenge" in f"{message} {errors}".lower()
-    ddg_failed = "ddgs" in f"{message} {errors}".lower() or "duckduckgo" in f"{message} {errors}".lower()
-    if not flagged and not ddg_failed:
+    provider_failed = bool(status.get("fallback_recommended")) or bool(errors)
+    if not flagged and not provider_failed and not warning_state:
         return
-    headline = "Manual Google recovery recommended"
-    detail = (
-        f"{source or 'A public search source'} was challenged or stopped returning results. "
-        "Google browser is the recommended fallback; solve the CAPTCHA in the visible Chrome window, "
-        "then the job continues from its checkpoint."
-    )
+    cloud = is_streamlit_cloud()
+    headline = "Provider recovery required" if warning_state else "Provider fallback active"
+    if cloud:
+        detail = (
+            f"{source or 'A public search source'} failed or was challenged. The hosted worker cannot expose "
+            "its Chrome window to your computer, so use the automatic provider retry below."
+        )
+    else:
+        detail = (
+            f"{source or 'A public search source'} failed or was challenged. Google is available as a fallback; "
+            "a visible local Chrome retry can be used when a CAPTCHA needs manual solving."
+        )
     st.warning(f"**{headline}**  \n{detail}")
     left, right = st.columns([1.25, 1])
     state = str(status.get("state") or "")
     if state in {"running", "starting", "stopping"}:
-        if left.button("Pause & prepare visible Google", key=button_key, width="stretch"):
-            enable_manual_recovery(job_dir)
-            request_stop(job_dir)
-            st.rerun(scope="fragment")
-    elif state in {"paused", "failed", "captcha_required"} or not status.get("pid"):
-        if left.button("Resume with Google CAPTCHA", key=button_key, type="primary", width="stretch"):
-            enable_manual_recovery(job_dir)
-            launch_job(job_dir, module)
-            st.rerun(scope="fragment")
-    right.caption("DDG failures automatically keep other selected sources in the plan; this recovery adds Google if needed.")
+        left.info("The worker is still trying fallback sources automatically.")
+    elif state in {"paused", "failed", "captcha_required", "completed", "completed_with_warnings"} or not status.get("pid"):
+        failed_searches = int(status.get("failed_searches") or 0)
+        if not failed_searches and state == "completed" and (provider_failed or flagged):
+            # Old checkpoints only exposed source_errors; make them recoverable
+            # after the new retry queue is deployed.
+            failed_searches = 1
+        if failed_searches:
+            label = "Retry failed searches automatically" if cloud else "Retry failed searches in visible Google"
+            if left.button(label, key=button_key, type="primary", width="stretch"):
+                prepare_failed_search_retry(job_dir, local_manual=not cloud)
+                request_stop(job_dir)
+                launch_job(job_dir, module)
+                st.rerun(scope="fragment")
+        else:
+            left.success("Fallback succeeded; no failed searches remain.")
+    outcomes = status.get("provider_outcomes") or {}
+    right.markdown("**Provider health**")
+    if outcomes:
+        for name, outcome in outcomes.items():
+            right.caption(
+                f"{name}: {outcome.get('results', 0)} results · "
+                f"{outcome.get('errors', 0)} errors · {outcome.get('challenges', 0)} challenges"
+            )
+    else:
+        right.caption("No provider telemetry recorded yet.")
 
 def download_gsheet(url: str, job_dir: Path) -> list[str]:
     if not url or not url.strip():

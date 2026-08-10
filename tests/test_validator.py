@@ -1,5 +1,10 @@
 from speedy_scraper.models import RawCandidate
-from speedy_scraper.validator import company_matches, role_matches, validate_candidate
+from speedy_scraper.validator import (
+    company_matches,
+    role_match_strength,
+    role_matches,
+    validate_candidate,
+)
 
 
 def _candidate(**overrides):
@@ -63,7 +68,15 @@ def test_role_matching_preserves_requested_function_and_seniority():
 
 def test_company_matching_ignores_legal_suffixes_but_not_mentions():
     assert company_matches("PayU Payments Private Limited", "PayU India")
+    assert company_matches("MUFG", "MUFG Bank Singapore")
+    assert not company_matches("ABC", "ABC Solutions")
     assert not company_matches("Booking.com", "Razorpay")
+
+
+def test_generic_senior_titles_match_function_variants_without_downgrading_directors():
+    assert role_match_strength("Senior Director of Customer Experience", "Senior Director")
+    assert role_matches("Senior Director Technology", ["Senior Director"])
+    assert not role_matches("Director of Customer Experience", ["Senior Director"])
 
 
 def test_location_taxonomy_accepts_alias_and_returns_canonical_location():
@@ -110,4 +123,3 @@ def test_strict_filter_contract_enforces_target_company_and_source_count():
     assert lead is None
     assert rejection is not None
     assert rejection.reason == "source_count"
-
