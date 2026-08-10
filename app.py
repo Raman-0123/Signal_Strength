@@ -125,12 +125,6 @@ st.markdown("A global, geography- and industry-agnostic lead intelligence engine
 if "lead_job_dir" not in st.session_state:
     st.session_state.lead_job_dir = ""
 
-# Session state for builder-driven text area content
-for _key in ("_roles_override", "_locations_override", "_companies_override", "_industries_override"):
-    if _key not in st.session_state:
-        st.session_state[_key] = None
-
-
 def _lines(value: str) -> list[str]:
     return [line.strip() for line in value.splitlines() if line.strip()]
 
@@ -146,34 +140,6 @@ def _save_uploads(files, job_dir: Path) -> list[str]:
     return saved
 
 
-def _roles_for_families(families: list[str]) -> list[str]:
-    """Return role names whose role_family is in the selected list."""
-    result = []
-    for name, meta in _role_tax.items():
-        if isinstance(meta, dict) and meta.get("role_family") in families:
-            result.append(name)
-    return result
-
-
-def _locations_for_regions(regions: list[str]) -> list[str]:
-    """Return canonical city names whose region is in the selected list."""
-    return [loc for loc, reg in _regions_by_location.items() if reg in regions]
-
-
-def _industries_for_verticals(verticals: list[str]) -> list[str]:
-    """Flatten evidence terms for selected industry verticals."""
-    terms: list[str] = []
-    for v in verticals:
-        terms.extend(_industry_evidence_map.get(v, [v]))
-    seen: set[str] = set()
-    unique: list[str] = []
-    for t in terms:
-        if t not in seen:
-            seen.add(t)
-            unique.append(t)
-    return unique
-
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Section 01 — Input
 # ─────────────────────────────────────────────────────────────────────────────
@@ -182,131 +148,21 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ── Step A: Quick Preset ──────────────────────────────────────────────────────
-st.markdown('<div class="builder-step">Step 1 — Quick preset  <span style="color:#78928f;font-weight:400">(or use the builder below to compose your own)</span></div>', unsafe_allow_html=True)
-
-preset_name = st.selectbox(
-    "Starting preset",
-    list(presets),
-    index=list(presets).index(default_preset) if default_preset in presets else 0,
-    format_func=lambda key: str(presets[key].get("label") or key),
-    key="preset_selectbox",
-)
-preset = dict(presets.get(preset_name) or {})
-
-# ── Step B: Visual Builder ────────────────────────────────────────────────────
-st.markdown('<div class="builder-step" style="margin-top:22px">Step 2 — Compose manually with dropdowns</div>', unsafe_allow_html=True)
-
-st.markdown('<div class="builder-panel">', unsafe_allow_html=True)
-
-b_col1, b_col2, b_col3 = st.columns(3)
-
-with b_col1:
-    st.markdown('<div style="font:600 10px SFMono-Regular,Menlo;letter-spacing:.14em;text-transform:uppercase;color:#73b7ff;margin-bottom:4px">🌍 Region(s)</div>', unsafe_allow_html=True)
-    builder_regions = st.multiselect(
-        "Regions",
-        _unique_regions,
-        default=[],
-        label_visibility="collapsed",
-        key="builder_regions",
-        placeholder="Select one or more regions…",
-    )
-    if builder_regions:
-        locs_in_region = _locations_for_regions(builder_regions)
-        st.markdown(
-            " ".join(f'<span class="pill-hint">{loc}</span>' for loc in locs_in_region[:8]),
-            unsafe_allow_html=True,
-        )
-
-with b_col2:
-    st.markdown('<div style="font:600 10px SFMono-Regular,Menlo;letter-spacing:.14em;text-transform:uppercase;color:#ffc857;margin-bottom:4px">🏭 Industry Vertical</div>', unsafe_allow_html=True)
-    builder_verticals = st.multiselect(
-        "Industry",
-        _industry_verticals,
-        default=[],
-        label_visibility="collapsed",
-        key="builder_verticals",
-        placeholder="Select one or more verticals…",
-    )
-
-with b_col3:
-    st.markdown('<div style="font:600 10px SFMono-Regular,Menlo;letter-spacing:.14em;text-transform:uppercase;color:#c87cf9;margin-bottom:4px">👤 Role Family</div>', unsafe_allow_html=True)
-    builder_families = st.multiselect(
-        "Role Family",
-        _all_role_families,
-        default=[],
-        label_visibility="collapsed",
-        key="builder_families",
-        placeholder="Select one or more role families…",
-    )
-    if builder_families:
-        roles_preview = _roles_for_families(builder_families)
-        st.markdown(
-            " ".join(f'<span class="pill-hint">{r}</span>' for r in roles_preview[:6]),
-            unsafe_allow_html=True,
-        )
-
-st.markdown("<hr class='builder-divider'>", unsafe_allow_html=True)
-
-pop_col, hint_col = st.columns([1, 3])
-with pop_col:
-    auto_populate = st.button(
-        "⚡ Auto-populate fields",
-        key="auto_populate_btn",
-        disabled=not (builder_regions or builder_verticals or builder_families),
-    )
-with hint_col:
-    st.markdown(
-        '<p style="font-size:11px;color:#5a7672;line-height:1.6;margin-top:10px">Selecting regions, verticals, or role families above and clicking <strong style=\'color:#72f2c3\'>Auto-populate</strong> will fill the roles, locations, and industry terms below. Company list is left for you to customise.</p>',
-        unsafe_allow_html=True,
-    )
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-if auto_populate:
-    if builder_regions:
-        st.session_state["_locations_override"] = _locations_for_regions(builder_regions)
-    if builder_verticals:
-        st.session_state["_industries_override"] = _industries_for_verticals(builder_verticals)
-    if builder_families:
-        st.session_state["_roles_override"] = _roles_for_families(builder_families)
-    st.session_state["_companies_override"] = []  # intentionally left blank for manual entry
-    st.rerun()
-
-# ── Step C: Filter Contract Form ──────────────────────────────────────────────
-st.markdown('<div class="builder-step" style="margin-top:22px">Step 3 — Review and commit the filter contract</div>', unsafe_allow_html=True)
-
-# Resolve initial list values: override (from builder) > preset > empty
-def _resolve_list(override_key: str, preset_list_key: str) -> list[str]:
-    override = st.session_state.get(override_key)
-    if override is not None:
-        if isinstance(override, str):
-            return _lines(override)
-        return list(override)
-    return [str(item) for item in preset.get(preset_list_key, [])]
-
-roles_default = [r for r in _resolve_list("_roles_override", "roles") if r in _all_roles]
-locations_default = [l for l in _resolve_list("_locations_override", "locations") if l in _all_locations]
-companies_default_str = "\n".join(_resolve_list("_companies_override", "company_names"))
-industries_default = _resolve_list("_industries_override", "industries")
-
 with st.form("lead_contract", clear_on_submit=False):
     top_a, top_b, top_c, top_d = st.columns([1.1, 1, 1, 1])
     target_count = top_a.number_input(
-        "Verified lead target", min_value=1, max_value=2000, value=int(preset.get("target_count") or 150)
+        "Verified lead target", min_value=1, max_value=2000, value=150
     )
     business_model = top_b.selectbox(
         "Business model",
         ["Any", "B2B only", "B2C only"],
-        index=["Any", "B2B only", "B2C only"].index(preset.get("business_model", "Any"))
-        if preset.get("business_model") in ["Any", "B2B only", "B2C only"]
-        else 0,
+        index=0,
     )
     minimum_confidence = top_c.slider(
-        "Minimum confidence", min_value=60, max_value=99, value=int(preset.get("minimum_confidence") or 85)
+        "Minimum confidence", min_value=60, max_value=99, value=85
     )
     require_target_company = top_d.checkbox(
-        "Hard company filter", value=bool(preset.get("require_target_company", True)),
+        "Hard company filter", value=True,
         help="When enabled, the parsed current company must match one of the target companies.",
     )
 
@@ -314,18 +170,18 @@ with st.form("lead_contract", clear_on_submit=False):
     roles = left.multiselect(
         "Roles / personas",
         options=_all_roles,
-        default=roles_default,
+        default=[],
         help="Role family and seniority are both enforced.",
     )
     locations = left.multiselect(
         "Locations",
         options=_all_locations,
-        default=locations_default,
+        default=[],
         help="Use canonical names from the location taxonomy, e.g. Singapore, London, Bengaluru.",
     )
     companies_text = right.text_area(
         "Target companies — one per line",
-        companies_default_str,
+        "",
         height=230,
         help="Paste a list of companies here.",
     )
@@ -335,14 +191,11 @@ with st.form("lead_contract", clear_on_submit=False):
     for k, v in _industry_evidence_map.items():
         _all_industries.extend(v)
     _all_industries = sorted(list(set(_all_industries)))
-    
-    # Ensure defaults exist in options
-    valid_industries_default = [i for i in industries_default if i in _all_industries]
 
     industries = right.multiselect(
         "Industry evidence terms",
         options=_all_industries,
-        default=valid_industries_default,
+        default=[],
     )
 
     with st.expander("Search budget, source policy, and deduplication", expanded=False):
@@ -369,7 +222,7 @@ with st.form("lead_contract", clear_on_submit=False):
             format_func=lambda value: source_labels[value],
         )
         minimum_sources = b.number_input(
-            "Minimum evidence sources", min_value=1, max_value=5, value=int(preset.get("minimum_sources") or 1)
+            "Minimum evidence sources", min_value=1, max_value=5, value=1
         )
         max_queries = c.number_input(
             "Maximum Google queries", min_value=1, max_value=300, value=int(source_defaults.get("max_queries") or 40)

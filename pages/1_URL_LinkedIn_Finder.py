@@ -47,10 +47,7 @@ st.markdown(
 # ─────────────────────────────────────────────────────────────────────────────
 # Form
 # ─────────────────────────────────────────────────────────────────────────────
-_DEFAULT_URLS = (
-    "https://www.intriguesummit.com/madverse2026singapore\n"
-    "https://conferences.marketing-interactive.com/digital-marketing-asia/"
-)
+_DEFAULT_URLS = ""
 
 with st.form("url_people_form"):
     st.markdown('<div class="url-label">🌐 Conference / event page URLs — one per line</div>', unsafe_allow_html=True)
@@ -59,7 +56,7 @@ with st.form("url_people_form"):
         value=_DEFAULT_URLS,
         height=120,
         label_visibility="collapsed",
-        placeholder="https://example.com/speakers\nhttps://another-event.com/speakers",
+        placeholder="e.g. https://example.com/speakers\nhttps://another-event.com/speakers",
     )
     st.markdown(
         '<div class="url-hint">Each URL is fetched separately. People found across all pages are deduplicated by name + company before enrichment.</div>',
