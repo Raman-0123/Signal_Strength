@@ -43,6 +43,9 @@ catalog = load_catalog()
 presets = dict(catalog.get("presets") or {})
 source_defaults = dict(catalog.get("source_defaults") or {})
 default_preset = str(catalog.get("default_preset") or next(iter(presets), ""))
+# The preset builder was removed from this page, but jobs still persist the
+# preset key so older checkpoints and the job archive remain compatible.
+preset_name = default_preset
 
 _config_dir = Path(__file__).parent / "config"
 
