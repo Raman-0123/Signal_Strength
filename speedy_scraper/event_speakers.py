@@ -309,15 +309,20 @@ def speaker_queries(
     include_terms: list[str] | None = None,
     exclude_terms: list[str] | None = None,
 ) -> list[str]:
-    name = _quote(speaker.name)
+    name_unquoted = clean_spaces(speaker.name)
+    name_quoted = _quote(speaker.name)
     queries = []
-    if speaker.company:
-        queries.append(f"site:linkedin.com/in {name} {_quote(speaker.company)}")
-    if speaker.designation:
-        queries.append(f"site:linkedin.com/in {name} {_quote(speaker.designation)}")
+    
     include_clause = " ".join(_quote(term) for term in (include_terms or []) if clean_spaces(term))
     exclude_clause = " ".join(f'-{_quote(term)}' for term in (exclude_terms or []) if clean_spaces(term))
-    queries.append(f"site:linkedin.com/in {name} {include_clause} {exclude_clause}".strip())
+    
+    # Try unquoted name first for max recall (Google handles names well), then fallback to quoted
+    for name in [name_unquoted, name_quoted]:
+        if speaker.company:
+            queries.append(f"site:linkedin.com/in {name} {_quote(speaker.company)}")
+        if speaker.designation:
+            queries.append(f"site:linkedin.com/in {name} {_quote(speaker.designation)}")
+        queries.append(f"site:linkedin.com/in {name} {include_clause} {exclude_clause}".strip())
     return list(dict.fromkeys(queries))
 
 
@@ -953,7 +958,9 @@ def _name_score(source: str, candidate: str) -> tuple[float, str]:
         return 0.0, ""
     if source_tokens == candidate_tokens:
         return 0.60, "exact_name"
-    if source_tokens[-1] != candidate_tokens[-1]:
+    s_last = source_tokens[-1]
+    c_last = candidate_tokens[-1]
+    if s_last != c_last and not (s_last.startswith(c_last) or c_last.startswith(s_last)):
         return 0.0, ""
     if len(source_tokens) == len(candidate_tokens) and all(
         left == right
