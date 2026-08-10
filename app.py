@@ -173,16 +173,26 @@ with st.form("lead_contract", clear_on_submit=False):
         default=[],
         help="Role family and seniority are both enforced.",
     )
+    custom_roles = left.text_input(
+        "Custom roles (comma-separated)",
+        "",
+        placeholder="e.g. Founder, Technical Lead",
+    )
     locations = left.multiselect(
         "Locations",
         options=_all_locations,
         default=[],
         help="Use canonical names from the location taxonomy, e.g. Singapore, London, Bengaluru.",
     )
+    custom_locations = left.text_input(
+        "Custom locations (comma-separated)",
+        "",
+        placeholder="e.g. Dubai, New York",
+    )
     companies_text = right.text_area(
         "Target companies — one per line",
         "",
-        height=230,
+        height=140,
         placeholder="For instance:\nRazorpay\nPhonePe\nCRED",
         help="Paste a list of companies here.",
     )
@@ -198,6 +208,11 @@ with st.form("lead_contract", clear_on_submit=False):
         options=_all_industries,
         default=[],
         help="These keywords will be included in the search query to narrow down leads to the correct industry.",
+    )
+    custom_industries = right.text_input(
+        "Custom industry keywords (comma-separated)",
+        "",
+        placeholder="e.g. SpaceTech, Quantum Computing",
     )
 
     with st.expander("Search budget, source policy, and deduplication", expanded=False):
@@ -304,15 +319,27 @@ with st.form("lead_contract", clear_on_submit=False):
         )
 
 if submitted:
-    # roles, locations, and industries are already lists from multiselect
+    # Combine multiselect with custom text inputs
+    final_roles = list(roles)
+    if custom_roles:
+        final_roles.extend([r.strip() for r in custom_roles.split(",") if r.strip()])
+        
+    final_locations = list(locations)
+    if custom_locations:
+        final_locations.extend([l.strip() for l in custom_locations.split(",") if l.strip()])
+        
+    final_industries = list(industries)
+    if custom_industries:
+        final_industries.extend([i.strip() for i in custom_industries.split(",") if i.strip()])
+        
     companies = _lines(companies_text)
     effective_sources = list(sources)
     if any(source in {"ddgs", "duckduckgo_browser"} for source in effective_sources) and "google_browser" not in effective_sources:
         effective_sources = ["google_browser", *effective_sources]
     errors = []
-    if not roles:
+    if not final_roles:
         errors.append("Enter at least one role/persona.")
-    if not locations and not companies:
+    if not final_locations and not companies:
         errors.append("Enter at least one location or target company so queries stay focused.")
     if require_target_company and not companies:
         errors.append("Hard company filtering requires at least one target company.")
@@ -331,9 +358,9 @@ if submitted:
             "preset": preset_name,
             "target_count": int(target_count),
             "business_model": business_model,
-            "roles": roles,
-            "locations": locations,
-            "industries": industries,
+            "roles": final_roles,
+            "locations": final_locations,
+            "industries": final_industries,
             "company_names": companies,
             "sources": sources,
             "max_queries": int(max_queries),
