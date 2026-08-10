@@ -413,6 +413,14 @@ class StopAfterLeadSearch:
 
 
 def test_main_lead_job_checkpoints_search_and_resumes_into_verification(tmp_path: Path):
+    dedupe_path = tmp_path / "existing.csv"
+    dedupe_path.write_text(
+        "Name,LinkedIn URL\n"
+        "Existing Person,https://www.linkedin.com/in/existing-person/\n"
+        "Malformed Value,https://[2001:db8::1\n"
+        "IP Value,192.0.2.10\n",
+        encoding="utf-8",
+    )
     job_dir = create_job(
         "lead_harvest",
         {
@@ -425,6 +433,7 @@ def test_main_lead_job_checkpoints_search_and_resumes_into_verification(tmp_path
             "sources": ["fake"],
             "target_count": 1,
             "max_queries": 1,
+            "existing_files": [str(dedupe_path)],
         },
         jobs_root=tmp_path,
     )

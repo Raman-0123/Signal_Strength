@@ -109,7 +109,23 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
         str(key): str(value)
         for key, value in dict(checkpoint.get("company_evidence_cache") or {}).items()
     }
-    existing_urls = load_existing_urls(config.existing_files)
+    try:
+        existing_urls = load_existing_urls(config.existing_files)
+    except Exception as exc:
+        update_status(
+            path,
+            state="failed",
+            workflow="lead_harvest",
+            job_id=path.name,
+            phase="startup",
+            message=f"Worker initialization failed while loading exclusions: {exc}",
+            processed=0,
+            total=0,
+            candidates=len(candidates_by_url),
+            matched=len(leads),
+            rejected=len(rejections),
+        )
+        raise
     existing_urls.update(lead.linkedin_url for lead in leads)
     pool_target = max(
         config.target_count * config.candidate_pool_multiplier,

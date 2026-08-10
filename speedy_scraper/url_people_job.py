@@ -20,16 +20,16 @@ from speedy_scraper.event_speakers import (
     fetch_public_html,
     write_speaker_exports,
 )
-from speedy_scraper.models import DEFAULT_SOURCE_NAMES
 from speedy_scraper.linkedin import normalize_linkedin_url
+from speedy_scraper.models import DEFAULT_SOURCE_NAMES
 from speedy_scraper.pipeline import load_existing_people_keys, load_existing_urls
-from speedy_scraper.text import normalize_text
 from speedy_scraper.sources import (
     SearchSource,
     build_sources,
     close_sources,
     configure_google_challenge_wait,
 )
+from speedy_scraper.text import normalize_text
 
 Fetcher = Callable[[str], str]
 SourceBuilder = Callable[[list[str]], list[SearchSource]]

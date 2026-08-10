@@ -201,7 +201,11 @@ class DdgsSource(SearchSource):
                 last_error = exc
         if last_error is None:
             return []
-        raise SourceError(f"DDGS failed for query: {last_error}")
+        raise SourceError(
+            f"DDGS failed for query: {last_error}",
+            disable_source=_looks_like_provider_challenge(last_error),
+            challenge=_looks_like_provider_challenge(last_error),
+        )
 
 
 class BrowserSearchSource(SearchSource):
@@ -653,6 +657,25 @@ def _challenge_page(html: str) -> bool:
         "select all squares containing a duck",
     )
     return any(marker in text for marker in markers)
+
+
+def _looks_like_provider_challenge(error: object) -> bool:
+    text = str(error or "").lower()
+    return any(
+        marker in text
+        for marker in (
+            "captcha",
+            "recaptcha",
+            "rate limit",
+            "too many requests",
+            "unusual traffic",
+            "automated quer",
+            "429",
+            "403",
+            "blocked",
+            "forbidden",
+        )
+    )
 
 
 def _blocked_resource_types(

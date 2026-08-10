@@ -13,8 +13,8 @@ from speedy_scraper.background_jobs import (
     job_is_stale,
     launch_job,
     list_jobs,
-    read_status,
     read_json,
+    read_status,
     request_stop,
     write_json,
 )
@@ -25,9 +25,10 @@ from speedy_scraper.company_pocs import (
 )
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
 from speedy_scraper.ui import (
+    action_button_css,
     captcha_recovery_panel,
-    is_streamlit_cloud,
     download_gsheet,
+    is_streamlit_cloud,
 )
 
 _config_dir = Path(__file__).parent.parent / "config"
@@ -46,6 +47,7 @@ _all_roles = list(_role_tax.keys())
 
 st.set_page_config(page_title="Company + Designation POC Finder", layout="wide")
 cloud_runtime = is_streamlit_cloud()
+st.markdown(action_button_css(), unsafe_allow_html=True)
 # CSS removed to rely on Streamlit default light theme
 
 st.title("Company + Designation POC Finder")
@@ -121,7 +123,12 @@ with st.form("company_poc_form"):
         placeholder="https://docs.google.com/spreadsheets/d/...",
         help="Paste a public Google Sheet URL to exclude existing POCs from the search.",
     )
-    start = st.form_submit_button("Start Company POC Job", type="primary", width="stretch")
+    with st.container(key="company-run-action"):
+        start = st.form_submit_button(
+            "Start Company POC Job",
+            type="primary",
+            width="stretch",
+        )
 
 if "company_poc_job_dir" not in st.session_state:
     st.session_state.company_poc_job_dir = ""
@@ -246,19 +253,22 @@ def job_monitor() -> None:
 
     left, right = st.columns(2)
     if state in {"running", "stopping"} and not stale:
-        if left.button(
-            "Stop after current search",
-            disabled=state == "stopping",
-            width="stretch",
-        ):
-            request_stop(job_dir)
-            st.rerun(scope="fragment")
+        with left.container(key="company-stop-action"):
+            if st.button(
+                "Stop after current search",
+                disabled=state == "stopping",
+                width="stretch",
+            ):
+                request_stop(job_dir)
+                st.rerun(scope="fragment")
     elif state in {"paused", "failed"} or stale:
         label = "Relaunch from checkpoint" if stale else "Resume from checkpoint"
-        if left.button(label, type="primary", width="stretch"):
-            launch_job(job_dir, "speedy_scraper.company_pocs")
-            st.rerun(scope="fragment")
-    right.button("Refresh now", width="stretch")
+        with left.container(key="company-resume-action"):
+            if st.button(label, type="primary", width="stretch"):
+                launch_job(job_dir, "speedy_scraper.company_pocs")
+                st.rerun(scope="fragment")
+    with right.container(key="company-refresh-action"):
+        st.button("Refresh now", width="stretch")
 
     pocs, rejections = load_company_poc_checkpoint(job_dir)
     checkpoint = read_json(job_dir / "checkpoint.json", default={})

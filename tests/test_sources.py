@@ -1,4 +1,11 @@
+import sys
+from types import SimpleNamespace
+
+import pytest
+
 from speedy_scraper.sources import (
+    DdgsSource,
+    SourceError,
     _blocked_resource_types,
     _BrowserRuntime,
     _challenge_page,
@@ -6,6 +13,24 @@ from speedy_scraper.sources import (
     build_sources,
     configure_google_challenge_wait,
 )
+
+
+def test_ddgs_provider_block_is_classified_as_challenge(monkeypatch):
+    class BlockedDDGS:
+        def __init__(self, **_options):
+            pass
+
+        def text(self, _query, **_options):
+            raise RuntimeError("429 Too Many Requests: captcha required")
+
+    monkeypatch.setitem(sys.modules, "ddgs", SimpleNamespace(DDGS=BlockedDDGS))
+    source = DdgsSource(backends=("brave",))
+
+    with pytest.raises(SourceError) as caught:
+        source.search("site:linkedin.com/in CTO", max_results=10)
+
+    assert caught.value.challenge is True
+    assert caught.value.disable_source is True
 
 
 def test_browser_html_parser_extracts_linkedin_cards():

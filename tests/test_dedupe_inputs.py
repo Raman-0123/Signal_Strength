@@ -9,8 +9,12 @@ def test_load_existing_urls_scans_csv_and_all_excel_sheets(tmp_path: Path):
     csv_path = tmp_path / "existing.csv"
     pd.DataFrame(
         {
-            "Name": ["Jane Doe"],
-            "Profile URL": ["https://www.linkedin.com/in/jane-doe/?trk=abc"],
+            "Name": ["Jane Doe", "Malformed row", "IP row"],
+            "Profile URL": [
+                "https://www.linkedin.com/in/jane-doe/?trk=abc",
+                "https://[2001:db8::1",
+                "192.0.2.10",
+            ],
         }
     ).to_csv(csv_path, index=False)
 

@@ -18,18 +18,19 @@ from speedy_scraper.background_jobs import (
 )
 from speedy_scraper.event_speakers import speakers_frame
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
-from speedy_scraper.url_people_job import load_checkpoint_speakers
 from speedy_scraper.ui import (
+    action_button_css,
     captcha_recovery_panel,
     download_gsheet,
-    enable_manual_recovery,
 )
+from speedy_scraper.url_people_job import load_checkpoint_speakers
 
 st.set_page_config(
     page_title="URL People LinkedIn Finder · Speedy Scraper",
     page_icon="◉",
     layout="wide",
 )
+st.markdown(action_button_css(), unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CSS removed to rely on Streamlit default light theme
@@ -111,7 +112,12 @@ with st.form("url_people_form"):
         help="Paste a public Google Sheet URL to exclude existing POCs from the search.",
     )
 
-    submitted = st.form_submit_button("⚡ Start URL People Job", type="primary", use_container_width=True)
+    with st.container(key="url-run-action"):
+        submitted = st.form_submit_button(
+            "⚡ Start URL People Job",
+            type="primary",
+            use_container_width=True,
+        )
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job launch
@@ -252,15 +258,22 @@ def job_monitor() -> None:
 
     ctrl_l, ctrl_r, ctrl_meta = st.columns([1, 1, 2])
     if state in {"running", "stopping"} and not stale:
-        if ctrl_l.button("Stop after current person", disabled=state == "stopping", width="stretch"):
-            request_stop(job_dir)
-            st.rerun(scope="fragment")
+        with ctrl_l.container(key="url-stop-action"):
+            if st.button(
+                "Stop after current person",
+                disabled=state == "stopping",
+                width="stretch",
+            ):
+                request_stop(job_dir)
+                st.rerun(scope="fragment")
     elif state in {"paused", "failed"} or stale:
         label = "Relaunch from checkpoint" if stale else "Resume from checkpoint"
-        if ctrl_l.button(label, type="primary", width="stretch"):
-            launch_job(job_dir, "speedy_scraper.url_people_job")
-            st.rerun(scope="fragment")
-    ctrl_r.button("Refresh now", width="stretch")
+        with ctrl_l.container(key="url-resume-action"):
+            if st.button(label, type="primary", width="stretch"):
+                launch_job(job_dir, "speedy_scraper.url_people_job")
+                st.rerun(scope="fragment")
+    with ctrl_r.container(key="url-refresh-action"):
+        st.button("Refresh now", width="stretch")
     ctrl_meta.caption(f"updated {datetime.now().strftime('%H:%M:%S')}")
 
     # Metrics

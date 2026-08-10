@@ -10,6 +10,98 @@ from typing import Any
 import streamlit as st
 
 
+def action_button_css() -> str:
+    """Shared semantic action colors for all worker controls."""
+    return """
+    <style>
+    :root {
+        --action-run:#087d62;
+        --action-run-hover:#06634f;
+        --action-stop:#c43d2b;
+        --action-stop-hover:#a93123;
+        --action-resume:#1769aa;
+        --action-resume-hover:#125582;
+        --action-refresh:#52646b;
+        --action-refresh-hover:#3d4e54;
+        --action-text:#ffffff;
+        --action-focus:#f3b63f;
+    }
+    [data-testid="stButton"] button,
+    [data-testid="stFormSubmitButton"] button,
+    [data-testid="stDownloadButton"] button {
+        border:1px solid transparent!important;
+        border-radius:10px!important;
+        font-weight:700!important;
+        min-height:2.6rem!important;
+        transition:background .16s ease, box-shadow .16s ease, transform .16s ease!important;
+    }
+    [data-testid="stButton"] button:hover,
+    [data-testid="stFormSubmitButton"] button:hover,
+    [data-testid="stDownloadButton"] button:hover {
+        transform:translateY(-1px);
+        box-shadow:0 6px 16px rgba(24,49,44,.16)!important;
+    }
+    [data-testid="stButton"] button:focus-visible,
+    [data-testid="stFormSubmitButton"] button:focus-visible,
+    [data-testid="stDownloadButton"] button:focus-visible {
+        outline:3px solid var(--action-focus)!important;
+        outline-offset:2px!important;
+    }
+    .st-key-lead-run-action button,
+    .st-key-url-run-action button,
+    .st-key-company-run-action button {
+        background:var(--action-run)!important;
+        color:var(--action-text)!important;
+    }
+    .st-key-lead-run-action button:hover,
+    .st-key-url-run-action button:hover,
+    .st-key-company-run-action button:hover {
+        background:var(--action-run-hover)!important;
+    }
+    .st-key-lead-stop-action button,
+    .st-key-url-stop-action button,
+    .st-key-company-stop-action button {
+        background:var(--action-stop)!important;
+        color:var(--action-text)!important;
+    }
+    .st-key-lead-stop-action button:hover,
+    .st-key-url-stop-action button:hover,
+    .st-key-company-stop-action button:hover {
+        background:var(--action-stop-hover)!important;
+    }
+    .st-key-lead-resume-action button,
+    .st-key-url-resume-action button,
+    .st-key-company-resume-action button,
+    [class*="st-key-"][class*="captcha_recovery"] button {
+        background:var(--action-resume)!important;
+        color:var(--action-text)!important;
+    }
+    .st-key-lead-resume-action button:hover,
+    .st-key-url-resume-action button:hover,
+    .st-key-company-resume-action button:hover,
+    [class*="st-key-"][class*="captcha_recovery"] button:hover {
+        background:var(--action-resume-hover)!important;
+    }
+    .st-key-lead-refresh-action button,
+    .st-key-url-refresh-action button,
+    .st-key-company-refresh-action button {
+        background:var(--action-refresh)!important;
+        color:var(--action-text)!important;
+    }
+    .st-key-lead-refresh-action button:hover,
+    .st-key-url-refresh-action button:hover,
+    .st-key-company-refresh-action button:hover {
+        background:var(--action-refresh-hover)!important;
+    }
+    button:disabled {
+        opacity:.48!important;
+        transform:none!important;
+        box-shadow:none!important;
+    }
+    </style>
+    """
+
+
 def render_theme_toggle(key: str) -> bool:
     """Render the small, per-page theme switch used by all Streamlit surfaces."""
     return bool(st.sidebar.toggle("Light mode", value=False, key=key))
@@ -146,11 +238,12 @@ def captcha_recovery_panel(
             failed_searches = 1
         if failed_searches:
             label = "Retry failed searches automatically" if cloud else "Retry failed searches in visible Google"
-            if left.button(label, key=button_key, type="primary", width="stretch"):
-                prepare_failed_search_retry(job_dir, local_manual=not cloud)
-                request_stop(job_dir)
-                launch_job(job_dir, module)
-                st.rerun(scope="fragment")
+            with left.container(key=f"{button_key}_action"):
+                if st.button(label, key=button_key, type="primary", width="stretch"):
+                    prepare_failed_search_retry(job_dir, local_manual=not cloud)
+                    request_stop(job_dir)
+                    launch_job(job_dir, module)
+                    st.rerun(scope="fragment")
         else:
             left.success("Fallback succeeded; no failed searches remain.")
     outcomes = status.get("provider_outcomes") or {}

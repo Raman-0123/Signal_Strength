@@ -14,3 +14,9 @@ def test_rejects_non_personal_linkedin_links():
     assert normalize_linkedin_url("https://www.linkedin.com/company/razorpay/") == ""
     assert normalize_linkedin_url("https://example.com/in/person") == ""
 
+
+def test_malformed_ip_like_values_fail_closed_without_raising():
+    assert normalize_linkedin_url("[2001:db8::1]") == ""
+    assert normalize_linkedin_url("https://[2001:db8::1") == ""
+    assert normalize_linkedin_url("192.0.2.10") == ""
+    assert normalize_linkedin_url("not a URL") == ""

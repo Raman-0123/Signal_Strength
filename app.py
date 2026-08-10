@@ -27,11 +27,13 @@ from speedy_scraper.exports import leads_frame, rejections_frame
 from speedy_scraper.lead_job import load_lead_job_checkpoint
 from speedy_scraper.sources import independent_source_families
 from speedy_scraper.ui import (
+    action_button_css,
     captcha_recovery_panel,
     download_gsheet,
 )
 
 st.set_page_config(page_title="Speedy Scraper · Lead Operations", page_icon="◉", layout="wide")
+st.markdown(action_button_css(), unsafe_allow_html=True)
 
 first_paint = "ui_mounted" not in st.session_state
 st.session_state.ui_mounted = True
@@ -314,7 +316,12 @@ with st.form("lead_contract", clear_on_submit=False):
     )
     contract_left, contract_right = st.columns([1.45, 1])
     with contract_left:
-        submitted = st.form_submit_button("Commit contract & start background job", width="stretch")
+        with st.container(key="lead-run-action"):
+            submitted = st.form_submit_button(
+                "Commit contract & start background job",
+                type="primary",
+                width="stretch",
+            )
     with contract_right:
         st.markdown(
             '<div class="contract"><span class="micro">Accuracy policy</span><p><strong>Role → company → location → industry → business model → source count → confidence.</strong><br>Failure at any selected gate sends the candidate to the rejection ledger with a reason.</p></div>',
@@ -511,18 +518,21 @@ def job_monitor() -> None:
 
     controls_left, controls_right, controls_meta = st.columns([1, 1, 2])
     if active and not stale:
-        if controls_left.button(
-            "Stop after current unit",
-            disabled=state == "stopping",
-            width="stretch",
-        ):
-            request_stop(job_dir)
-            st.rerun(scope="fragment")
+        with controls_left.container(key="lead-stop-action"):
+            if st.button(
+                "Stop after current unit",
+                disabled=state == "stopping",
+                width="stretch",
+            ):
+                request_stop(job_dir)
+                st.rerun(scope="fragment")
     elif state in {"paused", "failed"} or stale:
-        if controls_left.button("Relaunch from checkpoint", width="stretch"):
-            launch_job(job_dir, "speedy_scraper.lead_job")
-            st.rerun(scope="fragment")
-    controls_right.button("Refresh ledger", width="stretch")
+        with controls_left.container(key="lead-resume-action"):
+            if st.button("Relaunch from checkpoint", width="stretch"):
+                launch_job(job_dir, "speedy_scraper.lead_job")
+                st.rerun(scope="fragment")
+    with controls_right.container(key="lead-refresh-action"):
+        st.button("Refresh ledger", width="stretch")
     controls_meta.caption(
         f"JOB {job_dir.name} · updated {datetime.now().strftime('%H:%M:%S')} · checkpoint v{checkpoint.get('version', '—')}"
     )

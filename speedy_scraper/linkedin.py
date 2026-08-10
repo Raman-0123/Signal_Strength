@@ -24,11 +24,19 @@ def normalize_linkedin_url(value: str | None) -> str:
         return ""
     if "://" not in raw:
         raw = "https://" + raw.lstrip("/")
-    parsed = urllib.parse.urlparse(raw)
-    host = (parsed.hostname or "").lower().rstrip(".")
+    # Uploaded exports can contain arbitrary cells, including bracketed IP
+    # literals such as ``[2001:db8::1]``. Python's URL parser rejects malformed
+    # bracketed hosts; those values are not LinkedIn URLs and should fail
+    # closed rather than aborting the worker.
+    try:
+        parsed = urllib.parse.urlparse(raw)
+        host = (parsed.hostname or "").lower().rstrip(".")
+        path = parsed.path
+    except (TypeError, ValueError):
+        return ""
     if host != "linkedin.com" and not host.endswith(".linkedin.com"):
         return ""
-    match = re.match(r"^/(?:in|mwlite/profile/in)/([^/?#]+)", parsed.path, re.IGNORECASE)
+    match = re.match(r"^/(?:in|mwlite/profile/in)/([^/?#]+)", path, re.IGNORECASE)
     if not match:
         return ""
     slug = match.group(1).strip().strip("/").lower()
@@ -44,4 +52,3 @@ def linkedin_id(value: str | None) -> str:
     if not url:
         return ""
     return url.rstrip("/").rsplit("/", 1)[-1]
-
