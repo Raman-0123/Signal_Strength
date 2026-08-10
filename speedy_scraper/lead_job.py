@@ -43,17 +43,46 @@ CHECKPOINT_VERSION = 3
 
 def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
     path = Path(job_dir)
-    raw_config = read_json(path / "config.json", default={})
-    if not isinstance(raw_config, dict):
-        raise ValueError("Invalid lead-harvest job config")
-    config = config_from_mapping(raw_config)
-    if config.require_target_company and not config.company_names:
-        raise ValueError("Hard company filtering requires at least one target company")
-    if config.minimum_sources > len(independent_source_families(config.sources)):
-        raise ValueError("Minimum evidence sources exceed the selected source count")
-    queries = build_queries(config)
-    if not queries:
-        raise ValueError("The selected filters did not produce any search queries")
+    # launch_job marks the process as running before this function starts. Keep
+    # startup failures visible instead of leaving the UI on a permanent,
+    # checkpoint-less RUNNING status.
+    update_status(
+        path,
+        state="running",
+        workflow="lead_harvest",
+        job_id=path.name,
+        phase="startup",
+        message="Worker initializing filter contract",
+        processed=0,
+        total=0,
+    )
+    try:
+        raw_config = read_json(path / "config.json", default={})
+        if not isinstance(raw_config, dict):
+            raise ValueError("Invalid lead-harvest job config")
+        config = config_from_mapping(raw_config)
+        if config.require_target_company and not config.company_names:
+            raise ValueError("Hard company filtering requires at least one target company")
+        if config.minimum_sources > len(independent_source_families(config.sources)):
+            raise ValueError("Minimum evidence sources exceed the selected source count")
+        queries = build_queries(config)
+        if not queries:
+            raise ValueError("The selected filters did not produce any search queries")
+    except Exception as exc:
+        update_status(
+            path,
+            state="failed",
+            workflow="lead_harvest",
+            job_id=path.name,
+            phase="startup",
+            message=f"Worker initialization failed: {exc}",
+            processed=0,
+            total=0,
+            candidates=0,
+            matched=0,
+            rejected=0,
+        )
+        raise
 
     checkpoint_path = path / "checkpoint.json"
     checkpoint = read_json(checkpoint_path, default={})

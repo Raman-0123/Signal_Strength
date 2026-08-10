@@ -59,6 +59,12 @@ def launch_job(job_dir: Path | str, module: str) -> int:
     if latest.get("state") == "starting":
         latest.update(state="running", message="Background worker started")
     write_status(path, **latest)
+    threading.Thread(
+        target=_watch_worker,
+        args=(process, path),
+        name=f"watch-{path.name}",
+        daemon=True,
+    ).start()
     return process.pid
 
 
@@ -162,6 +168,36 @@ def write_json(path: Path | str, value: object) -> None:
             temporary.unlink()
 
 
+def _watch_worker(process: subprocess.Popen[bytes], path: Path) -> None:
+    """Reconcile a child that exits before it writes a terminal job status."""
+    try:
+        return_code = process.wait()
+    except (OSError, ValueError):
+        return
+    current = read_status(path)
+    if current.get("state") not in {"starting", "running", "stopping"}:
+        return
+    phase = str(current.get("phase") or "startup")
+    if return_code == 0:
+        message = "Worker exited without writing a terminal status"
+    else:
+        message = (
+            f"Worker exited before completing (exit code {return_code}). "
+            "Open worker.log or the app logs for the underlying error."
+        )
+    update_status(
+        path,
+        state="failed",
+        phase=phase,
+        message=message,
+        processed=int(current.get("processed") or 0),
+        total=int(current.get("total") or 0),
+        candidates=int(current.get("candidates") or 0),
+        matched=int(current.get("matched") or 0),
+        rejected=int(current.get("rejected") or 0),
+    )
+
+
 def list_jobs(workflow: str, *, jobs_root: Path = JOBS_ROOT) -> list[Path]:
     directory = jobs_root / workflow
     if not directory.exists():
@@ -176,6 +212,23 @@ def process_is_running(pid: int) -> bool:
         os.kill(pid, 0)
     except (OSError, ProcessLookupError):
         return False
+    # A worker launched by Streamlit can briefly remain as a zombie after it
+    # exits because the app process does not own a blocking wait loop. Treat
+    # that state as dead so the ledger can surface recovery instead of showing
+    # RUNNING forever.
+    try:
+        result = subprocess.run(
+            ["ps", "-o", "state=", "-p", str(pid)],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=1,
+        )
+        process_state = result.stdout.strip()
+        if process_state.startswith("Z"):
+            return False
+    except (OSError, subprocess.SubprocessError):
+        pass
     return True
 
 
@@ -196,11 +249,22 @@ def job_is_stale(status: dict[str, Any], *, stale_after_seconds: int = 30) -> bo
     if status.get("state") not in {"starting", "running", "stopping"}:
         return False
     pid = int(status.get("pid") or 0)
+    heartbeat_age = heartbeat_age_seconds(status)
+    # Startup is the one phase that has no heartbeat yet. A live process that
+    # never gets past startup is still a failed worker from the user's point
+    # of view, so do not let it remain RUNNING forever.
+    if str(status.get("phase") or "") == "startup" or not status.get("phase"):
+        startup_age = _timestamp_age_seconds(status.get("updated_at"))
+        return (
+            not process_is_running(pid)
+            or startup_age is None
+            or startup_age > stale_after_seconds
+        )
+    if heartbeat_age is not None:
+        return heartbeat_age > stale_after_seconds
     if process_is_running(pid):
         return False
-    age = heartbeat_age_seconds(status)
-    if age is None:
-        age = _timestamp_age_seconds(status.get("updated_at"))
+    age = _timestamp_age_seconds(status.get("updated_at"))
     return age is None or age > stale_after_seconds
 
 

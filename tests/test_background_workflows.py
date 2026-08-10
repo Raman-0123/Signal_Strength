@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import pytest
 from openpyxl import load_workbook
 
 from speedy_scraper.background_jobs import clear_stop, create_job, job_is_stale, read_status
@@ -364,6 +365,28 @@ def test_job_without_a_live_pid_becomes_recoverable():
             "updated_at": "2020-01-01T00:00:00+00:00",
         }
     )
+
+
+def test_lead_worker_marks_preflight_errors_failed_instead_of_stuck_running(tmp_path: Path):
+    job_dir = create_job(
+        "lead_harvest",
+        {
+            "roles": ["CTO"],
+            "locations": ["Bengaluru"],
+            "sources": ["google_browser"],
+            "require_target_company": True,
+            "company_names": [],
+        },
+        jobs_root=tmp_path,
+    )
+
+    with pytest.raises(ValueError, match="Hard company filtering"):
+        run_lead_job(job_dir)
+
+    status = read_status(job_dir)
+    assert status["state"] == "failed"
+    assert status["phase"] == "startup"
+    assert "Worker initialization failed" in status["message"]
 
 
 class StopAfterLeadSearch:

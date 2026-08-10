@@ -441,6 +441,14 @@ def _phase_markup(current: str, state: str) -> str:
     return '<div class="phase-grid">' + "".join(cells) + "</div>"
 
 
+def _worker_log_tail(job_dir: Path, *, limit: int = 5000) -> str:
+    try:
+        content = (job_dir / "worker.log").read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+    return content[-limit:].strip()
+
+
 @st.fragment(run_every="2s")
 def job_monitor() -> None:
     raw_path = str(st.session_state.get("lead_job_dir") or "")
@@ -480,6 +488,11 @@ def job_monitor() -> None:
     )
     if stale:
         st.warning("This worker is no longer alive. Relaunching continues from its last atomic checkpoint.")
+    if state == "failed" or stale:
+        worker_log = _worker_log_tail(job_dir)
+        if worker_log:
+            with st.expander("Worker diagnostics", expanded=state == "failed"):
+                st.code(worker_log, language="text")
 
     captcha_recovery_panel(
         status,
