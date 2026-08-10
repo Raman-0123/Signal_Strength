@@ -6,65 +6,10 @@
 
 locations:
 
-  # ── Asia Pacific ─────────────────────────────────────────────────────────────
-
-  Singapore:
-    region: Asia Pacific
-    variants:
-      - Singapore
-      - Singapore, Singapore
-      - Greater Singapore Area
-      - Central Singapore
-
-  Tokyo:
-    region: Asia Pacific
-    variants:
-      - Tokyo
-      - Tokyo, Japan
-      - Greater Tokyo Area
-      - Tokyo/Japan
-
-  Sydney:
-    region: Asia Pacific
-    variants:
-      - Sydney
-      - Sydney, New South Wales, Australia
-      - Greater Sydney Area
-      - Sydney/NSW/Australia
-
-  Melbourne:
-    region: Asia Pacific
-    variants:
-      - Melbourne
-      - Melbourne, Victoria, Australia
-      - Greater Melbourne Area
-
-  Seoul:
-    region: Asia Pacific
-    variants:
-      - Seoul
-      - Seoul, South Korea
-      - Seoul, Korea
-      - Greater Seoul Area
-
-  Jakarta:
-    region: Asia Pacific
-    variants:
-      - Jakarta
-      - Jakarta, Indonesia
-      - DKI Jakarta
-      - Greater Jakarta Area
-
-  Kuala Lumpur:
-    region: Asia Pacific
-    variants:
-      - Kuala Lumpur
-      - Kuala Lumpur, Malaysia
-      - KL, Malaysia
-      - Greater Kuala Lumpur Area
+  # ── India ──────────────────────────────────────────────────────────────────
 
   Bengaluru:
-    region: Asia Pacific
+    region: India
     variants:
       - Bengaluru
       - Bangalore
@@ -75,7 +20,7 @@ locations:
       - Bangalore/Karnataka/India
 
   Mumbai:
-    region: Asia Pacific
+    region: India
     variants:
       - Mumbai
       - Mumbai, Maharashtra, India
@@ -83,7 +28,7 @@ locations:
       - Mumbai/Maharashtra/India
 
   Delhi NCR:
-    region: Asia Pacific
+    region: India
     variants:
       - Delhi NCR
       - New Delhi
@@ -94,189 +39,54 @@ locations:
       - Noida
       - Noida, Uttar Pradesh, India
 
+  Pune:
+    region: India
+    variants:
+      - Pune
+      - Pune, Maharashtra, India
+      - Pune/Pimpri-Chinchwad Area
+
   Hyderabad:
-    region: Asia Pacific
+    region: India
     variants:
       - Hyderabad
       - Hyderabad, Telangana, India
       - Greater Hyderabad Area
 
   Chennai:
-    region: Asia Pacific
+    region: India
     variants:
       - Chennai
       - Chennai, Tamil Nadu, India
       - Greater Chennai Area
 
-  Pune:
-    region: Asia Pacific
-    variants:
-      - Pune
-      - Pune, Maharashtra, India
-      - Pune/Pimpri-Chinchwad Area
-
   Kolkata:
-    region: Asia Pacific
+    region: India
     variants:
       - Kolkata
       - Kolkata, West Bengal, India
       - Greater Kolkata Area
 
-  # ── EMEA ─────────────────────────────────────────────────────────────────────
+  # ── Rest of World ────────────────────────────────────────────────────────────
 
-  London:
-    region: EMEA
+  Singapore:
+    region: Rest of World
     variants:
-      - London
-      - London, England, United Kingdom
-      - Greater London Area
-      - London, UK
-      - London/United Kingdom
+      - Singapore
+      - Singapore, Singapore
+      - Greater Singapore Area
+      - Central Singapore
 
-  Amsterdam:
-    region: EMEA
+  Italy:
+    region: Rest of World
     variants:
-      - Amsterdam
-      - Amsterdam, North Holland, Netherlands
-      - Amsterdam Area
-      - Amsterdam, Netherlands
-
-  Berlin:
-    region: EMEA
-    variants:
-      - Berlin
-      - Berlin, Germany
-      - Berlin Area
-      - Berlin/Germany
-
-  Paris:
-    region: EMEA
-    variants:
-      - Paris
-      - Paris, Île-de-France, France
-      - Greater Paris Metropolitan Region
-      - Paris, France
-
-  France:
-    region: EMEA
-    variants:
-      - France
-      - République française
+      - Italy
+      - Italia
 
   Rome:
-    region: EMEA
+    region: Rest of World
     variants:
       - Rome
       - Rome, Italy
       - Rome, Latium, Italy
       - Greater Rome Area
-
-  Italy:
-    region: EMEA
-    variants:
-      - Italy
-      - Italia
-
-  Stockholm:
-    region: EMEA
-    variants:
-      - Stockholm
-      - Stockholm, Sweden
-      - Greater Stockholm Area
-
-  Dublin:
-    region: EMEA
-    variants:
-      - Dublin
-      - Dublin, County Dublin, Ireland
-      - Greater Dublin Area
-      - Dublin, Ireland
-
-  Dubai:
-    region: EMEA
-    variants:
-      - Dubai
-      - Dubai, United Arab Emirates
-      - Dubai, UAE
-      - Dubai Emirate
-
-  Riyadh:
-    region: EMEA
-    variants:
-      - Riyadh
-      - Riyadh, Saudi Arabia
-      - Riyadh Region
-
-  Tel Aviv:
-    region: EMEA
-    variants:
-      - Tel Aviv
-      - Tel Aviv, Israel
-      - Tel Aviv-Yafo
-      - Greater Tel Aviv Area
-
-  Zurich:
-    region: EMEA
-    variants:
-      - Zurich
-      - Zürich
-      - Zurich, Switzerland
-      - Zürich Area
-
-  # ── Americas ─────────────────────────────────────────────────────────────────
-
-  San Francisco Bay Area:
-    region: Americas
-    variants:
-      - San Francisco Bay Area
-      - San Francisco, California, United States
-      - San Francisco, CA
-      - Silicon Valley
-      - Palo Alto, California, United States
-      - Menlo Park, California, United States
-
-  New York:
-    region: Americas
-    variants:
-      - New York City Metropolitan Area
-      - New York, New York, United States
-      - New York, NY
-      - New York City
-      - Manhattan, New York
-
-  Austin:
-    region: Americas
-    variants:
-      - Austin, Texas, United States
-      - Austin, TX
-      - Austin, Texas Area
-      - Greater Austin Area
-
-  Boston:
-    region: Americas
-    variants:
-      - Boston, Massachusetts, United States
-      - Greater Boston Area
-      - Boston, MA
-
-  Seattle:
-    region: Americas
-    variants:
-      - Seattle, Washington, United States
-      - Greater Seattle Area
-      - Seattle, WA
-
-  Toronto:
-    region: Americas
-    variants:
-      - Toronto, Ontario, Canada
-      - Greater Toronto Area
-      - Toronto, Canada
-
-  São Paulo:
-    region: Americas
-    variants:
-      - São Paulo, Brazil
-      - Sao Paulo, Brazil
-      - Greater São Paulo Area
-      - São Paulo/SP/Brazil

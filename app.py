@@ -183,6 +183,7 @@ with st.form("lead_contract", clear_on_submit=False):
         "Target companies — one per line",
         "",
         height=230,
+        placeholder="For instance:\nRazorpay\nPhonePe\nCRED",
         help="Paste a list of companies here.",
     )
     
@@ -193,9 +194,10 @@ with st.form("lead_contract", clear_on_submit=False):
     _all_industries = sorted(list(set(_all_industries)))
 
     industries = right.multiselect(
-        "Industry evidence terms",
+        "Industry keywords (e.g. Fintech, Banking)",
         options=_all_industries,
         default=[],
+        help="These keywords will be included in the search query to narrow down leads to the correct industry.",
     )
 
     with st.expander("Search budget, source policy, and deduplication", expanded=False):
