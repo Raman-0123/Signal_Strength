@@ -29,103 +29,12 @@ from speedy_scraper.sources import independent_source_families
 from speedy_scraper.ui import (
     captcha_recovery_panel,
     download_gsheet,
-    light_mode_css,
-    render_theme_toggle,
 )
 
 st.set_page_config(page_title="Speedy Scraper · Lead Operations", page_icon="◉", layout="wide")
 
-light_mode = render_theme_toggle("lead_harvest_light_mode")
-
 first_paint = "ui_mounted" not in st.session_state
 st.session_state.ui_mounted = True
-
-# ─────────────────────────────────────────────────────────────────────────────
-# CSS
-# ─────────────────────────────────────────────────────────────────────────────
-base_css = """
-    <style>
-    :root {
-        --night:#071316; --night-2:#0b1d21; --panel:#10282d; --panel-2:#15343a;
-        --line:#28515a; --text:#eef7f4; --muted:#94aaa8; --mint:#72f2c3;
-        --sun:#ffc857; --coral:#ff785a; --blue:#73b7ff; --violet:#c87cf9;
-    }
-    .stApp {color:var(--text); background:
-        radial-gradient(circle at 80% 2%, rgba(114,242,195,.11), transparent 28rem),
-        linear-gradient(135deg, var(--night), #08191d 58%, #071215);}
-    .stApp:before {content:"";position:fixed;inset:0;pointer-events:none;opacity:.2;
-        background-image:linear-gradient(rgba(115,183,255,.08) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(115,183,255,.08) 1px,transparent 1px);
-        background-size:44px 44px;mask-image:linear-gradient(to bottom,black,transparent 70%);}
-    [data-testid="stHeader"] {background:rgba(7,19,22,.84);border-bottom:1px solid var(--line);backdrop-filter:blur(18px);}
-    [data-testid="stSidebar"] {background:#061013;border-right:1px solid var(--line);}
-    [data-testid="stSidebar"] * {color:#d9e8e5;}
-    .block-container {max-width:1480px;padding-top:2.5rem;padding-bottom:6rem;}
-    h1,h2,h3 {font-family:'Avenir Next','Futura',sans-serif!important;color:var(--text)!important;letter-spacing:-.035em;}
-    p,label,div,button,input,textarea {font-family:'SFMono-Regular','Menlo',monospace;}
-    p,.stCaption {color:var(--muted);}
-    .hero {position:relative;overflow:hidden;border:1px solid var(--line);border-radius:24px;padding:clamp(24px,4vw,58px);
-        display:grid;grid-template-columns:1.35fr .75fr;gap:42px;margin-bottom:34px;background:
-        linear-gradient(125deg,rgba(21,52,58,.92),rgba(8,24,28,.92));box-shadow:0 28px 80px rgba(0,0,0,.28);}
-    .hero:after {content:"";position:absolute;width:310px;height:310px;border-radius:50%;right:-105px;top:-145px;
-        border:55px solid rgba(114,242,195,.12);box-shadow:0 0 70px rgba(114,242,195,.12);}
-    .kicker,.section-index,.micro {font:600 10px/1.5 'SFMono-Regular','Menlo',monospace;letter-spacing:.17em;text-transform:uppercase;}
-    .kicker {color:var(--mint);}.hero h1 {font-size:clamp(48px,6.7vw,98px);line-height:.94;margin:18px 0 22px;max-width:900px;}
-    .hero h1 em {font-style:normal;color:var(--mint);}.hero-copy {font-size:13px;line-height:1.8;max-width:720px;color:#afc3c0;}
-    .manifest {position:relative;z-index:1;border-left:1px solid var(--line);padding-left:28px;display:flex;flex-direction:column;justify-content:space-between;}
-    .manifest-row {display:flex;justify-content:space-between;gap:18px;padding:12px 0;border-bottom:1px solid rgba(40,81,90,.75);
-        font:500 10px 'SFMono-Regular','Menlo',monospace;text-transform:uppercase;color:#9ab0ad;}
-    .manifest-row b {font-weight:600;color:var(--mint);}.manifest-row b.warn {color:var(--sun);}
-    .section-rule {display:grid;grid-template-columns:80px 1fr auto;align-items:end;gap:18px;margin:38px 0 16px;
-        border-bottom:1px solid var(--line);padding-bottom:12px;}.section-rule h2 {font-size:clamp(26px,3vw,39px);margin:0;}
-    .section-index,.micro {color:#78928f;}.contract {min-height:128px;border:1px solid var(--line);border-radius:16px;padding:20px;
-        background:linear-gradient(145deg,#143238,#0c2327);position:relative;overflow:hidden;}
-    .contract:after {content:'ACCURACY';position:absolute;right:-8px;bottom:-20px;font:700 48px 'Avenir Next';color:rgba(255,255,255,.035);}
-    .contract strong {color:var(--mint);font-weight:600;}.contract p {font-size:11px;line-height:1.75;margin:8px 0 0;color:#9eb2af;}
-    .phase-grid {display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0 16px;}
-    .phase {padding:15px;min-height:74px;border:1px solid var(--line);border-radius:14px;background:rgba(16,40,45,.8);}
-    .phase.active {border-color:var(--mint);box-shadow:inset 0 0 0 1px rgba(114,242,195,.28);}.phase.done {background:#153c37;border-color:#28685e;}
-    .phase-num {font:10px 'SFMono-Regular','Menlo';color:#78928f}.phase-name {font:600 11px 'SFMono-Regular','Menlo';text-transform:uppercase;margin-top:15px;}
-    .live-strip {display:flex;align-items:center;gap:13px;min-height:62px;border:1px solid var(--line);border-radius:14px;padding:12px 15px;background:rgba(11,29,33,.88);}
-    .live-dot {width:9px;height:9px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 0 rgba(114,242,195,.45);animation:pulse 1.7s infinite;}
-    .live-dot.stale {background:var(--coral);animation:none}.live-dot.done {background:#6c8582;animation:none}
-    @keyframes pulse {70%{box-shadow:0 0 0 9px rgba(114,242,195,0)}100%{box-shadow:0 0 0 0 rgba(114,242,195,0)}}
-    [data-testid="stMetric"] {min-height:116px;background:rgba(16,40,45,.72);border:1px solid var(--line);border-radius:15px;padding:15px;}
-    [data-testid="stMetricLabel"] {text-transform:uppercase;letter-spacing:.08em;color:#8fa5a2;}
-    [data-testid="stMetricValue"] {font-family:'Avenir Next','Futura',sans-serif;color:var(--text);}
-    .stButton>button,.stDownloadButton>button,.stFormSubmitButton>button {border-radius:12px!important;border:1px solid #39756b!important;
-        background:#173e39!important;color:#edfff9!important;text-transform:uppercase!important;letter-spacing:.07em!important;min-height:44px;transition:transform .18s ease,background .18s ease,box-shadow .18s ease;}
-    .stButton>button:hover,.stFormSubmitButton>button:hover,.stDownloadButton>button:hover {background:#20594f!important;border-color:var(--mint)!important;transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.22);}
-    [data-testid="stForm"] {border:1px solid var(--line);border-radius:20px;padding:22px;background:rgba(11,29,33,.72);box-shadow:0 18px 55px rgba(0,0,0,.18);}
-    [data-baseweb="input"],[data-baseweb="select"],textarea {border-radius:10px!important;background:#0b2024!important;}
-    .stTabs [data-baseweb="tab-list"] {gap:6px;border-bottom:1px solid var(--line)}
-    .stTabs [data-baseweb="tab"] {border-radius:10px 10px 0 0;padding:10px 16px;text-transform:uppercase;font-size:10px;}
-    .stTabs [aria-selected="true"] {background:var(--panel-2);color:var(--mint);}
-    [data-testid="stDataFrame"] {border:1px solid var(--line);border-radius:14px;overflow:hidden;}
-
-    /* Builder panel */
-    .builder-panel {border:1px solid var(--line);border-radius:18px;padding:22px 24px 16px;
-        background:linear-gradient(145deg,rgba(20,50,56,.75),rgba(10,27,31,.75));
-        margin-bottom:14px;position:relative;overflow:hidden;}
-    .builder-panel:before {content:"BUILDER";position:absolute;right:-4px;top:-18px;
-        font:700 52px 'Avenir Next';color:rgba(255,255,255,.028);pointer-events:none;}
-    .builder-step {font:600 10px 'SFMono-Regular','Menlo';letter-spacing:.16em;text-transform:uppercase;
-        color:var(--violet);margin-bottom:6px;}
-    .builder-divider {border:none;border-top:1px solid var(--line);margin:16px 0;}
-    .pill-hint {display:inline-block;padding:2px 9px;border-radius:99px;font-size:10px;letter-spacing:.06em;
-        background:rgba(114,242,195,.1);color:var(--mint);border:1px solid rgba(114,242,195,.22);margin:0 3px 4px 0;}
-
-    @media(max-width:800px){.hero{grid-template-columns:1fr}.manifest{border-left:0;border-top:1px solid var(--line);padding:20px 0 0}.phase-grid{grid-template-columns:1fr 1fr}.section-rule{grid-template-columns:1fr}.section-rule .micro{display:none}}
-    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-    </style>
-    """
-entry_css = """
-    <style>
-    @keyframes unifiedIn {from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
-    [data-testid="stMainBlockContainer"] {animation:unifiedIn .42s cubic-bezier(.2,.7,.2,1) both;}
-    </style>
-"""
-st.markdown(base_css + light_mode_css(light_mode) + (entry_css if first_paint else ""), unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Load configs
@@ -210,30 +119,8 @@ _industry_evidence_map: dict[str, list[str]] = {
 # ─────────────────────────────────────────────────────────────────────────────
 # Hero
 # ─────────────────────────────────────────────────────────────────────────────
-st.markdown(
-    """
-    <section class="hero">
-      <div>
-        <div class="kicker">Public-search lead intelligence / revision 06</div>
-        <h1>Find the right person.<br><em>Anywhere.</em></h1>
-        <div class="hero-copy">A global, geography- and industry-agnostic lead intelligence engine.
-        Pick a region, vertical, and role family — or load a preset — commit the filter contract,
-        and the worker searches page by page, checkpoints every candidate, and exports the audit trail.</div>
-      </div>
-      <div class="manifest">
-        <div class="kicker">Source control</div>
-        <div>
-          <div class="manifest-row"><span>Search engine</span><b>Google browser</b></div>
-          <div class="manifest-row"><span>Query execution</span><b>Paced · paged</b></div>
-          <div class="manifest-row"><span>API keys</span><b>Not used</b></div>
-          <div class="manifest-row"><span>Page cursor</span><b>Checkpointed</b></div>
-          <div class="manifest-row"><span>Direct LinkedIn fetch</span><b>Disabled</b></div>
-        </div>
-      </div>
-    </section>
-    """,
-    unsafe_allow_html=True,
-)
+st.title("Lead Operations")
+st.markdown("A global, geography- and industry-agnostic lead intelligence engine.")
 
 if "lead_job_dir" not in st.session_state:
     st.session_state.lead_job_dir = ""

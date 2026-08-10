@@ -23,8 +23,6 @@ from speedy_scraper.ui import (
     captcha_recovery_panel,
     download_gsheet,
     enable_manual_recovery,
-    light_mode_css,
-    render_theme_toggle,
 )
 
 st.set_page_config(
@@ -32,7 +30,6 @@ st.set_page_config(
     page_icon="◉",
     layout="wide",
 )
-light_mode = render_theme_toggle("url_people_light_mode")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CSS — matches the dark glassmorphism theme of the main app
@@ -136,35 +133,15 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.markdown(light_mode_css(light_mode), unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Hero
 # ─────────────────────────────────────────────────────────────────────────────
+st.title("URL People LinkedIn Finder")
 st.markdown(
-    """
-    <div class="url-hero">
-      <div class="url-hero-icon">🔍</div>
-      <div>
-        <div class="kicker">Conference & Event Intelligence</div>
-        <div class="url-hero-title">URL People <em>LinkedIn Finder</em></div>
-        <div class="url-hero-copy">
-          Paste one or more public conference, speaker, or team pages (one URL per line).
-          The worker extracts every person listed, then finds their LinkedIn profile
-          through public search — no LinkedIn login, no API keys.
-        </div>
-        <div style="margin-top:14px;">
-          <span class="site-pill">🎤 Speaker pages</span>
-          <span class="site-pill">📋 Divi/Elementor events</span>
-          <span class="site-pill">🔗 Pages with LinkedIn links</span>
-          <span class="site-pill">📦 Next.js JSON events</span>
-          <span class="site-pill">🗂 JSON-LD Person markup</span>
-          <span class="site-pill">🃏 HTML card grids</span>
-        </div>
-      </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
+    "Paste one or more public conference, speaker, or team pages (one URL per line). "
+    "The worker extracts every person listed, then finds their LinkedIn profile "
+    "through public search — no LinkedIn login, no API keys."
 )
 
 # ─────────────────────────────────────────────────────────────────────────────

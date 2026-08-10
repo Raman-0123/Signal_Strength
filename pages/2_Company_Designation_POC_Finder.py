@@ -27,8 +27,6 @@ from speedy_scraper.models import DEFAULT_SOURCE_NAMES
 from speedy_scraper.ui import (
     captcha_recovery_panel,
     is_streamlit_cloud,
-    light_mode_css,
-    render_theme_toggle,
     download_gsheet,
 )
 
@@ -47,7 +45,6 @@ _all_locations = list(_location_tax.keys())
 _all_roles = list(_role_tax.keys())
 
 st.set_page_config(page_title="Company + Designation POC Finder", layout="wide")
-light_mode = render_theme_toggle("company_poc_light_mode")
 cloud_runtime = is_streamlit_cloud()
 st.markdown(
     """
@@ -128,19 +125,11 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.markdown(light_mode_css(light_mode), unsafe_allow_html=True)
 
+st.title("Company + Designation POC Finder")
 st.markdown(
-    """
-    <div class="url-hero">
-        <div class="url-hero-icon">🏢</div>
-        <div>
-            <h1 class="url-hero-title">Company + Designation <em>POC Finder</em></h1>
-            <p class="url-hero-copy">Target the exact companies and roles you care about. Speedy Scraper automatically searches public results for personal LinkedIn profiles and verifies both inputs against candidate records.</p>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
+    "Target the exact companies and roles you care about. Speedy Scraper automatically searches public results "
+    "for personal LinkedIn profiles and verifies both inputs against candidate records."
 )
 
 with st.form("company_poc_form"):
