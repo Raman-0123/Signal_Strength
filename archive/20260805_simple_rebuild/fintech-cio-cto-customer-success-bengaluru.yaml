@@ -1,0 +1,9 @@
+workflow: lead
+location_ids: ["6"]
+role_ids: ["6", "7", "23"]
+industry_ids: ["8"]
+target_count: 150
+discovery_provider: ddgs
+validation_provider: ddgs
+business_model: B2B only
+browser_mode: interactive

@@ -1,0 +1,2808 @@
+{
+  "version": 1,
+  "task_index": 200,
+  "source_index": 0,
+  "pocs": [
+    {
+      "name": "Kailash Nadh",
+      "designation": "CTO",
+      "company": "Zerodha",
+      "linkedin_url": "https://www.linkedin.com/in/kailashnadh/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Kailash Nadh - CTO @ Zerodha LinkedIn · Kailash Nadh 1.4L+ followers Web results Kailash Nadh - CTO @ Zerodha LinkedIn · Kailash Nadh 1.4L+ followers LinkedIn · Kailash Nadh 1.4L+ followers CTO @ Zerodha · Hobbyist software developer and FOSS hacker for more than two decades. Started tech@ Zerodha , India's largest stock broker.",
+      "requested_company": "Zerodha",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Sneha P.",
+      "designation": "EA to the CTO",
+      "company": "Zerodha",
+      "linkedin_url": "https://www.linkedin.com/in/sneha0908/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Sneha P. - EA to the CTO @Zerodha | I/O Psychologist LinkedIn · Sneha P. 1.4K+ followers Sneha P. - EA to the CTO @Zerodha | I/O Psychologist LinkedIn · Sneha P. 1.4K+ followers LinkedIn · Sneha P. 1.4K+ followers Bengaluru, Karnataka, India · Executive Assistant to CTO · Zerodha EA to the CTO @ Zerodha | I/O Psychologist · Experience: Zerodha · Education: Christ University, Bangalore · Location: Bengaluru · 500+ connections on ...",
+      "requested_company": "Zerodha",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Finn McCann",
+      "designation": "Chief Technology Officer",
+      "company": "Navi Group",
+      "linkedin_url": "https://www.linkedin.com/in/finnmccann/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Finn McCann - Chief Technology Officer at Navi Group LinkedIn · Finn McCann 830+ followers Finn McCann - Chief Technology Officer at Navi Group LinkedIn · Finn McCann 830+ followers LinkedIn · Finn McCann 830+ followers Ireland · Chief Technology Officer · Navi Group Experience. Navi Group. 9 years 7 months · Navi Group Graphic. Chief Technology Officer . Navi Group. Apr 2020 - Present 6 years 5 months. Dublin, Ireland. Read more",
+      "requested_company": "Navi",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Mark Marinelli",
+      "designation": "CTO",
+      "company": "Navi",
+      "linkedin_url": "https://www.linkedin.com/in/mark-marinelli-70b7a737/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Mark Marinelli - CTO at Navi LinkedIn · Mark Marinelli 950+ followers Mark Marinelli - CTO at Navi LinkedIn · Mark Marinelli 950+ followers LinkedIn · Mark Marinelli 950+ followers St Augustine, Florida, United States · Chief Technology Officer · Navi Experience · Navi Graphic. Chief Technology Officer . Navi · Tamr Inc. 3 years 6 months · Lavastorm. 9 years 4 months · Senior Sales Engineer. Macrovision. Nov 2006 ... Read more",
+      "requested_company": "Navi",
+      "requested_designation": "CTO"
+    }
+  ],
+  "rejections": [
+    {
+      "Name": "Jainulabidin (Imran) Mohammed",
+      "LinkedIn URL": "https://www.linkedin.com/in/jainulabidin-imran-mohammed-467b1b13/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sarath Kummamuru",
+      "LinkedIn URL": "https://www.linkedin.com/in/kcsarath/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Murali Brahmadesam",
+      "LinkedIn URL": "https://www.linkedin.com/in/murali-brahmadesam/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Mehul Desai",
+      "LinkedIn URL": "https://www.linkedin.com/in/desaimehul/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Harshil Mathur",
+      "LinkedIn URL": "https://www.linkedin.com/in/harshilmathur/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Dhaval Jariwala",
+      "LinkedIn URL": "https://www.linkedin.com/in/dhavaljariwalla/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Subhajit Singha",
+      "LinkedIn URL": "https://www.linkedin.com/in/subhajit-singha-a79a09a4/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Raju Shetty",
+      "LinkedIn URL": "https://www.linkedin.com/in/rajushetty/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sharan Velmurugan",
+      "LinkedIn URL": "https://www.linkedin.com/in/sharan-velmurugan-1b79a4215/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Salilpreet Singh Bedi",
+      "LinkedIn URL": "https://www.linkedin.com/in/salilpreet-singh-bedi-29402516/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Murali Brahmadesam",
+      "LinkedIn URL": "https://www.linkedin.com/in/murali-brahmadesam/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Pankaj Goel",
+      "LinkedIn URL": "https://www.linkedin.com/in/pankajkgoel/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rahul Kothari",
+      "LinkedIn URL": "https://www.linkedin.com/in/rahulkothari/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Saurav Roy",
+      "LinkedIn URL": "https://www.linkedin.com/in/sr96/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Harshil Mathur",
+      "LinkedIn URL": "https://www.linkedin.com/in/harshilmathur/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Tejas Agrawal",
+      "LinkedIn URL": "https://www.linkedin.com/in/agrawaltejas01/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ankan Singhvi",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankansinghvi/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Arpit Chug",
+      "LinkedIn URL": "https://www.linkedin.com/in/arpit-chug-5928354/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/subhrajyotimodak/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Sudhir Reddy",
+      "LinkedIn URL": "https://www.linkedin.com/in/discoversudhir/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Soumitrie Mohanty",
+      "LinkedIn URL": "https://www.linkedin.com/in/soumitriemohanty/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sheth Akshit Praful",
+      "LinkedIn URL": "https://www.linkedin.com/in/sheth-akshit-praful-01530ba1/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sonal Jain",
+      "LinkedIn URL": "https://www.linkedin.com/in/sonaljjain/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Manish Chander",
+      "LinkedIn URL": "https://www.linkedin.com/in/manish-chander-08b322ab/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Abhijeet Banerji",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhijeet-banerji-1aa88b53/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ankita S.",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankitars/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anshul Bhatt",
+      "LinkedIn URL": "https://www.linkedin.com/in/anshulbhatt/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rahul Srivastav",
+      "LinkedIn URL": "https://www.linkedin.com/in/rahul-srivastav-5464b5a7/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Neeraj Amin",
+      "LinkedIn URL": "https://www.linkedin.com/in/neeraj-amin-36155a48/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sujata Ahlawat",
+      "LinkedIn URL": "https://www.linkedin.com/in/sujata-ahlawat-936b4071/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Gaurav Bajaj",
+      "LinkedIn URL": "https://www.linkedin.com/in/gaurav-bajaj-3883b015/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sukesh Shetty",
+      "LinkedIn URL": "https://www.linkedin.com/in/sukesh-shetty-68963011/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sumit Lakra",
+      "LinkedIn URL": "https://www.linkedin.com/in/sumitlakra9/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anas Ali Khan",
+      "LinkedIn URL": "https://www.linkedin.com/in/anas-ali-khan-789b17188/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Yashasvi Sharma",
+      "LinkedIn URL": "https://www.linkedin.com/in/yashasvi-66y1/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Abhishek Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhishek-kumar-1205b973/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Abilash Vijayamohan",
+      "LinkedIn URL": "https://www.linkedin.com/in/abilash-vijayamohan-a11a39110/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Varun Sehgal",
+      "LinkedIn URL": "https://www.linkedin.com/in/varun-sehgal-7060681b/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Monika Malkotiya",
+      "LinkedIn URL": "https://www.linkedin.com/in/monika-malkotiya-81085655/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sanchit Malhotra",
+      "LinkedIn URL": "https://www.linkedin.com/in/sanchitmalhotra22/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Dolar Anil Adesara",
+      "LinkedIn URL": "https://www.linkedin.com/in/adesara/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vivek Sridhar",
+      "LinkedIn URL": "https://www.linkedin.com/in/vivek-sridhar-244b1320/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Abhishek Verma",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhishek-verma-55020817a/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Debjit Roy Chowdhury",
+      "LinkedIn URL": "https://www.linkedin.com/in/debjitroychowdhury/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ranjan Poojari",
+      "LinkedIn URL": "https://www.linkedin.com/in/ranjan-poojari/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Debashish Sen",
+      "LinkedIn URL": "https://www.linkedin.com/in/debashishsen/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anuj Midha",
+      "LinkedIn URL": "https://www.linkedin.com/in/anuj-midha/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Dilip Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/dilip-kumar-9637031b3/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Karthik Krishnamoorthy",
+      "LinkedIn URL": "https://www.linkedin.com/in/karthik-krishnamoorthy-0b540b217/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sanika Gavankar",
+      "LinkedIn URL": "https://www.linkedin.com/in/sanikagavankar/",
+      "Requested Company": "Razorpay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ritesh. Pai",
+      "LinkedIn URL": "https://www.linkedin.com/in/riteshrpai/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rahul Chari",
+      "LinkedIn URL": "https://www.linkedin.com/in/rahulchari/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Adarsh Nahata",
+      "LinkedIn URL": "https://www.linkedin.com/in/adarsh-nahata-4a349413/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Sameer Nigam",
+      "LinkedIn URL": "https://www.linkedin.com/in/sanigam/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ankur Bhargava",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankurbhargava87/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Tanushree Pathak",
+      "LinkedIn URL": "https://www.linkedin.com/in/tanushreepathak/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Pragati Murty",
+      "LinkedIn URL": "https://www.linkedin.com/in/pragatimurty/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Deep Agrawal",
+      "LinkedIn URL": "https://www.linkedin.com/in/deepagrawal1/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Shashank Mittal",
+      "LinkedIn URL": "https://www.linkedin.com/in/shashankmittalmdi/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anup Gandhi",
+      "LinkedIn URL": "https://www.linkedin.com/in/gandhianup/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Rahul Chari",
+      "LinkedIn URL": "https://www.linkedin.com/in/rahulchari/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shankar Jayaraman",
+      "LinkedIn URL": "https://www.linkedin.com/in/shankar-jayaraman/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Akhilesh Swarnkar",
+      "LinkedIn URL": "https://www.linkedin.com/in/akhilesh-swarnkar/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sumit Bana",
+      "LinkedIn URL": "https://www.linkedin.com/in/banasumit/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Ritesh. Pai",
+      "LinkedIn URL": "https://www.linkedin.com/in/riteshrpai/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sonika Chandra",
+      "LinkedIn URL": "https://www.linkedin.com/in/sonika-chandra-262abb1/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Radhakrishna R",
+      "LinkedIn URL": "https://www.linkedin.com/in/radhakrishnark/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Srijon Biswas",
+      "LinkedIn URL": "https://www.linkedin.com/in/srijonbiswas/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Ranjitha R",
+      "LinkedIn URL": "https://www.linkedin.com/in/ranjithapr/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Chakravati Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/chakravati-singh-b2591133/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Kanishk Dogar",
+      "LinkedIn URL": "https://www.linkedin.com/in/kanishkdogar/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Mathangi Sri Ramachandran",
+      "LinkedIn URL": "https://www.linkedin.com/in/mathangisri/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Mitali Chakraborty",
+      "LinkedIn URL": "https://www.linkedin.com/in/mitalichakrobortyy/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Siddharth Sinharay",
+      "LinkedIn URL": "https://www.linkedin.com/in/sidsinroy76/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Astitva Karunesh",
+      "LinkedIn URL": "https://www.linkedin.com/in/astitva-karunesh/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ajai Govind Govindan",
+      "LinkedIn URL": "https://www.linkedin.com/in/ajaigovindg/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Satya Surya",
+      "LinkedIn URL": "https://www.linkedin.com/in/satyasurya/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Gaurav Agrawal",
+      "LinkedIn URL": "https://www.linkedin.com/in/gaurav-agrawal-b2326526b/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kundan Jha",
+      "LinkedIn URL": "https://www.linkedin.com/in/kundanjha/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vaitheeswaran S",
+      "LinkedIn URL": "https://www.linkedin.com/in/svaithee12/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ashok Gunasekaran",
+      "LinkedIn URL": "https://www.linkedin.com/in/ashok-gunasekaran1222/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Imran Pasha",
+      "LinkedIn URL": "https://www.linkedin.com/in/imran-pasha-020593135/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Joel Martis",
+      "LinkedIn URL": "https://www.linkedin.com/in/martisjoel/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Deepak Lamba",
+      "LinkedIn URL": "https://www.linkedin.com/in/deepak-lamba/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Saakshi Agarwal",
+      "LinkedIn URL": "https://www.linkedin.com/in/saakshi-agarwal/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Riju Joseph",
+      "LinkedIn URL": "https://www.linkedin.com/in/riju-joseph/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sai Koti Reddy Danda",
+      "LinkedIn URL": "https://www.linkedin.com/in/saikotireddy/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sai Teja Reddy",
+      "LinkedIn URL": "https://www.linkedin.com/in/sai-teja-reddy-c23/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kapil Raina",
+      "LinkedIn URL": "https://www.linkedin.com/in/kapilraina0630/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vinod V",
+      "LinkedIn URL": "https://www.linkedin.com/in/vinod-v-0578a962/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kanchana Murthy",
+      "LinkedIn URL": "https://www.linkedin.com/in/kanchana-murthy-8142a2253/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Fasih Abbas M",
+      "LinkedIn URL": "https://www.linkedin.com/in/fasih-abbas-m-4b96b2105/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Raja Meyyappan",
+      "LinkedIn URL": "https://www.linkedin.com/in/raja-meyyappan/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Arnab Bose",
+      "LinkedIn URL": "https://www.linkedin.com/in/arnab-bose-0ab8a185/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anamika Sinha",
+      "LinkedIn URL": "https://www.linkedin.com/in/anamika-sinha-1a9a8824/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Adithya Ashok",
+      "LinkedIn URL": "https://www.linkedin.com/in/adithyaashok/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anuj Midha",
+      "LinkedIn URL": "https://www.linkedin.com/in/anuj-midha/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Akshay Kolaskar",
+      "LinkedIn URL": "https://www.linkedin.com/in/akshay-kolaskar-b2bb66301/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Poonam Puri",
+      "LinkedIn URL": "https://www.linkedin.com/in/poonam-puri-5a338734a/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jiten Ramrakhiani",
+      "LinkedIn URL": "https://www.linkedin.com/in/jiten-ramrakhiani/",
+      "Requested Company": "PhonePe",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Chandrashekhar Bhosle",
+      "LinkedIn URL": "https://www.linkedin.com/in/chandrashekharbhosle/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ganesh Subramanian",
+      "LinkedIn URL": "https://www.linkedin.com/in/ganeshsubramanian/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Himanshu Kumar Das",
+      "LinkedIn URL": "https://www.linkedin.com/in/himanshukumardas/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Keshav Sharma",
+      "LinkedIn URL": "https://www.linkedin.com/in/keshavsharma01/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Abhishek Bhojnagarwala",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhishekbhoj/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Takkallapalli Nishanth",
+      "LinkedIn URL": "https://www.linkedin.com/in/takkallapalli-nishanth-75967bb3/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Prajal Kulkarni",
+      "LinkedIn URL": "https://www.linkedin.com/in/prajalkulkarni/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Amrish Kumar Jain",
+      "LinkedIn URL": "https://www.linkedin.com/in/amrishjain/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Prem kumar L",
+      "LinkedIn URL": "https://www.linkedin.com/in/premkumark7computing/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vishal Nandakumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/vishal-nandakumar-00516a1aa/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ganesh Subramanian",
+      "LinkedIn URL": "https://www.linkedin.com/in/ganeshsubramanian/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Swamy Seetharaman",
+      "LinkedIn URL": "https://www.linkedin.com/in/sswamy/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vaitheeswaran S",
+      "LinkedIn URL": "https://www.linkedin.com/in/svaithee12/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Chandrashekhar Bhosle",
+      "LinkedIn URL": "https://www.linkedin.com/in/chandrashekharbhosle/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kapil Kapoor",
+      "LinkedIn URL": "https://www.linkedin.com/in/kapilkapoor23/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Harish Sivaramakrishnan",
+      "LinkedIn URL": "https://www.linkedin.com/in/hsivaramakrishnan/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nicholas Cornish",
+      "LinkedIn URL": "https://www.linkedin.com/in/nicholas-cornish-b60937114/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Aniket Mukherjee",
+      "LinkedIn URL": "https://www.linkedin.com/in/aniket-mukherjee-1509/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Kunal Shah",
+      "LinkedIn URL": "https://www.linkedin.com/in/kunalshah1/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Salin Agarwal",
+      "LinkedIn URL": "https://www.linkedin.com/in/salinagarwal/",
+      "Requested Company": "CRED",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Pranav Gupta",
+      "LinkedIn URL": "https://www.linkedin.com/in/pranav-gupta-80a716172/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Mitali Chakraborty",
+      "LinkedIn URL": "https://www.linkedin.com/in/mitalichakrobortyy/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vaitheeswaran S",
+      "LinkedIn URL": "https://www.linkedin.com/in/svaithee12/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Vedant Rathore",
+      "LinkedIn URL": "https://www.linkedin.com/in/vedantrathore/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Sandeep E P",
+      "LinkedIn URL": "https://www.linkedin.com/in/sandeepep/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nikhil Sahni",
+      "LinkedIn URL": "https://www.linkedin.com/in/nikhil-sahni-57b22a/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vijay Subramanian",
+      "LinkedIn URL": "https://www.linkedin.com/in/vijay-subramanian-427a9b8/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Dimuthu Tilakaratne",
+      "LinkedIn URL": "https://www.linkedin.com/in/dimuthutilakaratne/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sagar Chordia",
+      "LinkedIn URL": "https://www.linkedin.com/in/sagar-chordia-97424417/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kiran Bhumana",
+      "LinkedIn URL": "https://www.linkedin.com/in/kkbhumana/",
+      "Requested Company": "CRED",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Lauren Bagley",
+      "LinkedIn URL": "https://www.linkedin.com/in/lauren-bagley-160b12154/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Brennan Wilkie",
+      "LinkedIn URL": "https://www.linkedin.com/in/brennanwilkie/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ryan Dupuie",
+      "LinkedIn URL": "https://www.linkedin.com/in/ryandupuie/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ben Caird",
+      "LinkedIn URL": "https://www.linkedin.com/in/bcaird/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sam Brennand",
+      "LinkedIn URL": "https://www.linkedin.com/in/sambrennand/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sai Kiran Akarapu",
+      "LinkedIn URL": "https://www.linkedin.com/in/sai-kiran-akarapu/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Venkatesh U C",
+      "LinkedIn URL": "https://www.linkedin.com/in/venkatesh-u-c-949ab82b6/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Arjun Nayyar",
+      "LinkedIn URL": "https://www.linkedin.com/in/arjun-nayyar/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Matt Robles",
+      "LinkedIn URL": "https://www.linkedin.com/in/matt-robles-95a28210/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Matthew Marcionetti",
+      "LinkedIn URL": "https://www.linkedin.com/in/matthew-marcionetti-3b0a566a/",
+      "Requested Company": "CRED",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nikita Mahato",
+      "LinkedIn URL": "https://www.linkedin.com/in/nikitamahato/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Akanksha S.",
+      "LinkedIn URL": "https://www.linkedin.com/in/akankshatiss/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Saransh Tiwari",
+      "LinkedIn URL": "https://www.linkedin.com/in/saransh-tiwari-145a79233/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Chethan Kumar S",
+      "LinkedIn URL": "https://www.linkedin.com/in/chethankumarscs/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Lauren Plavchak",
+      "LinkedIn URL": "https://www.linkedin.com/in/lauren-plavchak-443a2911/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Lovepreet Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/lpadx/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sanika Gavankar",
+      "LinkedIn URL": "https://www.linkedin.com/in/sanikagavankar/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ananaya Chopra",
+      "LinkedIn URL": "https://www.linkedin.com/in/ananaya-chopra/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shreya Das",
+      "LinkedIn URL": "https://www.linkedin.com/in/shreya-das-csm/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shantanu Jaiswal",
+      "LinkedIn URL": "https://www.linkedin.com/in/shantanu-jaiswal-07a68668/",
+      "Requested Company": "CRED",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sheetal Lalwani",
+      "LinkedIn URL": "https://www.linkedin.com/in/sheetalchainraj/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Malav Shah",
+      "LinkedIn URL": "https://www.linkedin.com/in/malav42/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Ashish Sinha",
+      "LinkedIn URL": "https://www.linkedin.com/in/ashish-sinha-4964901/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anand Ganesh",
+      "LinkedIn URL": "https://www.linkedin.com/in/anand-ganesh-789515113/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anjana Rao",
+      "LinkedIn URL": "https://www.linkedin.com/in/anjana-rao-b411238/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "DAKSHANA JAYAKUMAR",
+      "LinkedIn URL": "https://www.linkedin.com/in/dakshana-jayakumar-a5733b1b1/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Onkar Gujar",
+      "LinkedIn URL": "https://www.linkedin.com/in/onkar-gujar-a9a596174/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ayusha Ashtankar",
+      "LinkedIn URL": "https://www.linkedin.com/in/ayusha-ashtankar-8a57b3396/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Siddharth Bhati",
+      "LinkedIn URL": "https://www.linkedin.com/in/siddharth-bhati/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vivek Singla",
+      "LinkedIn URL": "https://www.linkedin.com/in/vivek-singla-3635939/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sheetal Lalwani",
+      "LinkedIn URL": "https://www.linkedin.com/in/sheetalchainraj/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vimal Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/kumarvimal/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jugal Makwana",
+      "LinkedIn URL": "https://www.linkedin.com/in/jugal-makwana/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Pramod Mulani",
+      "LinkedIn URL": "https://www.linkedin.com/in/pramod-mulani-798a5742/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Sahebjot Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/sahebjot/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nodita T.",
+      "LinkedIn URL": "https://www.linkedin.com/in/noditatiku/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Ishan Sharma",
+      "LinkedIn URL": "https://www.linkedin.com/in/ishansharma13/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Raghavendra G S",
+      "LinkedIn URL": "https://www.linkedin.com/in/raghavendra-g-s-6092012/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nakul Kothari",
+      "LinkedIn URL": "https://www.linkedin.com/in/nakulkothari/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Malav Shah",
+      "LinkedIn URL": "https://www.linkedin.com/in/malav42/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "JP Bhamu",
+      "LinkedIn URL": "https://www.linkedin.com/in/jpbhamu/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vaishnave Jonnalagadda",
+      "LinkedIn URL": "https://www.linkedin.com/in/vaishnavijonnalagadda/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Raja Pal",
+      "LinkedIn URL": "https://www.linkedin.com/in/raja-pal-063453139/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Magizhan Selvan",
+      "LinkedIn URL": "https://www.linkedin.com/in/magizhan/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Adithya P Maithreya",
+      "LinkedIn URL": "https://www.linkedin.com/in/adithya-p-maithreya-33551ba9/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Manjappa Mahadevappa",
+      "LinkedIn URL": "https://www.linkedin.com/in/manjappa-hm/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Aishwarya .",
+      "LinkedIn URL": "https://www.linkedin.com/in/aishwarya-iim/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Manish Karjol",
+      "LinkedIn URL": "https://www.linkedin.com/in/manishkarjol/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "SHIVAM SINGHAL",
+      "LinkedIn URL": "https://www.linkedin.com/in/shivam-singhal-15842b114/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Omkar Nagure",
+      "LinkedIn URL": "https://www.linkedin.com/in/omkar-nagure-b7b04748/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jennifer Roderick",
+      "LinkedIn URL": "https://www.linkedin.com/in/jenroderick/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "James Couey",
+      "LinkedIn URL": "https://www.linkedin.com/in/james-couey-7840a22b/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Saakshi Agarwal",
+      "LinkedIn URL": "https://www.linkedin.com/in/saakshi-agarwal/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Aafia Feroze",
+      "LinkedIn URL": "https://www.linkedin.com/in/aafia-feroze-7b0071131/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Mehul Mistry",
+      "LinkedIn URL": "https://www.linkedin.com/in/mehul-mistry-a07343b/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Manish Sharma",
+      "LinkedIn URL": "https://www.linkedin.com/in/manishsharma-profile/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rajesh Gunasekar",
+      "LinkedIn URL": "https://www.linkedin.com/in/rajesh-gunasekar-b4037a18/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Andy P",
+      "LinkedIn URL": "https://www.linkedin.com/in/andy-p-a18378a5/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Stephen Keohane",
+      "LinkedIn URL": "https://www.linkedin.com/in/stephen-keohane-58243213b/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nitish Bhandari",
+      "LinkedIn URL": "https://www.linkedin.com/in/nitish-bhandari-9a070a30/",
+      "Requested Company": "Juspay",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Deena Jacob",
+      "LinkedIn URL": "https://www.linkedin.com/in/deena-jacob-348b8b4/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ajeesh Achuthan",
+      "LinkedIn URL": "https://www.linkedin.com/in/ajeeshachuthan/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jayesh Haridasan",
+      "LinkedIn URL": "https://www.linkedin.com/in/jayesh-haridasan/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Seetharaman Venkatraman",
+      "LinkedIn URL": "https://www.linkedin.com/in/seetha-linkingtech2businessneeds/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Praveen Kumar A",
+      "LinkedIn URL": "https://www.linkedin.com/in/praveen-kumar-a-302793100/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Abhishek Sharma",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhishek-sharma-009a57183/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rajat Gurnani (Raj)",
+      "LinkedIn URL": "https://www.linkedin.com/in/rajatgurnanica/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Narendra Babu",
+      "LinkedIn URL": "https://www.linkedin.com/in/narendra-babu-4780444/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kapil Kapoor",
+      "LinkedIn URL": "https://www.linkedin.com/in/kapilkapoor23/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Bhushan Sonkusare",
+      "LinkedIn URL": "https://www.linkedin.com/in/bhushancube/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ajeesh Achuthan",
+      "LinkedIn URL": "https://www.linkedin.com/in/ajeeshachuthan/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Deena Jacob",
+      "LinkedIn URL": "https://www.linkedin.com/in/deena-jacob-348b8b4/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jayesh Haridasan",
+      "LinkedIn URL": "https://www.linkedin.com/in/jayesh-haridasan/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Shijithlal L V",
+      "LinkedIn URL": "https://www.linkedin.com/in/shijithlal/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Sourav R.",
+      "LinkedIn URL": "https://www.linkedin.com/in/souravray/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Arvind Kaushaal",
+      "LinkedIn URL": "https://www.linkedin.com/in/arvindkaushal/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Narendra Babu",
+      "LinkedIn URL": "https://www.linkedin.com/in/narendra-babu-4780444/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kapil Kapoor",
+      "LinkedIn URL": "https://www.linkedin.com/in/kapilkapoor23/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Suman Gandham",
+      "LinkedIn URL": "https://www.linkedin.com/in/gsuman/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sai Krishna",
+      "LinkedIn URL": "https://www.linkedin.com/in/sai-krishna-25513477/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Josna Vimal",
+      "LinkedIn URL": "https://www.linkedin.com/in/josna-vimal/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rishabh Jain",
+      "LinkedIn URL": "https://www.linkedin.com/in/rishabhjainr/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ramesh Lakshman",
+      "LinkedIn URL": "https://www.linkedin.com/in/rlakshman/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sai Geya",
+      "LinkedIn URL": "https://www.linkedin.com/in/sai-geya/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kalyan C Reddy Alla",
+      "LinkedIn URL": "https://www.linkedin.com/in/kalyancreddy/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sriram Umasankar",
+      "LinkedIn URL": "https://www.linkedin.com/in/sriramumasankar/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Maria Martin",
+      "LinkedIn URL": "https://www.linkedin.com/in/mariasmartin/",
+      "Requested Company": "OPEN Financial Technologies",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Prajal Kulkarni",
+      "LinkedIn URL": "https://www.linkedin.com/in/prajalkulkarni/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Arunima Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/arunima-singh-203949bb/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Neeraj Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/neeraj-singh-groww/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shivam Harsh",
+      "LinkedIn URL": "https://www.linkedin.com/in/shivam-harsh-83474014/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ishan Bansal",
+      "LinkedIn URL": "https://www.linkedin.com/in/ishan-bansal-8678b216/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "John Francis",
+      "LinkedIn URL": "https://www.linkedin.com/in/john1jan/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anupam Tiwari",
+      "LinkedIn URL": "https://www.linkedin.com/in/anupam-tiwari-a882b77/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ankit De",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankit-de/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nikhil Pathak",
+      "LinkedIn URL": "https://www.linkedin.com/in/nikhil-pathak-1513787/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Mohammed Mohiuddin Shariff",
+      "LinkedIn URL": "https://www.linkedin.com/in/mohammed-mohiuddin-shariff-809667123/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Neeraj Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/neeraj-singh-groww/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anup Cowkur",
+      "LinkedIn URL": "https://www.linkedin.com/in/anupcowkur/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Prajal Kulkarni",
+      "LinkedIn URL": "https://www.linkedin.com/in/prajalkulkarni/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Ishan Bansal",
+      "LinkedIn URL": "https://www.linkedin.com/in/ishan-bansal-8678b216/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kartik Ukhalkar",
+      "LinkedIn URL": "https://www.linkedin.com/in/kartikssj/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Sourav De",
+      "LinkedIn URL": "https://www.linkedin.com/in/sourav-de-5b900246/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Shivam Harsh",
+      "LinkedIn URL": "https://www.linkedin.com/in/shivam-harsh-83474014/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jatin Dixit",
+      "LinkedIn URL": "https://www.linkedin.com/in/jd-jatindixit/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Lalit Keshre",
+      "LinkedIn URL": "https://www.linkedin.com/in/lalitkeshre/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Pranay Joshi",
+      "LinkedIn URL": "https://www.linkedin.com/in/joshipranay/",
+      "Requested Company": "Groww",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Akshay Tuteja",
+      "LinkedIn URL": "https://www.linkedin.com/in/akshay-tuteja-bb378b85/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Dimpy Duggal",
+      "LinkedIn URL": "https://www.linkedin.com/in/dimpy-duggal-73225a363/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kumar Amitabh",
+      "LinkedIn URL": "https://www.linkedin.com/in/kumar-amitabh-09250b16/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Muthu Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/muthuk/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Tushar Das",
+      "LinkedIn URL": "https://www.linkedin.com/in/tushar-das/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rohit Madan",
+      "LinkedIn URL": "https://www.linkedin.com/in/rohit-madan-a7b0344/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "VARUN SHARMA",
+      "LinkedIn URL": "https://www.linkedin.com/in/varun-sharma-57471666/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "SHUBHAM DABADE",
+      "LinkedIn URL": "https://www.linkedin.com/in/shubham-dabade-66b771222/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Varsha Venkatraman",
+      "LinkedIn URL": "https://www.linkedin.com/in/varsha-venkatraman-751605130/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "tapan aggarwal",
+      "LinkedIn URL": "https://www.linkedin.com/in/tapan-aggarwal-40605119/",
+      "Requested Company": "Groww",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Swati Jaiswal",
+      "LinkedIn URL": "https://www.linkedin.com/in/swati-jaiswal-09688718/",
+      "Requested Company": "Groww",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Krunal Mehta",
+      "LinkedIn URL": "https://www.linkedin.com/in/krunalhm/",
+      "Requested Company": "Groww",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Fakruz Zaman",
+      "LinkedIn URL": "https://www.linkedin.com/in/fakruz-zaman-81041a185/",
+      "Requested Company": "Groww",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Gayatri T Patra",
+      "LinkedIn URL": "https://www.linkedin.com/in/gayatri-t-patra-4b4033128/",
+      "Requested Company": "Groww",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shiladitya Deb",
+      "LinkedIn URL": "https://www.linkedin.com/in/shiladitya-deb-776060371/",
+      "Requested Company": "Groww",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Siddharth Khattak",
+      "LinkedIn URL": "https://www.linkedin.com/in/siddharth-khattak/",
+      "Requested Company": "Groww",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vaishnavi Sudha Tata",
+      "LinkedIn URL": "https://www.linkedin.com/in/sudhatata/",
+      "Requested Company": "Groww",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sunny Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/sunny-kumar-0661a7101/",
+      "Requested Company": "Groww",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Asmit Mejari",
+      "LinkedIn URL": "https://www.linkedin.com/in/asmitmejari/",
+      "Requested Company": "Groww",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Akanksha Agrawal",
+      "LinkedIn URL": "https://www.linkedin.com/in/aakanksha-agrwl/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Saifuddin AP",
+      "LinkedIn URL": "https://www.linkedin.com/in/saifuddin-ap-27760793/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ramya Lakshmanan",
+      "LinkedIn URL": "https://www.linkedin.com/in/ramya-lakshmanan/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Saransh Tiwari",
+      "LinkedIn URL": "https://www.linkedin.com/in/saransh-tiwari-145a79233/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shantanu Jaiswal",
+      "LinkedIn URL": "https://www.linkedin.com/in/shantanu-jaiswal-07a68668/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Adwait Chachad",
+      "LinkedIn URL": "https://www.linkedin.com/in/adwait-chachad-968828208/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Debashish Sen",
+      "LinkedIn URL": "https://www.linkedin.com/in/debashishsen/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Fakruz Zaman",
+      "LinkedIn URL": "https://www.linkedin.com/in/fakruz-zaman-81041a185/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Tuhina Panda",
+      "LinkedIn URL": "https://www.linkedin.com/in/tuhina-panda-132a324/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/amar-sen/",
+      "Requested Company": "Groww",
+      "Requested Designation": "head of customer success",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Kailash Nadh",
+      "LinkedIn URL": "https://www.linkedin.com/in/kailashnadh/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Ratan Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/ratancs/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vishal Jain",
+      "LinkedIn URL": "https://www.linkedin.com/in/vishal-jain-0309298/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nikhil Kamath",
+      "LinkedIn URL": "https://www.linkedin.com/in/nikhilkamathcio/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nithin Kamath",
+      "LinkedIn URL": "https://www.linkedin.com/in/nithin-kamath-81136242/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vinay Kumar C",
+      "LinkedIn URL": "https://www.linkedin.com/in/vinaykumarc/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Karthik Rangappa",
+      "LinkedIn URL": "https://www.linkedin.com/in/karthik-rangappa0001/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shrinath Kichigari",
+      "LinkedIn URL": "https://www.linkedin.com/in/shrinath-kichigari-129682353/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Nithin Sasikumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/nithin-sasikumar-74335330/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sankarson Banerjee",
+      "LinkedIn URL": "https://www.linkedin.com/in/sankarson/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ratan Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/ratancs/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shivam Parashar",
+      "LinkedIn URL": "https://www.linkedin.com/in/parasharshivam/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Dilip Kumar Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/dilip-kumar-singh-b7a05325/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rohan Verma",
+      "LinkedIn URL": "https://www.linkedin.com/in/rhnvrm/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vaibhav Jalan",
+      "LinkedIn URL": "https://www.linkedin.com/in/vjalan08/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vaibhav Bansal",
+      "LinkedIn URL": "https://www.linkedin.com/in/vaibhavbansal7/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vivek R",
+      "LinkedIn URL": "https://www.linkedin.com/in/vividvilla/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "mukesh Chauhan",
+      "LinkedIn URL": "https://www.linkedin.com/in/mukesh-chauhan-8989421a0/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Arpit G.",
+      "LinkedIn URL": "https://www.linkedin.com/in/arpitguptaphd/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Pradipto Biswas",
+      "LinkedIn URL": "https://www.linkedin.com/in/pradbiswas/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "PRIYANK SONKIYA",
+      "LinkedIn URL": "https://www.linkedin.com/in/priyanksonkiya/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Subhrajit Dey",
+      "LinkedIn URL": "https://www.linkedin.com/in/subhrajit-dey-88605a58/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ajit Shukla",
+      "LinkedIn URL": "https://www.linkedin.com/in/ajit-shukla-93b1982a/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Pratyush Sinha",
+      "LinkedIn URL": "https://www.linkedin.com/in/pratyush773/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sachin Jaisar",
+      "LinkedIn URL": "https://www.linkedin.com/in/sachin-jaisar-98628716a/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Drishti Bhatia",
+      "LinkedIn URL": "https://www.linkedin.com/in/drishtibhatia10/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Manik Patil",
+      "LinkedIn URL": "https://www.linkedin.com/in/manik-patil-a8bba456/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shabbir K",
+      "LinkedIn URL": "https://www.linkedin.com/in/shabbir-k-5a301b42/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anas Ali Khan",
+      "LinkedIn URL": "https://www.linkedin.com/in/anas-ali-khan-789b17188/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Akash Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/akashckumar/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Dr Kshama Vyas",
+      "LinkedIn URL": "https://www.linkedin.com/in/dr-kshama-vyas-b5005628/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ashish Suresh Chandra Srivastava",
+      "LinkedIn URL": "https://www.linkedin.com/in/ashish-suresh-devops/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ravi Handa",
+      "LinkedIn URL": "https://www.linkedin.com/in/ravihanda/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Akhand Pratap Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/akhandpratapsingh/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kalpesh Jain",
+      "LinkedIn URL": "https://www.linkedin.com/in/kalpesh-jain-307520112/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Gunaseelan Narayanan",
+      "LinkedIn URL": "https://www.linkedin.com/in/gunaseelan-narayanan-4b2b6716/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Achal Yadav",
+      "LinkedIn URL": "https://www.linkedin.com/in/achal-yadav-5377a9a2/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nair Shweta",
+      "LinkedIn URL": "https://www.linkedin.com/in/nair-shweta-67214823/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Mukesh Rai",
+      "LinkedIn URL": "https://www.linkedin.com/in/mukesh-rai-a1baa112b/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kapil Kirti",
+      "LinkedIn URL": "https://www.linkedin.com/in/kapil-kirti-b56135173/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sanika Gavankar",
+      "LinkedIn URL": "https://www.linkedin.com/in/sanikagavankar/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ananaya Chopra",
+      "LinkedIn URL": "https://www.linkedin.com/in/ananaya-chopra/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Saurabh Arora",
+      "LinkedIn URL": "https://www.linkedin.com/in/saurabhplum/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Tina Elizabeth Titty",
+      "LinkedIn URL": "https://www.linkedin.com/in/tina-elizabeth-titty-10470421/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ritesh Gupta",
+      "LinkedIn URL": "https://www.linkedin.com/in/ritesh-gupta-8b42798/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "SHUBHAM D.",
+      "LinkedIn URL": "https://www.linkedin.com/in/shubhamdhamse/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Debashish Sen",
+      "LinkedIn URL": "https://www.linkedin.com/in/debashishsen/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/kaushal-gholap-4b530b14b/",
+      "Requested Company": "Zerodha",
+      "Requested Designation": "head of customer success",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/vishalsingh2777/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/nitin-parashar-628a7b44/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/jedhesh-thanam-b4857571/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/manisha-dixit-b03200103/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/jitendra-bhavsar-35434b18/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/aks720/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankit-agarwal-a1904930/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/sudhir-sharma-b9820623/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Navi Viswanathan",
+      "LinkedIn URL": "https://www.linkedin.com/in/naviviswanathan/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Navi Grewal",
+      "LinkedIn URL": "https://www.linkedin.com/in/navi-grewal-0732664/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Apoorva Gupta",
+      "LinkedIn URL": "https://www.linkedin.com/in/apoorva-gupta-bba8641b/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Gaurav Lahoti",
+      "LinkedIn URL": "https://www.linkedin.com/in/gauravlahoti/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Amit Jambotkar",
+      "LinkedIn URL": "https://www.linkedin.com/in/amit-jambotkar/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Ankit Agarwal",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankit-agarwal-a1904930/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Mubin Yousuf",
+      "LinkedIn URL": "https://www.linkedin.com/in/mubinyousuf/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Abhishek Dwivedi",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhishekd4u/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Manibabu Pippalla",
+      "LinkedIn URL": "https://www.linkedin.com/in/pippalla/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Prashant Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/prashant-kumar-6b9bb622/",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rajeev Srivastava",
+      "LinkedIn URL": "https://www.linkedin.com/in/rajeev-srivastava-6621b7288/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Abhijit Ghosh",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhijit-ghosh-data/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Siddharth Shah",
+      "LinkedIn URL": "https://www.linkedin.com/in/siddharthin/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Mitali Chakraborty",
+      "LinkedIn URL": "https://www.linkedin.com/in/mitalichakrobortyy/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Atul Chaudhari",
+      "LinkedIn URL": "https://www.linkedin.com/in/atul-chaudhari-717b615/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kartik Runja",
+      "LinkedIn URL": "https://www.linkedin.com/in/kartik-runja-8924584/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Debarag Banerjee",
+      "LinkedIn URL": "https://www.linkedin.com/in/debarag/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Bharat Chaurasiya",
+      "LinkedIn URL": "https://www.linkedin.com/in/bharat-chaurasiya-a0bb978/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sanjoy Sarangi",
+      "LinkedIn URL": "https://www.linkedin.com/in/sanjaysarangi/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nareshkumar Bhati",
+      "LinkedIn URL": "https://www.linkedin.com/in/nareshkumarbhati/",
+      "Requested Company": "Navi",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Divya Khaneja Arora",
+      "LinkedIn URL": "https://www.linkedin.com/in/divya-khaneja-arora-17900310b/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Himanshu Kukadia",
+      "LinkedIn URL": "https://www.linkedin.com/in/himanshu-kukadia-84441131/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Tabrez Sayed",
+      "LinkedIn URL": "https://www.linkedin.com/in/tabrez-sayed/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Bob Schindelar",
+      "LinkedIn URL": "https://www.linkedin.com/in/bob-schindelar-03009a8/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Deepesh Rana",
+      "LinkedIn URL": "https://www.linkedin.com/in/deepesh-rana-18808064/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "suman velagapudi",
+      "LinkedIn URL": "https://www.linkedin.com/in/suman-velagapudi-12310195/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Naveen Pandurangi",
+      "LinkedIn URL": "https://www.linkedin.com/in/naveen-pandurangi/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Hipin Jain",
+      "LinkedIn URL": "https://www.linkedin.com/in/hipinjain/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rupam Mazumder",
+      "LinkedIn URL": "https://www.linkedin.com/in/rupam-mazumder-13241724/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rashmi Chatterjee",
+      "LinkedIn URL": "https://www.linkedin.com/in/rashmichatterjee/",
+      "Requested Company": "Navi",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vyshnav Balachandran",
+      "LinkedIn URL": "https://www.linkedin.com/in/vyshnav-balachandran-15125398/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sankar Varutharaj",
+      "LinkedIn URL": "https://www.linkedin.com/in/sankar-varutharaj-39960b127/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Piyush Mistry",
+      "LinkedIn URL": "https://www.linkedin.com/in/mistrypiyush/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Srivalli R.",
+      "LinkedIn URL": "https://www.linkedin.com/in/srivalli-ragisetti/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Amitabh Mukherjee",
+      "LinkedIn URL": "https://www.linkedin.com/in/mukamitabh/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vivek Pandian",
+      "LinkedIn URL": "https://www.linkedin.com/in/vivek-pandian-8735161a6/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shubham Sharma",
+      "LinkedIn URL": "https://www.linkedin.com/in/shubhamsharma041/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Reena Goyal",
+      "LinkedIn URL": "https://www.linkedin.com/in/reena-s-goyal/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Dinoop Divakaran",
+      "LinkedIn URL": "https://www.linkedin.com/in/dndivaka/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/ben-aizenberg-3b2451300/",
+      "Requested Company": "Navi",
+      "Requested Designation": "head of customer success",
+      "Reason": "invalid_name"
+    },
+    {
+      "Name": "Ayushi Lamba",
+      "LinkedIn URL": "https://www.linkedin.com/in/ayushilamba01/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Komal Khichi",
+      "LinkedIn URL": "https://www.linkedin.com/in/komal-khichi-5ba66015/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "MAYANK DUBEY",
+      "LinkedIn URL": "https://www.linkedin.com/in/mayank-dubey-b1624a195/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Praneet Battina",
+      "LinkedIn URL": "https://www.linkedin.com/in/praneetbattina/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Navadeep Sharma",
+      "LinkedIn URL": "https://www.linkedin.com/in/navadeepsharma/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "SHEENA SURESH",
+      "LinkedIn URL": "https://www.linkedin.com/in/sheena-suresh-b1702723/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vidhey Addepally",
+      "LinkedIn URL": "https://www.linkedin.com/in/vidhey-addepally-19456080/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Eduardo Fajardo",
+      "LinkedIn URL": "https://www.linkedin.com/in/fajardoeduardo/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sebin Vincent",
+      "LinkedIn URL": "https://www.linkedin.com/in/sebin-vincent/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "‏Muqaddim Durrani‏",
+      "LinkedIn URL": "https://www.linkedin.com/in/muqaddim-durrani-a5aa1975/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Pruthvi Sabbu",
+      "LinkedIn URL": "https://www.linkedin.com/in/pruthvisabbu/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Arvind T P",
+      "LinkedIn URL": "https://www.linkedin.com/in/tparvind/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Richard Rufus",
+      "LinkedIn URL": "https://www.linkedin.com/in/richardrufus/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Ankur Bansal",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankurbansal8190/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Mitul Srivastava",
+      "LinkedIn URL": "https://www.linkedin.com/in/mitul-srivastava-956a231b5/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sathya Raj M B",
+      "LinkedIn URL": "https://www.linkedin.com/in/sathya-raj-m-b-94472718a/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Mohammad Shafiuddin",
+      "LinkedIn URL": "https://www.linkedin.com/in/shafi9155/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Darshan Mydoor",
+      "LinkedIn URL": "https://www.linkedin.com/in/darshan-mydoor-2774171ab/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Aniket Ukharde",
+      "LinkedIn URL": "https://www.linkedin.com/in/aniket-ukharde-743401205/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shivani Kadlag",
+      "LinkedIn URL": "https://www.linkedin.com/in/shivani-kadlag-382b5113a/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Chris D'Agostino",
+      "LinkedIn URL": "https://www.linkedin.com/in/chrisdagostino1/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Manish Worlikar",
+      "LinkedIn URL": "https://www.linkedin.com/in/manishworlikar/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nikhil Bimbrahw",
+      "LinkedIn URL": "https://www.linkedin.com/in/nikhilbimbrahw/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Parthasaradhi T.",
+      "LinkedIn URL": "https://www.linkedin.com/in/saradhi/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sonali Subudhi",
+      "LinkedIn URL": "https://www.linkedin.com/in/sonali-subudhi-0770014/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Pankaj Rai (He/Him/His)",
+      "LinkedIn URL": "https://www.linkedin.com/in/pankajrai69/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sonal Jain",
+      "LinkedIn URL": "https://www.linkedin.com/in/sonaljjain/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kumar S",
+      "LinkedIn URL": "https://www.linkedin.com/in/kumar-s-492703a4/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Binod Roy",
+      "LinkedIn URL": "https://www.linkedin.com/in/binod-roy-881b6923/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Arvind T P",
+      "LinkedIn URL": "https://www.linkedin.com/in/tparvind/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "Chief Data Officer",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Imran Pasha",
+      "LinkedIn URL": "https://www.linkedin.com/in/imran-pasha-020593135/",
+      "Requested Company": "Fi Money",
+      "Requested Designation": "VP Customer Success",
+      "Reason": "company_mismatch"
+    }
+  ],
+  "errors": [
+    "ddgs: DDGS failed for query: No results found.",
+    "google_browser: google_browser challenge detected; this source is disabled for the current job"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "source_url": "https://conferences.marketing-interactive.com/digital-marketing-asia/",
+  "enrich_missing": true,
+  "sources": [
+    "google_browser",
+    "google_browser"
+  ],
+  "browser_headless": false,
+  "google_manual_challenge_seconds": 180
+}

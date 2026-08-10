@@ -1,0 +1,56 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/lead_job.py", line 765, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/lead_job.py", line 761, in main
+    run_lead_job(args.job_dir)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/lead_job.py", line 92, in run_lead_job
+    query_index, source_index, page_index = _run_search_phase(
+                                            ~~~~~~~~~~~~~~~~~^
+        path,
+        ^^^^^
+    ...<14 lines>...
+        source_builder=source_builder,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/lead_job.py", line 350, in _run_search_phase
+    batch = search_source_page(
+        source,
+    ...<3 lines>...
+        headless=config.browser_headless,
+    )
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/sources.py", line 485, in search_source_page
+    return method(
+        query,
+    ...<2 lines>...
+        headless=headless,
+    )
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/sources.py", line 281, in search_page
+    html = _wait_for_manual_challenge(page_obj, self.manual_challenge_seconds)
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/sources.py", line 638, in _wait_for_manual_challenge
+    html = page_obj.content()
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/.venv/lib/python3.13/site-packages/playwright/sync_api/_generated.py", line 9771, in content
+    return mapping.from_maybe_impl(self._sync(self._impl_obj.content()))
+                                   ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/.venv/lib/python3.13/site-packages/playwright/_impl/_sync_base.py", line 115, in _sync
+    return task.result()
+           ~~~~~~~~~~~^^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/.venv/lib/python3.13/site-packages/playwright/_impl/_page.py", line 543, in content
+    return await self._main_frame.content()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/.venv/lib/python3.13/site-packages/playwright/_impl/_frame.py", line 500, in content
+    return await self._channel.send("content", None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/.venv/lib/python3.13/site-packages/playwright/_impl/_connection.py", line 76, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/.venv/lib/python3.13/site-packages/playwright/_impl/_connection.py", line 632, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.content: Unable to retrieve content because the page is navigating and changing the content.

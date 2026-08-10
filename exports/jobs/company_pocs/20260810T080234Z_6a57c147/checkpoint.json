@@ -1,0 +1,1573 @@
+{
+  "version": 1,
+  "task_index": 32,
+  "source_index": 0,
+  "pocs": [
+    {
+      "name": "Shannon Gerard",
+      "designation": "Vice President, Marketing",
+      "company": "DBS Bank",
+      "linkedin_url": "https://www.linkedin.com/in/shangerard/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Shannon Gerard - Vice President, Marketing at DBS Bank LinkedIn · Shannon Gerard 470+ followers Web results Shannon Gerard - Vice President, Marketing at DBS Bank LinkedIn · Shannon Gerard 470+ followers LinkedIn · Shannon Gerard 470+ followers Singapore, Singapore · Vice President, Marketing · DBS Bank Shannon Gerard. Vice President, Marketing at DBS Bank . DBS Bank University at Buffalo. Singapore , Singapore . Read more",
+      "requested_company": "DBS Bank",
+      "requested_designation": "VP Marketing"
+    },
+    {
+      "name": "Delia Tay",
+      "designation": "Regional Marketing Head (DBS Private Bank",
+      "company": "DBS Bank",
+      "linkedin_url": "https://www.linkedin.com/in/delia-tay-2987a682/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Delia Tay - Regional Marketing Head (DBS Private Bank Delia Tay - Regional Marketing Head (DBS Private Bank ... LinkedIn · Delia Tay 2.6K+ followers LinkedIn · Delia Tay 2.6K+ followers Singapore, Singapore · Executive Director · DBS Bank Experience: DBS Bank · Education: National University of Singapore · Location: Singapore ... SVP, Head of Marketing and Segments Strategy (IPB SG). Citi. Sep ... Read more",
+      "requested_company": "DBS Bank",
+      "requested_designation": "Head of Marketing"
+    },
+    {
+      "name": "Susan Tham",
+      "designation": "Regional Marketing Director",
+      "company": "OCBC Bank",
+      "linkedin_url": "https://www.linkedin.com/in/susan-tham-77976728/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Susan Tham - Regional Marketing Director at OCBC Bank LinkedIn · Susan Tham 6 followers Web results Susan Tham - Regional Marketing Director at OCBC Bank LinkedIn · Susan Tham 6 followers LinkedIn · Susan Tham 6 followers Singapore · Regional Marketing Director · OCBC Bank Regional Marketing Director at OCBC Bank · Experience: OCBC Bank · Location: Singapore · 1 connection on LinkedIn. View Susan Tham's profile on LinkedIn, ...",
+      "requested_company": "OCBC Bank",
+      "requested_designation": "Director of Marketing"
+    },
+    {
+      "name": "Joyce You",
+      "designation": "Executive Director, Marketing",
+      "company": "OCBC Bank",
+      "linkedin_url": "https://www.linkedin.com/in/joyce-you/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Joyce You - Executive Director, Marketing at OCBC Bank Joyce You - Executive Director, Marketing at OCBC Bank ... LinkedIn · Joyce You 840+ followers LinkedIn · Joyce You 840+ followers Singapore · Executive Director, Marketing at OCBC Bank [Global Markets Equities] · OCBC Joyce You. Executive Director, Marketing at OCBC Bank [Global Markets Equities]. OCBC Nanyang Technological University. Singapore . 842 followers 500+ ... Read more",
+      "requested_company": "OCBC Bank",
+      "requested_designation": "Director of Marketing"
+    },
+    {
+      "name": "Derrick Tan",
+      "designation": "Global Marketing Head",
+      "company": "Bank of Singapore",
+      "linkedin_url": "https://www.linkedin.com/in/derrick-tan-b06b4312b/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Derrick Tan - Global Marketing Head at Bank of Singapore Derrick Tan - Global Marketing Head at Bank of Singapore ... LinkedIn · Derrick Tan 10+ followers LinkedIn · Derrick Tan 10+ followers Singapore · Global Marketing Head · Bank of Singapore, Asia's Global Private Bank Derrick Tan · Global Marketing Head at Bank of Singapore , Asia's Global Private Bank · View mutual connections with Derrick · Experience · View Derrick's full ... Read more",
+      "requested_company": "Bank of Singapore",
+      "requested_designation": "Head of Marketing"
+    }
+  ],
+  "rejections": [
+    {
+      "Name": "Karen Ngui",
+      "LinkedIn URL": "https://www.linkedin.com/in/karenngui/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Shannon Gerard",
+      "LinkedIn URL": "https://www.linkedin.com/in/shangerard/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Krishna Kota",
+      "LinkedIn URL": "https://www.linkedin.com/in/krishnakota01/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Alvin Kirk",
+      "LinkedIn URL": "https://www.linkedin.com/in/alvin-kirk-05183522/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Karen Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/karenlplim/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Gaurav Rajput",
+      "LinkedIn URL": "https://www.linkedin.com/in/gaurav-rajput-63788a22/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jessica Zhao",
+      "LinkedIn URL": "https://www.linkedin.com/in/jessica-zhao-0b013422/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Gaurav Aggarwal",
+      "LinkedIn URL": "https://www.linkedin.com/in/gaurav08/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shoma Narayanan",
+      "LinkedIn URL": "https://www.linkedin.com/in/shomanarayanan/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Venkat Raghavan",
+      "LinkedIn URL": "https://www.linkedin.com/in/venkat121/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Gaurav Rajput",
+      "LinkedIn URL": "https://www.linkedin.com/in/gaurav-rajput-63788a22/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Asher Wen",
+      "LinkedIn URL": "https://www.linkedin.com/in/asherwen/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Sharon Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/sharontansuiwun/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Shannon Gerard",
+      "LinkedIn URL": "https://www.linkedin.com/in/shangerard/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Evan C.",
+      "LinkedIn URL": "https://www.linkedin.com/in/evan-c-1a755114b/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Peshwa Acharya",
+      "LinkedIn URL": "https://www.linkedin.com/in/peshwaacharya/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Shuhui Ang",
+      "LinkedIn URL": "https://www.linkedin.com/in/shuhuiang/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Asher Wen",
+      "LinkedIn URL": "https://www.linkedin.com/in/asherwen/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Fiona Chan",
+      "LinkedIn URL": "https://www.linkedin.com/in/fiona-chan-818bb034/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Selena Sung",
+      "LinkedIn URL": "https://www.linkedin.com/in/selena-sung-97348530/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jeslyn Lee",
+      "LinkedIn URL": "https://www.linkedin.com/in/jeslyn-lee/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Chung-Ching Ong",
+      "LinkedIn URL": "https://www.linkedin.com/in/chung-ching-ong-b4689911/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anbu Elango",
+      "LinkedIn URL": "https://www.linkedin.com/in/anbuelango/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "May Ann Chiam",
+      "LinkedIn URL": "https://www.linkedin.com/in/mayannchiam/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Alberina Sim",
+      "LinkedIn URL": "https://www.linkedin.com/in/a-sim/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Prabhanshu Kumar",
+      "LinkedIn URL": "https://www.linkedin.com/in/prabhanshu-kumar-597abb14/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Wei Boon Wong",
+      "LinkedIn URL": "https://www.linkedin.com/in/wei-boon-wong-4a842559/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Pei Fern Ng",
+      "LinkedIn URL": "https://www.linkedin.com/in/peifern/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Sundaralingam Kesavan Periyathambi",
+      "LinkedIn URL": "https://www.linkedin.com/in/sundaralingam-kesavan-periyathambi-0b075467/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Harpreet Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/harpreetsinghb/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Beng Loon Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/beng-loon-lim-771b54a/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Agnes Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/agnes-lim-7b0a9a85/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Richu Singh",
+      "LinkedIn URL": "https://www.linkedin.com/in/richu-singh-2a27a8a8/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Kelvin Koh",
+      "LinkedIn URL": "https://www.linkedin.com/in/kelvin-koh-3455847/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Rohini Rego",
+      "LinkedIn URL": "https://www.linkedin.com/in/rohinirego/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Rachel Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/rachel-tan-1286117/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Carolina Lam",
+      "LinkedIn URL": "https://www.linkedin.com/in/lamcarolina/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kim Seng Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/kimsengl/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Atanu Basak",
+      "LinkedIn URL": "https://www.linkedin.com/in/atanu-basak-084392b/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Jeff Chang",
+      "LinkedIn URL": "https://www.linkedin.com/in/jeff-chang-ab805766/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Karen Ngui",
+      "LinkedIn URL": "https://www.linkedin.com/in/karenngui/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Katherine P T Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/katherinetanpt/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Chung-Ching Ong",
+      "LinkedIn URL": "https://www.linkedin.com/in/chung-ching-ong-b4689911/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Karen Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/karenlplim/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "June O.",
+      "LinkedIn URL": "https://www.linkedin.com/in/june-o-29419352/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Krishna Kota",
+      "LinkedIn URL": "https://www.linkedin.com/in/krishnakota01/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Lauren Li",
+      "LinkedIn URL": "https://www.linkedin.com/in/lauren-li-24945926/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jermayne Teo",
+      "LinkedIn URL": "https://www.linkedin.com/in/jermayne-teo/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Julie Chiu",
+      "LinkedIn URL": "https://www.linkedin.com/in/julie-chiu-39076b32/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Myrna Poon",
+      "LinkedIn URL": "https://www.linkedin.com/in/myrna-poon-93981b6/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "David Cheong",
+      "LinkedIn URL": "https://www.linkedin.com/in/david-cheong-492862134/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Mavis Ng",
+      "LinkedIn URL": "https://www.linkedin.com/in/mavis-ng-a372651b/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Janice Yong",
+      "LinkedIn URL": "https://www.linkedin.com/in/janice-yongsf/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Bok Hwee Chua",
+      "LinkedIn URL": "https://www.linkedin.com/in/bokhwee-chua/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Daniel Forbes",
+      "LinkedIn URL": "https://www.linkedin.com/in/daniel-forbes-08b88919/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Saurabh Singhal",
+      "LinkedIn URL": "https://www.linkedin.com/in/ssinghal79/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Akash Deep Batra",
+      "LinkedIn URL": "https://www.linkedin.com/in/akashdeepbatra/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rohini Rego",
+      "LinkedIn URL": "https://www.linkedin.com/in/rohinirego/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Yazad Cooper",
+      "LinkedIn URL": "https://www.linkedin.com/in/yazadcooper/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Bidyut Dumra",
+      "LinkedIn URL": "https://www.linkedin.com/in/bdumra/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Geeta Sreeraman",
+      "LinkedIn URL": "https://www.linkedin.com/in/geeta-sreeraman-0575337/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sheran Mendiratta Mehra",
+      "LinkedIn URL": "https://www.linkedin.com/in/sheranmehra/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rachel Chew",
+      "LinkedIn URL": "https://www.linkedin.com/in/rachel-chew-dbs/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Tracey Choo",
+      "LinkedIn URL": "https://www.linkedin.com/in/tracey-choo-1b576353/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Han Cheng T.",
+      "LinkedIn URL": "https://www.linkedin.com/in/hancheng/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "June O.",
+      "LinkedIn URL": "https://www.linkedin.com/in/june-o-29419352/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Myrna Poon",
+      "LinkedIn URL": "https://www.linkedin.com/in/myrna-poon-93981b6/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Hock San See",
+      "LinkedIn URL": "https://www.linkedin.com/in/hock-san-see-b18384187/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kevin Yip 葉富澤",
+      "LinkedIn URL": "https://www.linkedin.com/in/kevinyipkl/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sin Yee Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/sin-yee-lim-523bb813/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Julie Chiu",
+      "LinkedIn URL": "https://www.linkedin.com/in/julie-chiu-39076b32/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Cheryn Chew",
+      "LinkedIn URL": "https://www.linkedin.com/in/cheryn-chew-1007824a/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Valerie Ling",
+      "LinkedIn URL": "https://www.linkedin.com/in/valerie-ling-real-estate-advisor/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Caroline Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/carolinelimm/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Leonard Sim",
+      "LinkedIn URL": "https://www.linkedin.com/in/leonard-kristanto-sim/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ajanta Nayak",
+      "LinkedIn URL": "https://www.linkedin.com/in/ajanta-nayak-419a8715/",
+      "Requested Company": "DBS Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "June Ong",
+      "LinkedIn URL": "https://www.linkedin.com/in/june-ong-03703a3b/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Valerie Madon 钟明心",
+      "LinkedIn URL": "https://www.linkedin.com/in/valeriecheng/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Siyuan Aw (歐思遠)",
+      "LinkedIn URL": "https://www.linkedin.com/in/siyuan-aw-%e6%ad%90%e6%80%9d%e9%81%a0-33a6925/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ethel Wee",
+      "LinkedIn URL": "https://www.linkedin.com/in/ethel-wee/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nick Goh",
+      "LinkedIn URL": "https://www.linkedin.com/in/thedigitalkaypoh/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sara Low",
+      "LinkedIn URL": "https://www.linkedin.com/in/sara-grace-low/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Clarissa Ramli",
+      "LinkedIn URL": "https://www.linkedin.com/in/clarissajunia/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kewin Y.",
+      "LinkedIn URL": "https://www.linkedin.com/in/kewin-y-a1237515b/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Saifullah Bin Mohd Yunus",
+      "LinkedIn URL": "https://www.linkedin.com/in/saifullah-bin-mohd-yunus-bb11a2205/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Tuck Wai Yue",
+      "LinkedIn URL": "https://www.linkedin.com/in/yuetuckwai/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jasmine Ng",
+      "LinkedIn URL": "https://www.linkedin.com/in/jasmine-ngxuejing/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Astari P.",
+      "LinkedIn URL": "https://www.linkedin.com/in/astari-p-96252243/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "June Ong",
+      "LinkedIn URL": "https://www.linkedin.com/in/june-ong-03703a3b/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Michelle Wong",
+      "LinkedIn URL": "https://www.linkedin.com/in/michelle-wong-0b4b9029/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Johnathan Leow",
+      "LinkedIn URL": "https://www.linkedin.com/in/johnathanleow/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Brandon Wong",
+      "LinkedIn URL": "https://www.linkedin.com/in/brandonjiashuowong/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Bhargavi Rathi",
+      "LinkedIn URL": "https://www.linkedin.com/in/bhargavi-rathi/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Astari P.",
+      "LinkedIn URL": "https://www.linkedin.com/in/astari-p-96252243/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Vimalla Tharshini Saravanan",
+      "LinkedIn URL": "https://www.linkedin.com/in/vimalla-tharshini-saravanan-a6b647198/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "YAT HWA GOH",
+      "LinkedIn URL": "https://www.linkedin.com/in/yat-hwa-goh-17056517b/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rex Chng",
+      "LinkedIn URL": "https://www.linkedin.com/in/rex-chng/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Olivia Andika Putri",
+      "LinkedIn URL": "https://www.linkedin.com/in/olivia-andika-putri-7571114a/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Michelle Wong",
+      "LinkedIn URL": "https://www.linkedin.com/in/michelle-wong-0b4b9029/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Valerie Madon 钟明心",
+      "LinkedIn URL": "https://www.linkedin.com/in/valeriecheng/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Eugene Sim",
+      "LinkedIn URL": "https://www.linkedin.com/in/eugenesw/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Tuck Wai Yue",
+      "LinkedIn URL": "https://www.linkedin.com/in/yuetuckwai/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Summer Wei Ling Hoon",
+      "LinkedIn URL": "https://www.linkedin.com/in/summerwl/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jonathan Tjitro",
+      "LinkedIn URL": "https://www.linkedin.com/in/jonathan-tjitro-6559411b2/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Cheryl Yeo",
+      "LinkedIn URL": "https://www.linkedin.com/in/cherylykt/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Karim Abou El Fetouh‏",
+      "LinkedIn URL": "https://www.linkedin.com/in/kfetouh/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Astari P.",
+      "LinkedIn URL": "https://www.linkedin.com/in/astari-p-96252243/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Daniel C.",
+      "LinkedIn URL": "https://www.linkedin.com/in/danielchuach/",
+      "Requested Company": "United Overseas Bank (UOB)",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Karen Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/karenlplim/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Cedric Dias",
+      "LinkedIn URL": "https://www.linkedin.com/in/diascedric/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Yvonne Low",
+      "LinkedIn URL": "https://www.linkedin.com/in/yvonne-low/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Varun Krishna",
+      "LinkedIn URL": "https://www.linkedin.com/in/varunkrishna/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Daphne L.",
+      "LinkedIn URL": "https://www.linkedin.com/in/daphne-l-b77939116/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Kemmy Tay",
+      "LinkedIn URL": "https://www.linkedin.com/in/kdk777/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Radhika Zingade Bhattacharya",
+      "LinkedIn URL": "https://www.linkedin.com/in/radhikaz/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Andryl Wei-tse Foo",
+      "LinkedIn URL": "https://www.linkedin.com/in/andryl-wei-tse-foo-08163939/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Alison Sim",
+      "LinkedIn URL": "https://www.linkedin.com/in/alison-sim-0a323214a/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Christine Ng",
+      "LinkedIn URL": "https://www.linkedin.com/in/christine-ng-92532a32/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Chloe Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/chloeliqi/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Charmaine Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/charmaine-lim-sj/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Yen Peng Ang",
+      "LinkedIn URL": "https://www.linkedin.com/in/yen-peng-ang-40a1a7a9/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jie Wei Ho",
+      "LinkedIn URL": "https://www.linkedin.com/in/jie-wei-ho-21507257/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Joyce You",
+      "LinkedIn URL": "https://www.linkedin.com/in/joyce-you/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Suwen Lai",
+      "LinkedIn URL": "https://www.linkedin.com/in/suwenlai/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Angela Chua",
+      "LinkedIn URL": "https://www.linkedin.com/in/angela-chua-4663b530/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Liana Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/lianatanlf/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Yi Wen Peh",
+      "LinkedIn URL": "https://www.linkedin.com/in/yiwen-peh/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Joanna Ho",
+      "LinkedIn URL": "https://www.linkedin.com/in/joanna-ho-ys/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Karen Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/karenlplim/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Cedric Dias",
+      "LinkedIn URL": "https://www.linkedin.com/in/diascedric/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Daphne L.",
+      "LinkedIn URL": "https://www.linkedin.com/in/daphne-l-b77939116/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Varun Krishna",
+      "LinkedIn URL": "https://www.linkedin.com/in/varunkrishna/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sheila Sim",
+      "LinkedIn URL": "https://www.linkedin.com/in/sheilasim/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Li Li Ong",
+      "LinkedIn URL": "https://www.linkedin.com/in/onglili/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Thu Nguyen",
+      "LinkedIn URL": "https://www.linkedin.com/in/nkthu32/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sharon Guan",
+      "LinkedIn URL": "https://www.linkedin.com/in/sharon-guan-916a5b1/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Marcus Wong",
+      "LinkedIn URL": "https://www.linkedin.com/in/marcus-wong-02b63730/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Yang Phen Tio",
+      "LinkedIn URL": "https://www.linkedin.com/in/yang-phen-tio-17aaa820/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Cedric Dias",
+      "LinkedIn URL": "https://www.linkedin.com/in/diascedric/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Cindy S",
+      "LinkedIn URL": "https://www.linkedin.com/in/cindy-s-1b103833/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Lee Caroline",
+      "LinkedIn URL": "https://www.linkedin.com/in/lee-caroline/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Kesinee Kongthong",
+      "LinkedIn URL": "https://www.linkedin.com/in/kesinee-kongthong-a7962a168/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sharon Guan",
+      "LinkedIn URL": "https://www.linkedin.com/in/sharon-guan-916a5b1/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Yvonne Low",
+      "LinkedIn URL": "https://www.linkedin.com/in/yvonne-low/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Daphne Chin",
+      "LinkedIn URL": "https://www.linkedin.com/in/daphnechj/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Yen Peng Ang",
+      "LinkedIn URL": "https://www.linkedin.com/in/yen-peng-ang-40a1a7a9/",
+      "Requested Company": "OCBC Bank",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Lisa Wang",
+      "LinkedIn URL": "https://www.linkedin.com/in/lisawang517/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sharon Khua",
+      "LinkedIn URL": "https://www.linkedin.com/in/sharon-khua/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "keng han Kwok",
+      "LinkedIn URL": "https://www.linkedin.com/in/keng-han-kwok-731b7b29/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jana D. Thevar",
+      "LinkedIn URL": "https://www.linkedin.com/in/jana-d-thevar-a6622315b/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Geraldine Goh",
+      "LinkedIn URL": "https://www.linkedin.com/in/geraldine-goh-925a5550/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Christine Ng",
+      "LinkedIn URL": "https://www.linkedin.com/in/christine-ng-92532a32/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Clara Lee",
+      "LinkedIn URL": "https://www.linkedin.com/in/clara-lee-3b6486/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Gaurav Aggarwal",
+      "LinkedIn URL": "https://www.linkedin.com/in/gaurav08/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Chin Yee Goh",
+      "LinkedIn URL": "https://www.linkedin.com/in/cygoh1691/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Timothy Lui",
+      "LinkedIn URL": "https://www.linkedin.com/in/timothylui/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Edeline L.",
+      "LinkedIn URL": "https://www.linkedin.com/in/edeline-lee/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jeslyn Lee",
+      "LinkedIn URL": "https://www.linkedin.com/in/jeslyn-lee/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Aaron Ng",
+      "LinkedIn URL": "https://www.linkedin.com/in/aaron-ng-0b78886b/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Bob Ward",
+      "LinkedIn URL": "https://www.linkedin.com/in/bob-ward-510ab374/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Betty Yan",
+      "LinkedIn URL": "https://www.linkedin.com/in/betty-yan-55299044/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anna Ho",
+      "LinkedIn URL": "https://www.linkedin.com/in/annaho/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kym Ong",
+      "LinkedIn URL": "https://www.linkedin.com/in/kym-ong-908a5219b/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Harshad Jain",
+      "LinkedIn URL": "https://www.linkedin.com/in/harshadjain/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Stephanie Yuliana",
+      "LinkedIn URL": "https://www.linkedin.com/in/stephanie-yuliana-27095336/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Trinia Foo",
+      "LinkedIn URL": "https://www.linkedin.com/in/trinia-foo-142620100/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Marianne Lok",
+      "LinkedIn URL": "https://www.linkedin.com/in/mariannelok2468/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kimberline Ng",
+      "LinkedIn URL": "https://www.linkedin.com/in/kimberlinehlng/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Wee Ni Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/wee-ni-tan-71675796/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Arina Shen",
+      "LinkedIn URL": "https://www.linkedin.com/in/arina-shen-280b425/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Lena Lin",
+      "LinkedIn URL": "https://www.linkedin.com/in/lena-lin-4745b314/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sarah Davis-Goff",
+      "LinkedIn URL": "https://www.linkedin.com/in/sarah-davis-goff/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Adrienne Chong",
+      "LinkedIn URL": "https://www.linkedin.com/in/adrienne-chong-46807561/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Elena Chong",
+      "LinkedIn URL": "https://www.linkedin.com/in/elena-chong-787a0a21/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Mandy Chew",
+      "LinkedIn URL": "https://www.linkedin.com/in/mandychew/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kimberline Ng",
+      "LinkedIn URL": "https://www.linkedin.com/in/kimberlinehlng/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Wee Ni Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/wee-ni-tan-71675796/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Hock San See",
+      "LinkedIn URL": "https://www.linkedin.com/in/hock-san-see-b18384187/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Laura Tse",
+      "LinkedIn URL": "https://www.linkedin.com/in/laura-tse-754511a9/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Caroline Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/carolinelimm/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Cheryl W.",
+      "LinkedIn URL": "https://www.linkedin.com/in/cherylwongyimyiu/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "John Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/john-tan-25387b1ba/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anna Ho",
+      "LinkedIn URL": "https://www.linkedin.com/in/annaho/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Cheryn Chew",
+      "LinkedIn URL": "https://www.linkedin.com/in/cheryn-chew-1007824a/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Chieh Lee Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/chieh-lee-tan-b96a5a106/",
+      "Requested Company": "Bank of Singapore",
+      "Requested Designation": "Director of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kai Xin Lee",
+      "LinkedIn URL": "https://www.linkedin.com/in/kaixinlee/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "keng han Kwok",
+      "LinkedIn URL": "https://www.linkedin.com/in/keng-han-kwok-731b7b29/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Patrick Aronson",
+      "LinkedIn URL": "https://www.linkedin.com/in/patrick-aronson/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Regina Rodricks",
+      "LinkedIn URL": "https://www.linkedin.com/in/reginarodricks/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Adrian Koh",
+      "LinkedIn URL": "https://www.linkedin.com/in/adriankoh1981/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jimmy Koh",
+      "LinkedIn URL": "https://www.linkedin.com/in/jimmy-koh/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Spike Choo",
+      "LinkedIn URL": "https://www.linkedin.com/in/spike-choo-8aa461/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Filbert Thamrin",
+      "LinkedIn URL": "https://www.linkedin.com/in/filbert-thamrin/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Charmaine L.",
+      "LinkedIn URL": "https://www.linkedin.com/in/charmaine-lee/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Clifford Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/clifford-tan-7161a61/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Eric Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/erictankl/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "May Ann Chiam",
+      "LinkedIn URL": "https://www.linkedin.com/in/mayannchiam/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jimmy Koh",
+      "LinkedIn URL": "https://www.linkedin.com/in/jimmy-koh/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Regina Rodricks",
+      "LinkedIn URL": "https://www.linkedin.com/in/reginarodricks/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Terry Williams",
+      "LinkedIn URL": "https://www.linkedin.com/in/terry--williams/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Aaron Grassian",
+      "LinkedIn URL": "https://www.linkedin.com/in/aarongrassian/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Yamin Nwe Myat",
+      "LinkedIn URL": "https://www.linkedin.com/in/myatyaminnwe/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Tiffany Koh",
+      "LinkedIn URL": "https://www.linkedin.com/in/tiffany-koh-54497a97/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Katharine Tan",
+      "LinkedIn URL": "https://www.linkedin.com/in/katharine-tan-61999031/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jack Ferreri",
+      "LinkedIn URL": "https://www.linkedin.com/in/jack-g-ferreri/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Kai Xin Lee",
+      "LinkedIn URL": "https://www.linkedin.com/in/kaixinlee/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Lynnice Ng",
+      "LinkedIn URL": "https://www.linkedin.com/in/lynnice/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jimmy Koh",
+      "LinkedIn URL": "https://www.linkedin.com/in/jimmy-koh/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Benny Neo",
+      "LinkedIn URL": "https://www.linkedin.com/in/bennyneo/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Cecilia Wong",
+      "LinkedIn URL": "https://www.linkedin.com/in/cecilia-wong-py0811/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Anastasia Tracy K.",
+      "LinkedIn URL": "https://www.linkedin.com/in/anastasia-tracy-k-32a955111/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Fiona Fei",
+      "LinkedIn URL": "https://www.linkedin.com/in/fiona-fei-378091117/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Gaurav Gursahani",
+      "LinkedIn URL": "https://www.linkedin.com/in/gauravgursahani/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Mona Basso",
+      "LinkedIn URL": "https://www.linkedin.com/in/mona-basso/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jessica Veronica Dewi Chandra",
+      "LinkedIn URL": "https://www.linkedin.com/in/jessica-veronica-dewi-chandra-016337100/",
+      "Requested Company": "Singapore Exchange (SGX)",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    }
+  ],
+  "errors": [
+    "ddgs: DDGS failed for query: No results found.",
+    "google_browser: google_browser challenge detected; this source is disabled for the current job"
+  ]
+}

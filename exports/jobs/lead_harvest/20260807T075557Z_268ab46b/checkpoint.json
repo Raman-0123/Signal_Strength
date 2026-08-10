@@ -1,0 +1,29 @@
+{
+  "version": 3,
+  "phase": "completed",
+  "query_index": 40,
+  "source_index": 0,
+  "page_index": 0,
+  "validation_index": 0,
+  "candidates": [],
+  "leads": [],
+  "rejections": [],
+  "source_errors": [
+    "google_browser: google_browser challenge detected; this source is disabled for the current job"
+  ],
+  "metrics": {
+    "google_browser_errors": 1,
+    "source_searches": 1,
+    "google_browser_results": 0,
+    "candidates_found": 0,
+    "rejected": 0
+  },
+  "company_evidence_cache": {},
+  "disabled_sources": [
+    "google_browser"
+  ],
+  "exhausted_sources": [],
+  "source_failures": {
+    "google_browser": 1
+  }
+}

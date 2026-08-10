@@ -1,0 +1,4 @@
+workflow: event_speakers
+source_url: https://globalfintechfest.com/speakers
+enrich_missing: true
+search_provider: ddgs

@@ -1,0 +1,22 @@
+{
+  "state": "completed",
+  "workflow": "company_pocs",
+  "job_id": "20260810T080234Z_6a57c147",
+  "message": "Completed with 5 matched POCs",
+  "processed": 32,
+  "total": 32,
+  "updated_at": "2026-08-10T08:05:23.278423+00:00",
+  "pid": 13362,
+  "matched": 5,
+  "searches_completed": 64,
+  "searches_total": 64,
+  "current_company": "Fullerton Fund Management",
+  "current_designation": "Director of Marketing",
+  "current_source": "ddgs",
+  "current_query": "site:linkedin.com/in \"Fullerton Fund Management\" (\"Director of Marketing\" OR \"Marketing Director\" OR \"Director Marketing\" OR \"Senior Director Marketing\" OR \"Senior Director of Marketing\") \"Singapore\"",
+  "heartbeat_at": "2026-08-10T08:05:22.032145+00:00",
+  "heartbeat_tick": 0,
+  "activity": "Public search request in progress",
+  "csv_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260810T080234Z_6a57c147/Company_Designation_POCs.csv",
+  "xlsx_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260810T080234Z_6a57c147/Company_Designation_POCs.xlsx"
+}

@@ -1,0 +1,2154 @@
+#app.py
+import streamlit as st
+import pandas as pd
+from datetime import datetime
+import io
+import time
+import urllib.parse
+import re
+import unicodedata
+import requests
+from bs4 import BeautifulSoup
+
+from lead_generator_cli import (
+    LOCATIONS, ROLES, INDUSTRIES, SIGNALS, COMPANY_NAMES,
+    SIGNAL_INTELLIGENCE, get_event_probability_score
+)
+
+st.set_page_config(page_title="AI Lead Intelligence Platform", page_icon="🧠", layout="wide")
+
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="css"] { 
+    font-family: 'Outfit', sans-serif; 
+}
+
+/* Premium Dark Backgrounds */
+.main { background-color: #050505; color: #E4E4E7; }
+section[data-testid="stSidebar"] { 
+    background-color: #09090B; 
+    border-right: 1px solid #27272A; 
+}
+
+/* Headers with Gradient Text */
+h1 {
+    background: linear-gradient(135deg, #4F46E5 0%, #10B981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700 !important;
+    letter-spacing: -1px;
+}
+h2, h3 { color: #FAFAFA !important; font-weight: 600 !important; }
+
+/* Stunning Buttons */
+.stButton>button {
+    background: linear-gradient(135deg, #10B981 0%, #3B82F6 100%);
+    color: white !important; 
+    font-weight: 600; 
+    border-radius: 12px; 
+    border: none;
+    padding: 0.75rem 2rem; 
+    font-size: 1.05rem;
+    box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    letter-spacing: 0.5px;
+}
+.stButton>button:hover { 
+    transform: translateY(-2px) scale(1.01); 
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5); 
+    filter: brightness(1.1);
+}
+
+/* Secondary Button Styling */
+div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="secondary"] {
+    background: #18181B !important;
+    border: 1px solid #3F3F46 !important;
+    color: #E4E4E7 !important;
+    box-shadow: none;
+}
+div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="secondary"]:hover {
+    border: 1px solid #EF4444 !important;
+    color: #EF4444 !important;
+    background: rgba(239, 68, 68, 0.05) !important;
+}
+
+/* Glassmorphism Metric Cards */
+.metric-card {
+    background: rgba(24, 24, 27, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 24px; 
+    text-align: center;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+.metric-card:hover {
+    transform: translateY(-5px);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.metric-value { 
+    background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2.8rem; 
+    font-weight: 700; 
+    margin: 8px 0; 
+}
+.metric-label { 
+    color: #A1A1AA; 
+    font-size: 0.85rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    font-weight: 500;
+}
+
+/* Sleek Streamlit Tabs */
+button[data-baseweb="tab"] {
+    background-color: transparent !important;
+    border-bottom: 2px solid transparent !important;
+    color: #A1A1AA !important;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+button[data-baseweb="tab"][aria-selected="true"] {
+    color: #10B981 !important;
+    border-bottom: 2px solid #10B981 !important;
+}
+button[data-baseweb="tab"]:hover {
+    color: #FAFAFA !important;
+}
+
+/* Inputs & Multiselects */
+.stTextInput > div > div > input, .stTextArea > div > div > textarea {
+    background-color: #18181B;
+    color: white;
+    border-radius: 10px;
+    border: 1px solid #27272A;
+    transition: border 0.3s;
+}
+.stTextInput > div > div > input:focus, .stTextArea > div > div > textarea:focus {
+    border: 1px solid #3B82F6;
+    box-shadow: 0 0 0 1px #3B82F6;
+}
+div[data-baseweb="select"] > div {
+    background-color: #18181B;
+    border-radius: 10px;
+    border: 1px solid #27272A;
+}
+
+/* Status / Expander */
+div[data-testid="stStatusWidget"] { 
+    border-radius: 12px; 
+    background-color: #18181B !important; 
+    border: 1px solid #27272A; 
+}
+div[data-testid="stDataFrame"] {
+    border: 1px solid #27272A;
+    border-radius: 12px;
+    overflow: hidden;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.title("🧠 AI-Powered Signal Harvesting Platform")
+st.markdown("Multi-engine deterministic lead harvesting · Location-verified · Signal-intelligent")
+
+tab1, tab2, tab3, tab4 = st.tabs(["🚀 AI Lead Generator", "🛠️ Universal CSV Reconciler", "🏢 Company Intelligence", "🎯 Competitor Event Intel"])
+
+
+# ========================================
+# HELPER FUNCTIONS
+# ========================================
+def _join(items):
+    return " OR ".join([f'"{i}"' if ' ' in i else i for i in items])
+
+def _q(i):
+    return f'"{i}"' if ' ' in i else i
+
+def normalize_text(value):
+    """Normalize text for deterministic, punctuation-insensitive matching."""
+    text = "" if value is None else str(value)
+    text = unicodedata.normalize("NFKD", text)
+    text = text.replace("&", " and ")
+    text = re.sub(r"[\u2010-\u2015]", "-", text)
+    text = re.sub(r"[^a-zA-Z0-9]+", " ", text.lower())
+    return re.sub(r"\s+", " ", text).strip()
+
+def normalize_linkedin_url(url):
+    """Canonicalize any LinkedIn profile URL to a single dedupe format."""
+    if not url:
+        return ""
+    match = re.search(r'linkedin\.com/in/([^\/\?#]+)', str(url), re.IGNORECASE)
+    if not match:
+        return ""
+    slug = match.group(1).strip().strip("/")
+    if normalize_text(slug) in {"404", "pub", "jobs", "job", "pulse", "feed", "posts", "company"}:
+        return ""
+    return f"https://www.linkedin.com/in/{slug}/"
+
+def split_csv_terms(raw):
+    """Split comma-separated user keywords into a clean list."""
+    if not raw:
+        return []
+    return [term.strip() for term in str(raw).split(",") if term.strip()]
+
+def term_in_text(text, term):
+    """Match a single term against normalized text using phrase or word-boundary matching.
+    Uses word-boundary regex for single-word terms to prevent false positives
+    e.g. 'delhi' must NOT match inside 'delhivery'.
+    """
+    text_norm = normalize_text(text)
+    term_norm = normalize_text(term)
+    if not text_norm or not term_norm:
+        return False
+    if " " in term_norm:
+        return term_norm in text_norm
+    # Word-boundary anchored match — prevents partial token false positives
+    return bool(re.search(r'(?<![a-z0-9])' + re.escape(term_norm) + r'(?![a-z0-9])', text_norm))
+
+def any_term_matches(text, terms):
+    """Return True when any term matches the supplied text."""
+    return any(term_in_text(text, term) for term in terms if term)
+
+def combined_text(*parts):
+    return " ".join(str(part) for part in parts if part)
+
+def lead_signal_text(lead):
+    """Build a searchable signal string from structured lead fields."""
+    signal_phrases = []
+    if str(lead.get("Conference_Speaker", "")).lower() == "yes":
+        signal_phrases.append("speaker keynote keynote speaker panelist conference speaker summit speaker tedx panel discussion")
+    if str(lead.get("Roundtable_Participation", "")).lower() == "yes":
+        signal_phrases.append("roundtable cxo roundtable leadership summit executive roundtable boardroom cxo forum leadership forum c suite roundtable")
+    if str(lead.get("Podcast_Participation", "")).lower() == "yes":
+        signal_phrases.append("podcast interview")
+
+    return combined_text(
+        lead.get("Awards", ""),
+        lead.get("Recent_News", ""),
+        lead.get("Buying_Signals", ""),
+        lead.get("Lead_Source", ""),
+        lead.get("Notes", ""),
+        lead.get("Company_Stage", ""),
+        lead.get("Public_Private", ""),
+        lead.get("Funding_Raised", ""),
+        lead.get("AI_Adoption_Signals", ""),
+        " ".join(signal_phrases),
+    )
+
+def company_name_variants(company_name):
+    """Generate relaxed company aliases for better matching."""
+    base = normalize_text(company_name)
+    if not base:
+        return []
+    variants = {company_name}
+    variants.add(base.replace(" india", ""))
+    tokens = [
+        t for t in base.split()
+        if t not in {
+            "india", "private", "limited", "ltd", "ltds", "pvt", "company", "co",
+            "group", "holdings", "holding", "and", "south", "asia"
+        }
+    ]
+    if tokens:
+        variants.add(" ".join(tokens))
+    return [v for v in variants if v]
+
+def score_web_profile(role_hit, location_hit, industry_hit, signal_score, custom_hit, company_known):
+    """Deterministic score for web-harvested profiles."""
+    score = signal_score
+    if role_hit:
+        score += 12
+    if location_hit:
+        score += 10
+    if industry_hit:
+        score += 5
+    if custom_hit:
+        score += 8
+    if company_known:
+        score += 2
+    return max(50, min(99, int(score)))
+
+def parameter_match_summary(role_hit, location_hit, industry_hit, signal_hit=None, custom_hit=None):
+    """Human-readable filter match summary for each harvested lead."""
+    parts = [
+        f"Role={'Yes' if role_hit else 'Check'}",
+        f"Location={'Yes' if location_hit else 'Check'}",
+        f"Industry={'Yes' if industry_hit else 'Check'}",
+    ]
+    if signal_hit is not None:
+        parts.append(f"Signal={'Yes' if signal_hit else 'Check'}")
+    if custom_hit is not None:
+        parts.append(f"Custom={'Yes' if custom_hit else 'Check'}")
+    return " | ".join(parts)
+
+def parse_profile(title, href, body=""):
+    """Extract clean name, designation, company, URL from DDG result."""
+    clean_url = normalize_linkedin_url(href)
+    if "linkedin.com/in/" not in clean_url:
+        return None, None, None, None
+
+    title_clean = re.split(r'\.\.\.|(?=\s+\|\s+LinkedIn)', str(title), maxsplit=1)[0].strip()
+    title_clean = re.sub(r'\s*\|\s*LinkedIn.*', '', title_clean, flags=re.IGNORECASE).strip()
+    company = ""
+    at_match = re.search(r'\s+(?:at|@)\s+([^\n|]+)', title_clean, re.IGNORECASE)
+    if at_match:
+        company = at_match.group(1).strip().strip(" -–")
+
+    parts = [p.strip() for p in re.split(r'\s*[-–]\s*', title_clean) if p.strip()]
+    name = parts[0] if parts else "Unknown"
+    designation = ""
+    if len(parts) > 1:
+        second_part = parts[1]
+        second_norm = normalize_text(second_part)
+        role_markers = (
+            "chief", "head", "vp", "vice president", "director", "founder",
+            "co founder", "ceo", "cmo", "cto", "cfo", "coo", "president",
+            "managing director", "partner", "lead", "manager", "officer"
+        )
+        if any(marker in second_norm for marker in role_markers):
+            designation = second_part
+        elif not company:
+            company = " - ".join(parts[1:]).strip()
+
+    if not company and len(parts) > 2:
+        company = " - ".join(parts[2:]).strip()
+
+    # Try enriching company from body snippet.
+    if body and not company:
+        exp = re.search(r'Experience:\s*([^·\n]{3,50})', body)
+        if exp:
+            company = exp.group(1).strip()
+
+    # Try looking for "Current: ... at [Company]" in body.
+    if body and not company:
+        curr = re.search(r'Current:\s*[^·]*at\s+([^·\n]+)', body)
+        if curr:
+            company = curr.group(1).strip()
+
+    if not company:
+        company = "Unknown"
+
+    # Clean up name.
+    name = re.sub(r'\s*(linkedin|profile).*', '', name, flags=re.IGNORECASE).strip()
+
+    return name, designation, company, clean_url
+
+def check_location_in_snippet(body, title, href, location_keywords):
+    """Return True if any location keyword appears in the DDG snippet."""
+    if not location_keywords:
+        return True
+    return any_term_matches(combined_text(body, title), location_keywords)
+
+
+# ---------------------------------------------------------------------------
+# ROLE SYNONYM EXPANSION
+# Maps common abbreviations ↔ full titles so both forms are matched in snippets
+# ---------------------------------------------------------------------------
+_ROLE_ABBREV_MAP = {
+    "ceo":   ["ceo", "chief executive officer"],
+    "cmo":   ["cmo", "chief marketing officer"],
+    "cto":   ["cto", "chief technology officer"],
+    "cio":   ["cio", "chief information officer"],
+    "cfo":   ["cfo", "chief financial officer"],
+    "coo":   ["coo", "chief operating officer"],
+    "cro":   ["cro", "chief revenue officer"],
+    "cpo":   ["cpo", "chief product officer"],
+    "chro":  ["chro", "chief human resources officer"],
+    "ciso":  ["ciso", "chief information security officer"],
+    "cdo":   ["cdo", "chief digital officer"],
+    "cso":   ["cso", "chief strategy officer"],
+    "vp":    ["vp", "vice president"],
+    "svp":   ["svp", "senior vice president"],
+    "evp":   ["evp", "executive vice president"],
+    "md":    ["md", "managing director"],
+    "gm":    ["gm", "general manager"],
+    "avp":   ["avp", "assistant vice president"],
+}
+
+def _expand_role_terms(terms: list) -> list:
+    """Expand role keywords to include both abbreviation and full-form variants."""
+    expanded = []
+    seen = set()
+    for t in terms:
+        t_norm = normalize_text(t)
+        for abbrev, variants in _ROLE_ABBREV_MAP.items():
+            norm_variants = [normalize_text(v) for v in variants]
+            if t_norm == abbrev or t_norm in norm_variants:
+                for v in variants:
+                    if v not in seen:
+                        seen.add(v)
+                        expanded.append(v)
+                break
+        else:
+            if t not in seen:
+                seen.add(t)
+                expanded.append(t)
+    return expanded
+
+
+def check_role_in_title(title, body, role_keywords):
+    """Return True if any role keyword (or its synonym) appears in the title or snippet."""
+    if not role_keywords:
+        return True
+    expanded = _expand_role_terms(role_keywords)
+    return any_term_matches(combined_text(title, body), expanded)
+
+def query_budget_for(count: int, all_locs=None, all_roles=None, all_inds=None, all_sigs=None) -> int:
+    """Keep the search fan-out bounded while preserving parameter coverage."""
+    primary_coverage = (
+        len(all_locs or []) +
+        len(all_roles or []) +
+        len(all_inds or []) +
+        min(len(all_sigs or []), 6) +
+        8
+    )
+    return min(72, max(24, int(count) * 3, primary_coverage * 2))
+
+def build_query_plan(all_locs, all_roles, all_inds, all_sigs, custom_kws, max_queries=None):
+    """
+    Build a parameter-wise query plan.
+    Priority order:
+    - compact role/location profile queries
+    - lightweight custom keyword expansions
+    - optional industry and signal expansions
+    - small grouped fallbacks
+    """
+    plan = []
+    seen = set()
+    custom_terms = split_csv_terms(custom_kws)
+    top_roles = all_roles[:8]
+    top_locs = all_locs[:5]
+    top_inds = all_inds[:2]
+    top_sigs = all_sigs[:2]
+    top_customs = custom_terms[:3]
+    grouped_roles = top_roles[:3]
+    grouped_locs = top_locs[:3]
+    role_group_str = f"({_join(grouped_roles)})" if grouped_roles else ""
+    loc_group_str = f"({_join(grouped_locs)})" if grouped_locs else ""
+    def add(q, bucket, roles=None, locs=None, inds=None, sigs=None, customs=None):
+        q = " ".join(q.split()).strip()
+        if q and q not in seen:
+            seen.add(q)
+            plan.append({
+                "query": q,
+                "bucket": bucket,
+                "roles": roles or [],
+                "locations": locs or [],
+                "industries": inds or [],
+                "signals": sigs or [],
+                "custom_terms": customs or [],
+            })
+
+    # Highest-yield profile queries: individual role + individual location.
+    for role in top_roles:
+        for loc in top_locs:
+            add(
+                f"site:linkedin.com/in {_q(role)} {_q(loc)}",
+                "role_location",
+                roles=[role], locs=[loc], customs=custom_terms,
+            )
+
+    # Keep custom terms early in the plan so they are not trimmed away by the
+    # query budget when the user selected many roles/locations.
+    for role in top_roles[:5]:
+        for loc in top_locs[:4]:
+            for custom in top_customs:
+                add(
+                    f"site:linkedin.com/in {_q(role)} {_q(loc)} {_q(custom)}",
+                    "role_location_custom",
+                    roles=[role], locs=[loc], customs=[custom],
+                )
+
+    for role in top_roles[:4]:
+        for custom in top_customs:
+            add(
+                f"site:linkedin.com/in {_q(role)} {_q(custom)}",
+                "role_custom",
+                roles=[role], customs=[custom],
+            )
+
+    for loc in top_locs[:3]:
+        for custom in top_customs:
+            add(
+                f"site:linkedin.com/in {_q(loc)} {_q(custom)}",
+                "location_custom",
+                locs=[loc], customs=[custom],
+            )
+
+    # Add light industry/signal hints to the strongest role/location pairs.
+    for role in top_roles[:6]:
+        for loc in top_locs[:4]:
+            for ind in top_inds:
+                add(
+                    f"site:linkedin.com/in {_q(role)} {_q(loc)} {_q(ind)}",
+                    "role_location_industry",
+                    roles=[role], locs=[loc], inds=[ind], customs=custom_terms,
+                )
+
+    for role in top_roles[:6]:
+        for loc in top_locs[:4]:
+            for sig in top_sigs:
+                add(
+                    f"site:linkedin.com/in {_q(role)} {_q(loc)} {_q(sig)}",
+                    "role_location_signal",
+                    roles=[role], locs=[loc], sigs=[sig], customs=custom_terms,
+                )
+
+    # Broader per-role queries.
+    for role in all_roles:
+        add(
+            f"site:linkedin.com/in {_q(role)} {loc_group_str}",
+            "role",
+            roles=[role], locs=grouped_locs, customs=custom_terms,
+        )
+
+    # Broader per-location queries.
+    for loc in all_locs:
+        add(
+            f"site:linkedin.com/in {role_group_str} {_q(loc)}",
+            "location",
+            roles=grouped_roles, locs=[loc], customs=custom_terms,
+        )
+
+    # Grouped fallbacks. Keep them late because they are noisier than direct pair queries.
+    # Guard: only add if both group strings are non-empty to avoid malformed queries.
+    if role_group_str and loc_group_str:
+        add(
+            f"site:linkedin.com/in {role_group_str} {loc_group_str}",
+            "base",
+            roles=grouped_roles, locs=grouped_locs, customs=custom_terms,
+        )
+    elif role_group_str:
+        add(
+            f"site:linkedin.com/in {role_group_str}",
+            "base_role_only",
+            roles=grouped_roles, customs=custom_terms,
+        )
+    elif loc_group_str:
+        add(
+            f"site:linkedin.com/in {loc_group_str}",
+            "base_loc_only",
+            locs=grouped_locs, customs=custom_terms,
+        )
+
+    for loc in top_locs:
+        for ind in top_inds:
+                add(
+                f"site:linkedin.com/in {role_group_str} {_q(loc)} {_q(ind)}",
+                "location_industry",
+                roles=grouped_roles, locs=[loc], inds=[ind], customs=custom_terms,
+            )
+
+    for role in top_roles:
+        for ind in top_inds:
+                add(
+                f"site:linkedin.com/in {_q(role)} {loc_group_str} {_q(ind)}",
+                "role_industry",
+                roles=[role], locs=grouped_locs, inds=[ind], customs=custom_terms,
+            )
+
+    for loc in top_locs:
+        for sig in top_sigs:
+                add(
+                f"site:linkedin.com/in {role_group_str} {_q(loc)} {_q(sig)}",
+                "location_signal",
+                roles=grouped_roles, locs=[loc], sigs=[sig], customs=custom_terms,
+            )
+
+    for role in top_roles:
+        for sig in top_sigs:
+                add(
+                f"site:linkedin.com/in {_q(role)} {loc_group_str} {_q(sig)}",
+                "role_signal",
+                roles=[role], locs=grouped_locs, sigs=[sig], customs=custom_terms,
+            )
+
+    if max_queries is not None:
+        plan = plan[:max_queries]
+    return plan
+
+def build_query_matrix(all_locs, all_roles, all_inds, all_sigs, custom_kws, max_queries=None):
+    return [item["query"] for item in build_query_plan(all_locs, all_roles, all_inds, all_sigs, custom_kws, max_queries=max_queries)]
+
+# ========================================
+# SCRAPING ENGINES
+# ========================================
+def engine_ddgs(all_locs, all_roles, all_inds, all_sigs, custom_kws, count, existing_urls, status_ui):
+    """DDGS multi-query engine with location + role validation."""
+    leads = []
+    try:
+        from ddgs import DDGS
+        custom_terms = split_csv_terms(custom_kws)
+        max_queries = query_budget_for(count, all_locs, all_roles, all_inds, all_sigs)
+
+        query_plan = build_query_plan(all_locs, all_roles, all_inds, all_sigs, custom_kws, max_queries=max_queries)
+        status_ui.write(
+            f"🟢 **[Engine 1 — DDGS]** {len(query_plan)} parameter-wise queries generated "
+            f"(budget {max_queries})."
+        )
+
+        with DDGS() as ddgs:
+            for idx, qinfo in enumerate(query_plan):
+                if len(leads) >= count:
+                    break
+                q = qinfo["query"]
+                status_ui.write(
+                    f"   ↳ [{qinfo['bucket']}] Query {idx+1}/{len(query_plan)} | Leads: **{len(leads)}/{count}**"
+                )
+                try:
+                    results = list(ddgs.text(q, max_results=12))
+
+                    for r in results:
+                        if len(leads) >= count:
+                            break
+                        href  = r.get('href', '')
+                        title = r.get('title', '')
+                        body  = r.get('body', '')
+
+                        if 'linkedin.com/in/' not in href:
+                            continue
+
+                        parsed_text = combined_text(title, body)
+                        scoped_roles = qinfo["roles"]
+                        scoped_locs = qinfo["locations"]
+                        scoped_inds = qinfo["industries"]
+                        scoped_sigs = qinfo["signals"]
+
+                        role_hit = check_role_in_title(title, body, all_roles)
+                        location_hit = check_location_in_snippet(body, title, href, all_locs)
+                        industry_hit = any_term_matches(parsed_text, all_inds) if all_inds else False
+                        signal_hit = any_term_matches(parsed_text, all_sigs) if all_sigs else None
+                        custom_hit = any_term_matches(parsed_text, custom_terms) if custom_terms else True
+
+                        # Keep scoped checks as diagnostics only. Do not hard-drop near matches.
+                        scoped_role_hit = check_role_in_title(title, body, scoped_roles) if scoped_roles else True
+                        scoped_loc_hit = check_location_in_snippet(body, title, href, scoped_locs) if scoped_locs else True
+                        scoped_ind_hit = any_term_matches(parsed_text, scoped_inds) if scoped_inds else True
+                        scoped_sig_hit = any_term_matches(parsed_text, scoped_sigs) if scoped_sigs else True
+
+                        name, designation, company, clean_url = parse_profile(title, href, body)
+                        if not clean_url or clean_url in existing_urls:
+                            continue
+                            
+                        # Hard-drop if the lead doesn't match any of the selected locations
+                        if all_locs and not location_hit:
+                            continue
+
+                        # ★ Signal Intelligence — event probability scoring
+                        sig_score, sig_name = get_event_probability_score(body, title)
+                        loc_confirmed = location_hit
+                        final_score = score_web_profile(
+                            role_hit=role_hit,
+                            location_hit=loc_confirmed,
+                            industry_hit=industry_hit,
+                            signal_score=sig_score,
+                            custom_hit=custom_hit,
+                            company_known=company != "Unknown",
+                        )
+
+                        existing_urls.add(clean_url)
+                        lead_dict = {
+                            "Full_Name": name or "Unknown",
+                            "Designation": designation,
+                            "Company": company,
+                            "LinkedIn_URL": clean_url,
+                            "Lead_Score": final_score,
+                            "Event_Probability": f"{sig_score}%",
+                            "Signal": sig_name,
+                            "Query_Bucket": qinfo["bucket"],
+                            "Matched_Parameters": parameter_match_summary(
+                                role_hit, loc_confirmed, industry_hit, signal_hit, custom_hit
+                            ),
+                            "Role_Verified": "✅ Confirmed" if role_hit else "⚠️ Check",
+                            "Industry_Verified": "✅ Confirmed" if industry_hit else "⚠️ Check",
+                            "Location_Verified": "✅ Confirmed" if loc_confirmed else "⚠️ Check"
+                        }
+                        leads.append(lead_dict)
+                        if "tab1_leads" in st.session_state:
+                            st.session_state.tab1_leads.append(lead_dict)
+                        if "live_table" in st.session_state:
+                            df = pd.DataFrame(st.session_state.tab1_leads)
+                            st.session_state.live_table.dataframe(df, use_container_width=True)
+                except Exception as e:
+                    time.sleep(1)
+                    continue
+                time.sleep(0.35)
+
+    except Exception as e:
+        status_ui.write(f"⚠️ DDGS error: {e}")
+    return leads
+
+
+def engine_brave(all_locs, all_roles, all_inds, all_sigs, custom_kws, count, existing_urls, status_ui):
+    """Brave Search HTML scraping fallback."""
+    leads = []
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+        }
+        custom_terms = split_csv_terms(custom_kws)
+        max_queries = min(20, query_budget_for(count, all_locs, all_roles, all_inds, all_sigs))
+        query_plan = build_query_plan(all_locs, all_roles, all_inds, all_sigs, custom_kws, max_queries=max_queries)
+
+        for idx, qinfo in enumerate(query_plan):
+            if len(leads) >= count:
+                break
+            query = qinfo["query"]
+            for page in range(2):
+                if len(leads) >= count:
+                    break
+                url = f"https://search.brave.com/search?q={urllib.parse.quote_plus(query)}&offset={page * 10}"
+                resp = requests.get(url, headers=headers, timeout=12)
+                if resp.status_code != 200:
+                    break
+                soup = BeautifulSoup(resp.text, 'html.parser')
+                for a in soup.find_all('a', href=True):
+                    if len(leads) >= count:
+                        break
+                    href = a['href']
+                    if 'linkedin.com/in/' not in href:
+                        continue
+                    snippet = a.get_text(" ", strip=True)
+                    scoped_roles = qinfo["roles"]
+                    scoped_locs = qinfo["locations"]
+                    scoped_inds = qinfo["industries"]
+                    scoped_sigs = qinfo["signals"]
+
+                    role_hit = check_role_in_title(snippet, "", all_roles)
+                    location_hit = check_location_in_snippet(snippet, "", "", all_locs)
+                    industry_hit = any_term_matches(snippet, all_inds) if all_inds else False
+                    signal_hit = any_term_matches(snippet, all_sigs) if all_sigs else None
+                    custom_hit = any_term_matches(snippet, custom_terms) if custom_terms else True
+
+                    # Keep scoped checks as diagnostics only. Do not hard-drop near matches.
+                    scoped_role_hit = check_role_in_title(snippet, "", scoped_roles) if scoped_roles else True
+                    scoped_loc_hit = check_location_in_snippet(snippet, "", "", scoped_locs) if scoped_locs else True
+                    scoped_ind_hit = any_term_matches(snippet, scoped_inds) if scoped_inds else True
+                    scoped_sig_hit = any_term_matches(snippet, scoped_sigs) if scoped_sigs else True
+
+                    name, designation, company, clean_url = parse_profile(snippet, href, snippet)
+                    if not clean_url or clean_url in existing_urls:
+                        continue
+                        
+                    # Hard-drop if the lead doesn't match any of the selected locations
+                    if all_locs and not location_hit:
+                        continue
+                    existing_urls.add(clean_url)
+                    lead_dict = {
+                        "Full_Name": name or "Unknown",
+                        "Designation": designation,
+                        "Company": company,
+                        "LinkedIn_URL": clean_url,
+                        "Lead_Score": score_web_profile(
+                            role_hit=role_hit,
+                            location_hit=location_hit,
+                            industry_hit=industry_hit,
+                            signal_score=get_event_probability_score(snippet, snippet)[0],
+                            custom_hit=custom_hit,
+                            company_known=company != "Unknown",
+                        ),
+                        "Query_Bucket": qinfo["bucket"],
+                        "Matched_Parameters": parameter_match_summary(
+                            role_hit, location_hit, industry_hit, signal_hit, custom_hit
+                        ),
+                        "Role_Verified": "✅ Confirmed" if role_hit else "⚠️ Check",
+                        "Industry_Verified": "✅ Confirmed" if industry_hit else "⚠️ Check",
+                        "Location_Verified": "✅ Confirmed" if location_hit else "⚠️ Check"
+                    }
+                    leads.append(lead_dict)
+                    if "tab1_leads" in st.session_state:
+                        st.session_state.tab1_leads.append(lead_dict)
+                    if "live_table" in st.session_state:
+                        df = pd.DataFrame(st.session_state.tab1_leads)
+                        st.session_state.live_table.dataframe(df, use_container_width=True)
+                time.sleep(1.25)
+    except Exception as e:
+        status_ui.write(f"⚠️ Brave error: {e}")
+    return leads
+
+
+def engine_local_db(all_locs, all_roles, all_inds, all_sigs, custom_kws, count, existing_urls, status_ui):
+    """Local verified database fallback."""
+    leads = []
+    try:
+        from generate_leads import LEADS as DB
+        flat_roles = [r.lower() for r in all_roles]
+        flat_locs  = [l.lower() for l in all_locs]
+        flat_inds  = [i.lower() for i in all_inds]
+        flat_sigs  = [s.lower() for s in all_sigs]
+        custom_terms = split_csv_terms(custom_kws)
+
+        for lead in DB:
+            if len(leads) >= count:
+                break
+            linkedin = normalize_linkedin_url(lead.get("LinkedIn_URL", ""))
+            if not linkedin or linkedin in existing_urls:
+                continue
+            role_text = combined_text(
+                lead.get("Designation", ""),
+                lead.get("Department", ""),
+                lead.get("Decision_Authority", ""),
+                lead.get("Seniority_Level", ""),
+            )
+            loc_text  = combined_text(
+                lead.get("Location", ""),
+                lead.get("City", ""),
+                lead.get("State", ""),
+                lead.get("HQ", ""),
+                lead.get("Country", ""),
+            )
+            ind_text  = combined_text(
+                lead.get("Industry", ""),
+                lead.get("Sub_Industry", ""),
+                lead.get("Company_Type", ""),
+                lead.get("Company_Stage", ""),
+            )
+            signal_text = lead_signal_text(lead)
+            profile_text = combined_text(
+                lead.get("Full_Name", ""),
+                lead.get("Company", ""),
+                lead.get("Tech_Stack", ""),
+                lead.get("Buying_Signals", ""),
+                signal_text,
+            )
+
+            role_ok = any_term_matches(role_text, flat_roles) if flat_roles else True
+            loc_ok  = any_term_matches(loc_text, flat_locs) if flat_locs else True
+            ind_ok  = any_term_matches(ind_text, flat_inds) if flat_inds else True
+            sig_ok  = any_term_matches(signal_text, flat_sigs) if flat_sigs else True
+            custom_ok = any_term_matches(profile_text, custom_terms) if custom_terms else True
+            match_score = sum([role_ok, loc_ok, ind_ok, sig_ok, custom_ok])
+
+            # Hard drop if the location doesn't match at all
+            if flat_locs and not loc_ok:
+                continue
+
+            # Keep close matches, not only exact matches.
+            if match_score >= 2 and (role_ok or loc_ok or ind_ok or sig_ok):
+                existing_urls.add(linkedin)
+                lead_dict = {
+                    "Full_Name": lead.get("Full_Name", "Unknown"),
+                    "Designation": lead.get("Designation", ""),
+                    "Company": lead.get("Company", ""),
+                    "LinkedIn_URL": linkedin,
+                    "Lead_Score": lead.get("Confidence_Score", lead.get("Overall_Priority_Score", 85)),
+                    "Query_Bucket": "local_db",
+                    "Matched_Parameters": parameter_match_summary(role_ok, loc_ok, ind_ok, sig_ok, custom_ok) + f" | MatchScore={match_score}/5",
+                    "Role_Verified": "✅ Confirmed" if role_ok else "⚠️ Check",
+                    "Industry_Verified": "✅ Confirmed" if ind_ok else "⚠️ Check",
+                    "Signal_Verified": "✅ Confirmed" if sig_ok else "⚠️ Check",
+                    "Location_Verified": "✅ Confirmed" if loc_ok else "⚠️ Check"
+                }
+                leads.append(lead_dict)
+                if "tab1_leads" in st.session_state:
+                    st.session_state.tab1_leads.append(lead_dict)
+                if "live_table" in st.session_state:
+                    df = pd.DataFrame(st.session_state.tab1_leads)
+                    st.session_state.live_table.dataframe(df, use_container_width=True)
+    except Exception as e:
+        status_ui.write(f"⚠️ Local DB error: {e}")
+    return leads
+
+
+def deterministic_harvest(all_locs, all_roles, all_inds, all_sigs, custom_kws, count, existing_urls, status_ui):
+    """Master controller — all engines fill toward target count."""
+    total = []
+
+    def remaining():
+        return count - len(total)
+
+    # Engine 1 — DDGS
+    batch = engine_ddgs(all_locs, all_roles, all_inds, all_sigs, custom_kws, remaining(), existing_urls, status_ui)
+    total.extend(batch)
+    status_ui.write(f"✅ **DDGS → {len(batch)} leads | Total: {len(total)}/{count}**")
+
+    # Engine 2 — Brave
+    if remaining() > 0:
+        status_ui.write(f"🟡 **[Engine 2 — Brave]** Need {remaining()} more...")
+        batch = engine_brave(all_locs, all_roles, all_inds, all_sigs, custom_kws, remaining(), existing_urls, status_ui)
+        total.extend(batch)
+        status_ui.write(f"✅ **Brave → {len(batch)} leads | Total: {len(total)}/{count}**")
+
+    # Engine 3 — Local DB
+    if remaining() > 0:
+        status_ui.write(f"🔴 **[Engine 3 — Local DB]** Need {remaining()} more...")
+        batch = engine_local_db(all_locs, all_roles, all_inds, all_sigs, custom_kws, remaining(), existing_urls, status_ui)
+        total.extend(batch)
+        status_ui.write(f"✅ **Local DB → {len(batch)} leads | Total: {len(total)}/{count}**")
+
+    used = f"DDG+Brave+LocalDB"
+    return total[:count], used
+
+
+# ========================================
+# TAB 1: AI LEAD GENERATOR
+# ========================================
+with tab1:
+    loc_options  = [f"{k} - {v[0]}" for k, v in LOCATIONS.items()]
+    role_options = [f"{k} - {v[0]}" for k, v in ROLES.items()]
+    ind_options  = [f"{k} - {v[0]}" for k, v in INDUSTRIES.items()]
+    sig_options  = [f"{k} - {v[0]}" for k, v in SIGNALS.items()]
+
+    with st.sidebar:
+        st.header("⚙️ Query Constructor")
+        st.caption("Select **multiple** parameters to build concurrent queries.")
+
+        sel_locs  = st.multiselect("📍 Geography", loc_options, default=[loc_options[0]])
+        sel_roles = st.multiselect("👤 Persona / Role", role_options, default=[role_options[0]])
+        sel_inds  = st.multiselect("🏭 Industry", ind_options, default=[ind_options[0]])
+        sel_sigs  = st.multiselect("⚡ Event / Intent Signals", sig_options, default=[sig_options[0]])
+
+        st.markdown("---")
+        st.subheader("🔑 Custom Keywords")
+        custom_keywords = st.text_input("Add keywords (comma separated)", placeholder="e.g. B2B, Series A, AI Builder")
+
+        st.markdown("---")
+        lead_count = st.number_input("🎯 Target Net-New Leads", min_value=1, max_value=500, value=15)
+
+        st.markdown("---")
+        st.header("🛡️ Deduplication Engine")
+        st.caption("Upload existing database to enforce **Zero Duplicates**.")
+        uploaded_file = st.file_uploader("Upload Existing CSV/Excel", type=['csv', 'xlsx'])
+
+    # Extract existing URLs for deduplication
+    existing_urls = set()
+    if uploaded_file:
+        try:
+            df_exist = pd.read_csv(uploaded_file) if uploaded_file.name.endswith('.csv') else pd.read_excel(uploaded_file)
+            for col in ['LinkedIn_URL', 'Linkdin Id', 'LinkedIn']:
+                if col in df_exist.columns:
+                    existing_urls.update(
+                        normalize_linkedin_url(url)
+                        for url in df_exist[col].dropna().tolist()
+                        if normalize_linkedin_url(url)
+                    )
+                    break
+            st.sidebar.success(f"✅ Loaded {len(existing_urls)} existing profiles for deduplication!")
+        except Exception as e:
+            st.sidebar.error(f"Error reading file: {e}")
+
+    # Resolve selections to flat keyword lists
+    def resolve_locs(sel):
+        return [l for sk in sel for l in LOCATIONS[sk.split(" - ")[0]]]
+
+    def resolve_roles(sel):
+        return [r for sk in sel for r in ROLES[sk.split(" - ")[0]]]
+
+    def resolve_inds(sel):
+        return [i for sk in sel for i in INDUSTRIES[sk.split(" - ")[0]]]
+
+    def resolve_sigs(sel):
+        return [s for sk in sel for s in SIGNALS[sk.split(" - ")[0]] if s != "None - General Prospecting"]
+
+    # Preview query
+    if sel_locs or sel_roles:
+        all_locs  = resolve_locs(sel_locs)
+        all_roles = resolve_roles(sel_roles)
+        all_inds  = resolve_inds(sel_inds)
+        all_sigs  = resolve_sigs(sel_sigs)
+        preview_limit = min(8, query_budget_for(lead_count, all_locs, all_roles, all_inds, all_sigs))
+        preview_plan = build_query_plan(all_locs, all_roles, all_inds, all_sigs, custom_keywords)
+        preview_bucket_order = [
+            "role_location_custom",
+            "role_location_industry",
+            "role_location_signal",
+            "role_location",
+            "role_custom",
+            "location_custom",
+            "role",
+            "location",
+            "base",
+            "location_industry",
+            "role_industry",
+            "location_signal",
+            "role_signal",
+        ]
+        preview_items = []
+        preview_seen = set()
+        for bucket in preview_bucket_order:
+            for item in preview_plan:
+                if item["bucket"] == bucket and item["query"] not in preview_seen:
+                    preview_items.append(item)
+                    preview_seen.add(item["query"])
+                    break
+            if len(preview_items) >= preview_limit:
+                break
+        if len(preview_items) < preview_limit:
+            for item in preview_plan:
+                if item["query"] in preview_seen:
+                    continue
+                preview_items.append(item)
+                preview_seen.add(item["query"])
+                if len(preview_items) >= preview_limit:
+                    break
+        preview_lines = [f"[{item['bucket']}] {item['query']}" for item in preview_items]
+        st.caption(
+            f"Live query plan preview. Showing {len(preview_lines)} of {len(preview_plan)} generated sub-queries."
+        )
+        st.code("\n".join(preview_lines) if preview_lines else "site:linkedin.com/in", language="sql")
+
+    # Initialize global state
+    if "tab1_leads" not in st.session_state:
+        st.session_state.tab1_leads = []
+    if "engine_label" not in st.session_state:
+        st.session_state.engine_label = ""
+
+    col1, col2 = st.columns(2)
+    with col1:
+        start_harvest = st.button("🚀 Engage Multi-Engine Intelligence & Harvest Leads", use_container_width=True)
+    with col2:
+        stop_harvest = st.button("🛑 Stop Scraping & Keep Found Leads", use_container_width=True, type="secondary")
+
+    if start_harvest:
+        if not sel_roles or not sel_locs:
+            st.error("Please select at least one Role and one Geography.")
+            st.stop()
+
+        all_locs  = resolve_locs(sel_locs)
+        all_roles = resolve_roles(sel_roles)
+        all_inds  = resolve_inds(sel_inds)
+        all_sigs  = resolve_sigs(sel_sigs)
+
+        st.session_state.tab1_leads = [] # clear previous
+        st.markdown("---")
+        
+        st.subheader("📊 Live Profile Preview Engine")
+        st.session_state.live_table = st.empty() # Placeholder for live updating table
+
+        with st.status("🧠 Running Multi-Engine Deterministic Harvesting...", expanded=True) as status:
+            n_queries = len(build_query_matrix(
+                all_locs, all_roles, all_inds, all_sigs, custom_keywords,
+                max_queries=query_budget_for(lead_count, all_locs, all_roles, all_inds, all_sigs)
+            ))
+            st.write(f"📊 **{n_queries} progressive sub-queries** will be executed across all engines.")
+            st.write(f"📍 Locations: `{'`, `'.join(all_locs)}`")
+            st.write(f"👤 Roles: `{'`, `'.join(all_roles)}`")
+            st.write(f"🏭 Industries: `{'`, `'.join(all_inds[:5])}{'...' if len(all_inds)>5 else ''}`")
+            if all_sigs:
+                st.write(f"⚡ Signals: `{'`, `'.join(all_sigs)}`")
+
+            leads, st.session_state.engine_label = deterministic_harvest(
+                all_locs, all_roles, all_inds, all_sigs,
+                custom_keywords, lead_count, existing_urls, status
+            )
+            status.update(
+                label=f"✅ Done! {len(leads)}/{lead_count} profiles harvested.",
+                state="complete", expanded=True
+            )
+
+        if not st.session_state.tab1_leads:
+            st.error("⚠️ All engines returned 0 leads. Try broader parameters.")
+
+    # Always render results if we have them (even if stopped midway)
+    if st.session_state.tab1_leads:
+        # Sort by score
+        st.session_state.tab1_leads.sort(key=lambda x: x["Lead_Score"], reverse=True)
+        for i, l in enumerate(st.session_state.tab1_leads):
+            l["Rank"] = i + 1
+
+        df_leads = pd.DataFrame(st.session_state.tab1_leads)
+
+        # Metrics
+        st.markdown("---")
+        c1, c2, c3 = st.columns(3)
+        c1.markdown(f'<div class="metric-card"><div class="metric-label">Net-New Real Profiles</div><div class="metric-value">{len(st.session_state.tab1_leads)}</div></div>', unsafe_allow_html=True)
+        c2.markdown(f'<div class="metric-card"><div class="metric-label">Engine(s) Used</div><div class="metric-value" style="font-size:1.2rem">{st.session_state.engine_label or "Multiple"}</div></div>', unsafe_allow_html=True)
+        avg = int(df_leads["Lead_Score"].mean()) if len(df_leads) > 0 else 0
+        c3.markdown(f'<div class="metric-card"><div class="metric-label">Avg Priority Score</div><div class="metric-value">{avg}/99</div></div>', unsafe_allow_html=True)
+
+        # Location verification stats
+        if "Location_Verified" in df_leads.columns:
+            confirmed = df_leads["Location_Verified"].str.contains("Confirmed").sum()
+            st.info(f"📍 **{confirmed}/{len(st.session_state.tab1_leads)}** profiles have location confirmed in snippet · Remaining {len(st.session_state.tab1_leads)-confirmed} are matched by query relevance — verify manually.")
+
+        st.subheader("📊 Final Profile Previews")
+        display_cols = [
+            "Rank", "Full_Name", "Designation", "Company", "LinkedIn_URL",
+            "Lead_Score", "Event_Probability", "Signal", "Query_Bucket",
+            "Matched_Parameters",
+            "Role_Verified", "Industry_Verified", "Location_Verified"
+        ]
+        display_cols = [c for c in display_cols if c in df_leads.columns]
+        st.dataframe(df_leads[display_cols], use_container_width=True)
+
+        # Final export format
+        df_export = pd.DataFrame({
+            "Name": df_leads["Full_Name"],
+            "COMPANY": df_leads["Company"],
+            "DESIGNATION": df_leads["Designation"],
+            "PHONE NUMBER": "",
+            "Linkdin Id": df_leads["LinkedIn_URL"],
+            "Lead Score": df_leads["Lead_Score"],
+            "Event Probability": df_leads.get("Event_Probability", ""),
+            "Signal Detected": df_leads.get("Signal", ""),
+            "Query Bucket": df_leads.get("Query_Bucket", ""),
+            "Matched Parameters": df_leads.get("Matched_Parameters", ""),
+            "Location Verified": df_leads.get("Location_Verified", "")
+        })
+
+        st.markdown("---")
+        st.subheader("💾 Export in Final Format")
+        st.dataframe(df_export, use_container_width=True)
+
+        ts = datetime.now().strftime("%Y%m%d_%H%M")
+        fname = f"Leads_{ts}"
+
+        ec1, ec2 = st.columns(2)
+        ec1.download_button("📥 Download CSV", df_export.to_csv(index=False).encode(), f"{fname}.csv", "text/csv", type="primary", use_container_width=True)
+        buf = io.BytesIO()
+
+        with pd.ExcelWriter(buf, engine='openpyxl') as w:
+            df_export.to_excel(w, index=False, sheet_name='Leads')
+        ec2.download_button("📥 Download Excel", buf.getvalue(), f"{fname}.xlsx",
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            type="primary", use_container_width=True)
+
+
+# ========================================
+# TAB 2: UNIVERSAL CSV RECONCILER
+# ========================================
+with tab2:
+    st.header("🛠️ Universal CSV Schema Reconciler")
+    st.markdown("Upload any raw CSV with messy columns → map to your required schema → export cleanly.")
+
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.subheader("1. Define Target Schema")
+        target_schema_input = st.text_input(
+            "Target column names (comma-separated):",
+            value="Name, COMPANY, DESIGNATION, PHONE NUMBER, Linkdin Id"
+        )
+        target_columns = [c.strip() for c in target_schema_input.split(",") if c.strip()]
+
+    with col_b:
+        st.subheader("2. Upload Raw Data")
+        raw_file = st.file_uploader("Upload raw CSV or Excel", type=['csv', 'xlsx'], key="reconciler_uploader")
+
+    if raw_file and target_columns:
+        st.markdown("---")
+        st.subheader("3. Map Columns")
+        try:
+            df_raw = pd.read_csv(raw_file) if raw_file.name.endswith('.csv') else pd.read_excel(raw_file)
+            raw_columns = df_raw.columns.tolist()
+            st.success(f"✅ Loaded: {len(raw_columns)} columns × {len(df_raw)} rows")
+
+            mapping = {}
+            map_cols = st.columns(min(3, len(target_columns)))
+            for i, tc in enumerate(target_columns):
+                # Smart default match
+                default_idx = 0
+                for j, rc in enumerate(raw_columns):
+                    if tc.lower().replace(" ", "").replace("_", "") in rc.lower().replace(" ", "").replace("_", ""):
+                        default_idx = j + 1
+                        break
+                with map_cols[i % len(map_cols)]:
+                    mapping[tc] = st.selectbox(f"**{tc}**", options=[""] + raw_columns, index=default_idx, key=f"map_{i}")
+
+            st.markdown("---")
+            if st.button("🔄 Format & Reconcile Data", use_container_width=True):
+                with st.spinner("Reconciling..."):
+                    reconciled = {}
+                    for tc, rc in mapping.items():
+                        reconciled[tc] = df_raw[rc] if rc else [""] * len(df_raw)
+                    df_rec = pd.DataFrame(reconciled)
+                    st.success("✅ Reconciled successfully!")
+                    st.dataframe(df_rec, use_container_width=True)
+
+                    ts = datetime.now().strftime("%Y%m%d_%H%M")
+                    rc1, rc2 = st.columns(2)
+                    rc1.download_button("📥 CSV", df_rec.to_csv(index=False).encode(), f"Reconciled_{ts}.csv", "text/csv", type="primary", use_container_width=True)
+                    buf = io.BytesIO()
+                    with pd.ExcelWriter(buf, engine='openpyxl') as w:
+                        df_rec.to_excel(w, index=False, sheet_name='Reconciled')
+                    rc2.download_button("📥 Excel", buf.getvalue(), f"Reconciled_{ts}.xlsx",
+                                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                        type="primary", use_container_width=True)
+        except Exception as e:
+            st.error(f"Error: {str(e)}")
+
+
+# ========================================
+# TAB 3: COMPANY INTELLIGENCE
+# ========================================
+def fetch_company_profile(company_name: str) -> dict:
+    """Scrape company overview, size, revenue from web search."""
+    profile = {
+        "name": company_name,
+        "description": "",
+        "employees": "",
+        "revenue": "",
+        "profit": "",
+        "industry": "",
+        "founded": "",
+        "hq": "",
+        "linkedin_page": "",
+        "website": "",
+        "kpis": "",
+        "top_leaders": "",
+    }
+    try:
+        from ddgs import DDGS
+        # Pull company card from DDG
+        query = f'"{company_name}" company India revenue employees founded about'
+        query_intel = f'"{company_name}" net profit top leaders key performance indicators KPI'
+        with DDGS() as ddgs:
+            results = list(ddgs.text(query, max_results=6))
+            results_intel = list(ddgs.text(query_intel, max_results=5))
+
+        for r in results:
+            body = r.get('body', '')
+            href = r.get('href', '')
+            if not profile["description"] and len(body) > 60:
+                profile["description"] = body[:500]
+            # Extract revenue hints
+            rev_match = re.search(r'(?:revenue|turnover|sales)[^\$₹\d]*[₹$]?\s*([\d,]+(?:\.\d+)?\s*(?:crore|million|billion|lakh|Cr|Mn|Bn)?)', body, re.IGNORECASE)
+            if rev_match and not profile["revenue"]:
+                profile["revenue"] = rev_match.group(1).strip()
+            # Extract employee count
+            emp_match = re.search(r'(\d[\d,]+)\s*(?:\+)?\s*(?:employees|workforce|staff|headcount|people)', body, re.IGNORECASE)
+            if emp_match and not profile["employees"]:
+                profile["employees"] = emp_match.group(1).replace(',', '')
+            # Founded year
+            found_match = re.search(r'(?:founded|established|incorporated)\s*(?:in)?\s*((?:19|20)\d{2})', body, re.IGNORECASE)
+            if found_match and not profile["founded"]:
+                profile["founded"] = found_match.group(1)
+            # HQ
+            hq_match = re.search(r'(?:headquartered|HQ|headquarters)\s+(?:in\s+)?([A-Za-z\s,]+?)(?:[\.;,]|$)', body, re.IGNORECASE)
+            if hq_match and not profile["hq"]:
+                profile["hq"] = hq_match.group(1).strip()[:50]
+            # LinkedIn company page
+            if 'linkedin.com/company/' in href and not profile["linkedin_page"]:
+                profile["linkedin_page"] = href
+            # Website
+            if not profile["website"] and href and 'linkedin' not in href and 'ddg' not in href:
+                profile["website"] = href
+
+        for r in results_intel:
+            body = r.get('body', '')
+            # Extract profit
+            prof_match = re.search(r'(?:net profit|profit|net income)[^\$₹\d]*[₹$]?\s*([\d,]+(?:\.\d+)?\s*(?:crore|million|billion|lakh|Cr|Mn|Bn)?)', body, re.IGNORECASE)
+            if prof_match and not profile["profit"]:
+                profile["profit"] = prof_match.group(1).strip()
+            # Top leaders (just naive sentence grab)
+            if any(k in body.lower() for k in ['ceo', 'founder', 'md', 'managing director', 'leader']) and not profile["top_leaders"]:
+                profile["top_leaders"] = body[:250] + "..."
+            # KPIs
+            if any(k in body.lower() for k in ['growth', 'margin', 'ebitda', 'kpi', 'performance']) and not profile["kpis"]:
+                profile["kpis"] = body[:250] + "..."
+
+    except Exception as e:
+        profile["description"] = f"Could not fetch company data: {e}"
+    return profile
+
+
+def scrape_company_employees(company_name: str, location: str, role_filter: list, count: int, existing_urls: set, status_ui) -> list:
+    """Find employees at a specific company via DDG."""
+    leads = []
+    try:
+        from ddgs import DDGS
+        flat_roles = [r.lower() for r in role_filter]
+        company_terms = company_name_variants(company_name)
+
+        # Build targeted queries
+        queries = []
+        if location:
+            base = f'site:linkedin.com/in "{company_name}" "{location}"'
+        else:
+            base = f'site:linkedin.com/in "{company_name}"'
+        queries.append(base)
+
+        if role_filter:
+            role_str = " OR ".join([f'"{r}"' if ' ' in r else r for r in role_filter])
+            if location:
+                queries.append(f'site:linkedin.com/in "{company_name}" "{location}" ({role_str})')
+            else:
+                queries.append(f'site:linkedin.com/in "{company_name}" ({role_str})')
+            # Per-role queries for freshness
+            for role in role_filter[:6]:
+                q_r = f'"{role}"' if ' ' in role else role
+                if location:
+                    queries.append(f'site:linkedin.com/in "{company_name}" "{location}" {q_r}')
+                else:
+                    queries.append(f'site:linkedin.com/in "{company_name}" {q_r}')
+        else:
+            # Senior leadership by default
+            if location:
+                queries.append(f'site:linkedin.com/in "{company_name}" "{location}" (CEO OR CMO OR CTO OR CFO OR COO OR VP OR Director OR Head)')
+            else:
+                queries.append(f'site:linkedin.com/in "{company_name}" (CEO OR CMO OR CTO OR CFO OR COO OR VP OR Director OR Head)')
+
+        status_ui.write(f"🏢 Searching **{len(queries)}** queries for `{company_name}` employees...")
+
+        with DDGS() as ddgs:
+            for idx, q in enumerate(queries):
+                if len(leads) >= count:
+                    break
+                status_ui.write(f"   ↳ Query {idx+1}/{len(queries)} | Found: {len(leads)}/{count}")
+                try:
+                    results = list(ddgs.text(q, max_results=50))
+                    for r in results:
+                        if len(leads) >= count:
+                            break
+                        href = r.get('href', '')
+                        title = r.get('title', '')
+                        body = r.get('body', '')
+                        if 'linkedin.com/in/' not in href:
+                            continue
+                        # Verify this person is associated with company
+                        company_hit = not company_terms or any_term_matches(combined_text(title, body), company_terms)
+                        # Track location when present, but do not hard-drop if it is missing.
+                        loc_hit = True
+                        if location:
+                            loc_parts = [l.strip().lower() for l in location.split(',') if l.strip()]
+                            if loc_parts:
+                                text_to_search = combined_text(title, body)
+                                loc_hit = any_term_matches(text_to_search, loc_parts)
+                        loc_match = "Yes" if loc_hit else "Check"
+                        # Role filter if specified
+                        role_hit = not flat_roles or any_term_matches(combined_text(title, body), flat_roles)
+
+                        match_score = sum([company_hit, loc_hit, role_hit])
+                        if match_score == 0:
+                            continue
+
+                        name, designation, company, clean_url = parse_profile(title, href, body)
+                        if not clean_url or clean_url in existing_urls:
+                            continue
+
+                        sig_score, sig_name = get_event_probability_score(body, title)
+                        existing_urls.add(clean_url)
+                        leads.append({
+                            "Full_Name": name or "Unknown",
+                            "Designation": designation,
+                            "Company": company or company_name,
+                            "Location_Match": loc_match,
+                            "LinkedIn_URL": clean_url,
+                            "Event_Probability": f"{sig_score}%",
+                            "Signal": sig_name,
+                            "Lead_Score": sig_score,
+                            "Query_Bucket": "company_employee",
+                            "Matched_Parameters": f"Company={'Yes' if company_hit else 'Check'} | Role={'Yes' if role_hit else 'Check'} | Location={'Yes' if loc_hit else 'Check'} | MatchScore={match_score}/3",
+                        })
+                except Exception:
+                    time.sleep(1)
+                    continue
+                time.sleep(1.5)
+    except Exception as e:
+        status_ui.write(f"⚠️ Error: {e}")
+    return leads
+
+
+with tab3:
+    st.header("🏢 Company Intelligence Hub")
+    st.markdown("Search any company → get full profile + scrape all key employees by role.")
+
+    # ── Inputs ──────────────────────────────────────────────
+    ci1, ci2, ci3 = st.columns([2, 1, 1])
+    with ci1:
+        company_query = st.text_input(
+            "🔍 Company Name",
+            placeholder="e.g. Microsoft India, Infosys, Razorpay",
+            key="company_input"
+        )
+    with ci2:
+        location_query = st.text_input(
+            "📍 Location (Optional)",
+            placeholder="e.g. Mumbai, New York",
+            key="company_loc"
+        )
+    with ci3:
+        emp_count = st.number_input("👥 Employees to Find", min_value=1, max_value=300, value=20, key="emp_count")
+
+    # Role filter within company
+    all_role_opts = [f"{k} - {v[0]}" for k, v in ROLES.items()]
+    selected_emp_roles = st.multiselect(
+        "🎯 Filter by Role/Seniority (leave blank = all senior leaders)",
+        all_role_opts,
+        key="emp_roles"
+    )
+
+    emp_role_keywords = [r for sk in selected_emp_roles for r in ROLES[sk.split(" - ")[0]]] if selected_emp_roles else []
+
+    existing_emp_urls: set = set()
+
+    if st.button("🚀 Fetch Company Profile & Employees", use_container_width=True, key="company_btn"):
+        if not company_query.strip():
+            st.error("Please enter a company name.")
+            st.stop()
+
+        with st.status(f"🔍 Fetching intelligence for **{company_query}**...", expanded=True) as ci_status:
+
+            # ── Company Profile Card ──
+            ci_status.write("📊 Fetching company profile from web...")
+            profile = fetch_company_profile(company_query.strip())
+            ci_status.write("✅ Company profile fetched!")
+
+        # Render company profile card
+        st.markdown("---")
+        st.subheader(f"🏢 {profile['name']} — Company Profile")
+
+        pc1, pc2, pc3, pc4, pc5 = st.columns(5)
+        pc1.metric("👥 Employees", profile['employees'] or "—")
+        pc2.metric("💰 Revenue", profile['revenue'] or "—")
+        pc3.metric("📈 Profit", profile['profit'] or "—")
+        pc4.metric("📅 Founded", profile['founded'] or "—")
+        pc5.metric("📍 HQ", profile['hq'] or "—")
+
+        if profile['description']:
+            st.info(f"**About:** {profile['description'][:600]}{'...' if len(profile['description']) > 600 else ''}")
+
+        intel1, intel2 = st.columns(2)
+        with intel1:
+            st.markdown("**👑 Top Leaders & Management**")
+            st.info(profile['top_leaders'] or "Data not found. Try searching specific leaders.")
+        with intel2:
+            st.markdown("**📊 Key Performance Indicators (KPIs)**")
+            st.info(profile['kpis'] or "Data not found. Typical KPIs include growth, margins, etc.")
+
+        link_cols = st.columns(3)
+        if profile['linkedin_page']:
+            link_cols[0].markdown(f"[![LinkedIn](https://img.shields.io/badge/LinkedIn-Company_Page-0077B5?logo=linkedin)]({profile['linkedin_page']})")
+        if profile['website']:
+            link_cols[1].markdown(f"🌐 [Company Website]({profile['website']})")
+
+        # ── Employee Scrape ──
+        st.markdown("---")
+        st.subheader(f"👥 Employees at {company_query}")
+
+        with st.status(f"🤖 Scraping employees at {company_query}...", expanded=True) as emp_status:
+            employees = scrape_company_employees(
+                company_query.strip(), location_query.strip(), emp_role_keywords,
+                emp_count, existing_emp_urls, emp_status
+            )
+            emp_status.update(
+                label=f"✅ Found {len(employees)} employees at {company_query}",
+                state="complete", expanded=True
+            )
+
+        if not employees:
+            st.warning("No employees found. Try a different company name or broader role filter.")
+        else:
+            # Sort by signal score
+            employees.sort(key=lambda x: x["Lead_Score"], reverse=True)
+            for i, e in enumerate(employees):
+                e["Rank"] = i + 1
+
+            df_emp = pd.DataFrame(employees)
+
+            # Summary metrics
+            em1, em2, em3 = st.columns(3)
+            em1.metric("Profiles Found", len(employees))
+            high_intent = df_emp[df_emp["Lead_Score"] >= 80]
+            em2.metric("High Event Intent (≥80%)", len(high_intent))
+            em3.metric("Avg Event Probability", f"{int(df_emp['Lead_Score'].mean())}%")
+
+            st.dataframe(
+                df_emp[["Rank","Full_Name","Designation","Company","Location_Match","LinkedIn_URL","Event_Probability","Signal","Query_Bucket","Matched_Parameters"]],
+                use_container_width=True
+            )
+
+            # Export
+            df_emp_export = pd.DataFrame({
+                "Name": df_emp["Full_Name"],
+                "COMPANY": df_emp["Company"],
+                "DESIGNATION": df_emp["Designation"],
+                "LOCATION MATCH": df_emp["Location_Match"],
+                "PHONE NUMBER": "",
+                "Linkdin Id": df_emp["LinkedIn_URL"],
+                "Event Probability": df_emp["Event_Probability"],
+                "Signal Detected": df_emp["Signal"],
+                "Query Bucket": df_emp.get("Query_Bucket", ""),
+                "Matched Parameters": df_emp.get("Matched_Parameters", ""),
+            })
+
+            ts = datetime.now().strftime("%Y%m%d_%H%M")
+            fname = f"{company_query.replace(' ','_')}_Employees_{ts}"
+
+            st.markdown("---")
+            st.subheader("💾 Export Employee List")
+            st.dataframe(df_emp_export, use_container_width=True)
+
+            dl1, dl2 = st.columns(2)
+            dl1.download_button("📥 Download CSV", df_emp_export.to_csv(index=False).encode(),
+                                f"{fname}.csv", "text/csv", type="primary", use_container_width=True)
+            buf = io.BytesIO()
+            with pd.ExcelWriter(buf, engine='openpyxl') as w:
+                df_emp_export.to_excel(w, index=False, sheet_name='Employees')
+            dl2.download_button("📥 Download Excel", buf.getvalue(), f"{fname}.xlsx",
+                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                type="primary", use_container_width=True)
+
+
+# ========================================
+# TAB 4: COMPETITOR EVENT INTELLIGENCE
+# ========================================
+
+def extract_names_from_text(text: str) -> list:
+    """
+    Extract likely person names from post/snippet text.
+    Uses capitalized word pairs/triples that look like names.
+    Filters out common non-name capitalized words.
+    """
+    # Common words that appear capitalized but aren't names
+    STOP_WORDS = {
+        'the', 'and', 'for', 'with', 'from', 'our', 'this', 'that', 'are', 'was',
+        'has', 'had', 'have', 'will', 'can', 'all', 'about', 'their', 'they',
+        'been', 'more', 'who', 'how', 'what', 'when', 'why', 'not', 'but',
+        'just', 'also', 'into', 'over', 'very', 'new', 'best', 'top',
+        'linkedin', 'india', 'post', 'read', 'share', 'join', 'event',
+        'roundtable', 'summit', 'conference', 'speaker', 'panelist',
+        'marketing', 'digital', 'global', 'senior', 'chief', 'vice',
+        'president', 'director', 'head', 'officer', 'manager', 'lead',
+        'cmo', 'ceo', 'cto', 'cfo', 'coo', 'cro', 'ciso', 'chro',
+        'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+        'january', 'february', 'march', 'april', 'may', 'june', 'july',
+        'august', 'september', 'october', 'november', 'december',
+        'register', 'rsvp', 'attend', 'click', 'link', 'here', 'now',
+        'fireside', 'chat', 'panel', 'discussion', 'keynote', 'talk',
+        'industry', 'leaders', 'leadership', 'business', 'growth',
+        'brand', 'strategy', 'innovation', 'technology', 'future',
+        'insights', 'trends', 'data', 'driven', 'experience',
+    }
+
+    names = []
+    # Pattern: 2-3 consecutive capitalized words (First Last or First Middle Last)
+    name_pattern = re.findall(r'\b([A-Z][a-z]{1,15}(?:\s+[A-Z][a-z]{1,15}){1,2})\b', text)
+    for candidate in name_pattern:
+        words = candidate.split()
+        # Skip if any word is a stop word
+        if any(w.lower() in STOP_WORDS for w in words):
+            continue
+        # Must have at least 2 words, each 2+ chars
+        if len(words) >= 2 and all(len(w) >= 2 for w in words):
+            names.append(candidate)
+
+    # Also match "FirstName LastInitial." patterns like "Kishan P."
+    initial_pattern = re.findall(r'\b([A-Z][a-z]{1,15}\s+[A-Z]\.)', text)
+    for candidate in initial_pattern:
+        first = candidate.split()[0]
+        if first.lower() not in STOP_WORDS:
+            names.append(candidate)
+
+    # Deduplicate while preserving order
+    seen = set()
+    unique = []
+    for n in names:
+        n_clean = n.strip()
+        if n_clean.lower() not in seen and len(n_clean) > 3:
+            seen.add(n_clean.lower())
+            unique.append(n_clean)
+
+    return unique
+
+
+def find_competitor_event_posts(company: str, event_kws: list, status_ui) -> list:
+    """
+    Step 1: Search DDG for competitor's LinkedIn posts about events/roundtables.
+    Returns list of {title, body, href} dicts from post pages.
+    """
+    posts = []
+    try:
+        from ddgs import DDGS
+
+        event_str = " OR ".join([f'"{e}"' if ' ' in e else e for e in event_kws[:8]])
+
+        queries = [
+            # LinkedIn posts from company about events
+            f'site:linkedin.com/posts "{company}" ({event_str})',
+            f'site:linkedin.com/feed "{company}" ({event_str})',
+            f'site:linkedin.com "{company}" roundtable speakers panelists attendees',
+            f'site:linkedin.com "{company}" event "{event_str}" congratulations',
+            # Activity/pulse pages that list attendees
+            f'site:linkedin.com "{company}" roundtable attendees panelist',
+            f'site:linkedin.com/pulse "{company}" ({event_str})',
+            # General web results mentioning company events with names
+            f'"{company}" roundtable attendees speakers list linkedin',
+            f'"{company}" event panelists speakers names',
+            f'"{company}" CMO roundtable participants',
+        ]
+
+        seen_urls = set()
+        with DDGS() as ddgs:
+            for qidx, q in enumerate(queries):
+                if len(posts) >= 30:
+                    break
+                try:
+                    results = list(ddgs.text(q, max_results=20))
+                    for r in results:
+                        href = r.get('href', '')
+                        if href in seen_urls:
+                            continue
+                        seen_urls.add(href)
+                        body = r.get('body', '')
+                        title = r.get('title', '')
+                        # We want posts/pages that contain actual names
+                        if len(body) > 40:
+                            posts.append({
+                                'title': title,
+                                'body': body,
+                                'href': href,
+                            })
+                except Exception:
+                    time.sleep(0.5)
+                    continue
+                time.sleep(1)
+
+    except Exception as e:
+        status_ui.write(f"⚠️ Error finding posts for {company}: {e}")
+    return posts
+
+
+def resolve_name_to_profile(name: str, locs: list, existing_urls: set) -> dict:
+    """
+    Step 3: Given an extracted name, find their LinkedIn profile via DDG.
+    Returns a lead dict or None.
+    """
+    try:
+        from ddgs import DDGS
+
+        loc_str = " OR ".join([f'"{l}"' if ' ' in l else l for l in locs[:3]]) if locs else ""
+        queries = [f'site:linkedin.com/in "{name}"']
+        if loc_str:
+            queries.insert(0, f'site:linkedin.com/in "{name}" ({loc_str})')
+
+        with DDGS() as ddgs:
+            for q in queries:
+                try:
+                    results = list(ddgs.text(q, max_results=5))
+                    for r in results:
+                        href = r.get('href', '')
+                        title = r.get('title', '')
+                        body = r.get('body', '')
+                        if 'linkedin.com/in/' not in href:
+                            continue
+                        parsed_name, designation, company, clean_url = parse_profile(title, href, body)
+                        if not clean_url or clean_url in existing_urls:
+                            continue
+                        # Verify the name roughly matches
+                        name_parts = name.lower().split()
+                        name_hints = [name]
+                        if len(name_parts) >= 2:
+                            name_hints.append(" ".join(name_parts[:2]))
+                        if any_term_matches(combined_text(title, body), name_hints):
+                            loc_confirmed = check_location_in_snippet(body, title, href, locs)
+                            sig_score, sig_name = get_event_probability_score(body, title)
+                            return {
+                                "name": parsed_name or name,
+                                "designation": designation,
+                                "company": company,
+                                "url": clean_url,
+                                "loc_confirmed": loc_confirmed,
+                                "sig_score": sig_score,
+                                "sig_name": sig_name,
+                            }
+                except Exception:
+                    continue
+                time.sleep(0.5)
+    except Exception:
+        pass
+    return None
+
+
+def scrape_competitor_event_attendees(
+    competitors: list, roles: list, locs: list, event_kws: list,
+    count: int, existing_urls: set, status_ui
+) -> list:
+    """
+    3-Step Pipeline:
+    1. Find competitor's LinkedIn posts/pages about events/roundtables
+    2. Extract person names mentioned in post content
+    3. Resolve each name to a LinkedIn profile, filtered by location
+    """
+    leads = []
+    try:
+        from ddgs import DDGS
+
+        def _join_or(items):
+            return " OR ".join([f'"{i}"' if ' ' in i else i for i in items])
+
+        flat_roles = [r.lower() for r in roles]
+
+        for comp_idx, company in enumerate(competitors):
+            if len(leads) >= count:
+                break
+            company = company.strip()
+            if not company:
+                continue
+
+            status_ui.write(f"")
+            status_ui.write(f"🏢 **━━━ [{comp_idx+1}/{len(competitors)}] Competitor: {company} ━━━**")
+
+            # ── STEP 1: Find event posts ──
+            status_ui.write(f"   📰 **Step 1:** Searching for {company}'s event/roundtable posts...")
+            posts = find_competitor_event_posts(company, event_kws, status_ui)
+            status_ui.write(f"   ✅ Found **{len(posts)}** post/page snippets mentioning {company}")
+
+            # ── STEP 2: Extract names from posts ──
+            status_ui.write(f"   🔍 **Step 2:** Extracting person names from post content...")
+            all_names = []
+            for p in posts:
+                text = p['title'] + " " + p['body']
+                names = extract_names_from_text(text)
+                for n in names:
+                    all_names.append({"name": n, "source_post": p['href'][:80]})
+
+            # Deduplicate names
+            seen_names = set()
+            unique_names = []
+            for item in all_names:
+                n_lower = item["name"].lower()
+                if n_lower not in seen_names:
+                    seen_names.add(n_lower)
+                    unique_names.append(item)
+
+            status_ui.write(f"   ✅ Extracted **{len(unique_names)}** unique person names")
+            if unique_names:
+                sample = ", ".join([n["name"] for n in unique_names[:8]])
+                status_ui.write(f"   📋 Sample: `{sample}`{'...' if len(unique_names) > 8 else ''}")
+
+            # ── STEP 3: Resolve names to LinkedIn profiles ──
+            status_ui.write(f"   🔗 **Step 3:** Resolving names to LinkedIn profiles (location: `{'`, `'.join(locs[:3])}`)...")
+
+            resolved_count = 0
+            for nidx, item in enumerate(unique_names):
+                if len(leads) >= count:
+                    break
+                name = item["name"]
+
+                if (nidx + 1) % 5 == 0 or nidx == 0:
+                    status_ui.write(f"      ↳ Resolving {nidx+1}/{len(unique_names)}: `{name}` | Total leads: {len(leads)}/{count}")
+
+                profile = resolve_name_to_profile(name, locs, existing_urls)
+                if profile:
+                    haystack = (profile.get("designation", "") + " " + profile.get("name", "")).lower()
+                    role_hit = not flat_roles or any(r in haystack for r in flat_roles)
+
+                    match_score = int(role_hit) + int(profile["loc_confirmed"])
+                    if match_score == 0:
+                        continue
+
+                    existing_urls.add(profile["url"])
+                    leads.append({
+                        "Full_Name": profile["name"],
+                        "Designation": profile["designation"],
+                        "Company": profile["company"],
+                        "LinkedIn_URL": profile["url"],
+                        "Competitor_Source": company,
+                        "Source_Post": item["source_post"],
+                        "Event_Signal": profile["sig_name"],
+                        "Event_Probability": f"{profile['sig_score']}%",
+                        "Location_Verified": "✅ Yes" if profile["loc_confirmed"] else "⚠️ Check",
+                        "Lead_Score": profile["sig_score"],
+                        "Query_Bucket": "competitor_event",
+                        "Matched_Parameters": f"Role={'Yes' if role_hit else 'Check'} | Location={'Yes' if profile['loc_confirmed'] else 'Check'} | MatchScore={match_score}/2",
+                    })
+                    resolved_count += 1
+                time.sleep(0.8)
+
+            status_ui.write(f"   ✅ **{company}** → Resolved {resolved_count} profiles | Total: {len(leads)}/{count}")
+
+            # ── BONUS: Also do direct LinkedIn profile search for this competitor ──
+            status_ui.write(f"   🔄 **Bonus:** Direct LinkedIn search for {company} event attendees...")
+            role_str = f"({_join_or(roles)})" if roles else ""
+            loc_str  = f"({_join_or(locs)})"  if locs  else ""
+            event_str = f"({_join_or(event_kws[:6])})" if event_kws else ""
+
+            bonus_queries = [
+                f'site:linkedin.com/in "{company}" {event_str} {role_str} {loc_str}',
+                f'site:linkedin.com/in "{company}" {role_str} {loc_str}',
+            ]
+            with DDGS() as ddgs:
+                for bq in bonus_queries:
+                    if len(leads) >= count:
+                        break
+                    try:
+                        results = list(ddgs.text(bq, max_results=30))
+                        for r in results:
+                            if len(leads) >= count:
+                                break
+                            href  = r.get('href', '')
+                            title = r.get('title', '')
+                            body  = r.get('body', '')
+                            if 'linkedin.com/in/' not in href:
+                                continue
+                            pname, desig, comp, clean_url = parse_profile(title, href, body)
+                            if not clean_url or clean_url in existing_urls:
+                                continue
+                            role_hit = not flat_roles or any_term_matches(combined_text(title, body), flat_roles)
+                            loc_confirmed = check_location_in_snippet(body, title, href, locs)
+                            if flat_roles and not role_hit:
+                                continue
+                            if locs and not loc_confirmed:
+                                continue
+                            sig_score, sig_name = get_event_probability_score(body, title)
+                            existing_urls.add(clean_url)
+                            leads.append({
+                                "Full_Name": pname or "Unknown",
+                                "Designation": desig,
+                                "Company": comp,
+                                "LinkedIn_URL": clean_url,
+                                "Competitor_Source": company,
+                                "Source_Post": "Direct LinkedIn search",
+                                "Event_Signal": sig_name,
+                                "Event_Probability": f"{sig_score}%",
+                                "Location_Verified": "✅ Yes" if loc_confirmed else "⚠️ Check",
+                                "Lead_Score": sig_score,
+                                "Query_Bucket": "competitor_bonus",
+                                "Matched_Parameters": f"Role={'Yes' if role_hit else 'Check'} | Location={'Yes' if loc_confirmed else 'Check'}",
+                            })
+                    except Exception:
+                        time.sleep(0.5)
+                    time.sleep(1)
+
+        status_ui.write(f"")
+        status_ui.write(f"🏁 **Pipeline complete! {len(leads)} total profiles resolved.**")
+
+    except Exception as e:
+        status_ui.write(f"⚠️ Competitor scrape error: {e}")
+    return leads
+
+
+# ========================================
+# COMPANY SUMMARY BATCH FETCHER
+# Fetches "what company does" + net profit for a list of companies
+# ========================================
+def fetch_company_summary_batch(companies: list, status_ui=None) -> dict:
+    """
+    Given a list of company names, return a dict:
+    {company_name: {"description": ..., "net_profit": ...}}
+    Uses DDG to find a brief 1-2 sentence overview + net profit figure.
+    """
+    summaries = {}
+    try:
+        from ddgs import DDGS
+        unique_companies = list({c.strip() for c in companies if c and c.strip() and c.lower() != "unknown"})
+
+        with DDGS() as ddgs:
+            for comp in unique_companies:
+                if status_ui:
+                    status_ui.write(f"   🏢 Fetching company profile: **{comp}**...")
+                desc = ""
+                profit = ""
+                try:
+                    # Description query
+                    q_desc = f'"{comp}" company overview what they do services products'
+                    results_d = list(ddgs.text(q_desc, max_results=3))
+                    for r in results_d:
+                        body = r.get("body", "")
+                        if len(body) > 60 and not desc:
+                            # Try to grab the first clean sentence
+                            sentences = re.split(r'(?<=[.!?])\s+', body)
+                            clean_sents = [s for s in sentences if len(s) > 30]
+                            if clean_sents:
+                                desc = " ".join(clean_sents[:2])[:300]
+                            break
+
+                    # Net profit query
+                    q_profit = f'"{comp}" net profit revenue annual financial results'
+                    results_p = list(ddgs.text(q_profit, max_results=3))
+                    for r in results_p:
+                        body = r.get("body", "")
+                        m = re.search(
+                            r'(?:net profit|net income|profit after tax)[^₹$\d]*[₹$]?\s*([\d,]+(?:\.\d+)?\s*(?:crore|million|billion|lakh|Cr|Mn|Bn|cr)?)',
+                            body, re.IGNORECASE
+                        )
+                        if m and not profit:
+                            profit = m.group(1).strip()
+                            break
+
+                    summaries[comp] = {
+                        "description": desc or "—",
+                        "net_profit": profit or "—",
+                    }
+                except Exception:
+                    summaries[comp] = {"description": "—", "net_profit": "—"}
+                time.sleep(0.5)
+    except Exception as e:
+        if status_ui:
+            status_ui.write(f"⚠️ Company summary error: {e}")
+    return summaries
+
+
+# ========================================
+# TAB 4: COMPETITOR EVENT INTELLIGENCE
+# ========================================
+with tab4:
+
+    st.header("🎯 Competitor Event Intelligence")
+    st.markdown("""
+    **Find people who attend your competitor's roundtables/events** — filtered by location and role.
+    Enter competitor company names → we scrape LinkedIn for their event attendees, speakers, and panelists.
+    Export the list and invite them to **your** events.
+    """)
+
+    st.markdown("---")
+
+    # ── Inputs ──
+    st.subheader("1️⃣ List Your Competitors")
+    comp_input = st.text_area(
+        "Enter competitor company names (one per line):",
+        placeholder="e.g.\nMcKinsey\nBCG\nBain & Company\nDeloitte\nAccenture",
+        height=150,
+        key="comp_input"
+    )
+
+    st.subheader("2️⃣ Target Parameters")
+    ci_col1, ci_col2 = st.columns(2)
+
+    with ci_col1:
+        # Location filter
+        loc_options_ci = [f"{k} - {v[0]}" for k, v in LOCATIONS.items()]
+        sel_ci_locs = st.multiselect(
+            "📍 Filter by Geography",
+            loc_options_ci,
+            default=[loc_options_ci[0]],
+            key="ci_locs"
+        )
+
+    with ci_col2:
+        # Role filter
+        role_options_ci = [f"{k} - {v[0]}" for k, v in ROLES.items()]
+        sel_ci_roles = st.multiselect(
+            "👤 Filter by Role/Seniority",
+            role_options_ci,
+            default=[role_options_ci[0]],
+            key="ci_roles"
+        )
+
+    # Event type filter
+    st.subheader("3️⃣ Event Types to Target")
+    event_presets = {
+        "CMO Roundtable": ["CMO roundtable", "CMO event", "marketing roundtable", "CMO summit"],
+        "CXO Leadership Summit": ["CXO roundtable", "leadership summit", "executive roundtable", "C-suite event"],
+        "Tech Conference": ["tech conference", "developer summit", "CTO roundtable", "engineering meetup"],
+        "Sales Kickoff": ["sales kickoff", "revenue summit", "CRO roundtable", "sales event"],
+        "Industry Awards": ["award ceremony", "awards night", "40 under 40", "industry recognition"],
+        "Speaker / Panelist": ["speaker", "panelist", "keynote", "panel discussion"],
+        "Custom": [],
+    }
+    sel_event_types = st.multiselect(
+        "⚡ Event Types",
+        list(event_presets.keys()),
+        default=["CMO Roundtable", "Speaker / Panelist"],
+        key="ci_events"
+    )
+
+    custom_event_kws = ""
+    if "Custom" in sel_event_types:
+        custom_event_kws = st.text_input("Custom event keywords (comma separated):",
+                                          placeholder="e.g. dinner, fireside chat, workshop",
+                                          key="ci_custom_events")
+
+    ci_count = st.number_input("🎯 Total Leads to Find", min_value=1, max_value=500, value=50, key="ci_count")
+
+    # ── Resolve parameters ──
+    ci_locs  = [l for sk in sel_ci_locs  for l in LOCATIONS[sk.split(" - ")[0]]]
+    ci_roles = [r for sk in sel_ci_roles for r in ROLES[sk.split(" - ")[0]]]
+
+    # Build event keyword list
+    ci_event_kws = []
+    for et in sel_event_types:
+        if et != "Custom":
+            ci_event_kws.extend(event_presets[et])
+    if custom_event_kws:
+        ci_event_kws.extend([k.strip() for k in custom_event_kws.split(",") if k.strip()])
+
+    # Parse competitors
+    competitors = [c.strip() for c in comp_input.strip().split("\n") if c.strip()] if comp_input.strip() else []
+
+    # Preview
+    if competitors and ci_locs:
+        st.info(f"**{len(competitors)}** competitors × **{len(ci_locs)}** locations × **{len(ci_roles)}** roles × **{len(ci_event_kws)}** event signals")
+
+    # Session state — init
+    if "ci_leads" not in st.session_state:
+        st.session_state.ci_leads = []
+    if "ci_blacklist" not in st.session_state:
+        st.session_state.ci_blacklist = set()
+    if "ci_company_summaries" not in st.session_state:
+        st.session_state.ci_company_summaries = {}
+
+    st.markdown("---")
+
+    ci_c1, ci_c2 = st.columns(2)
+    with ci_c1:
+        ci_start = st.button("🚀 Scan Competitor Events & Find Attendees", use_container_width=True, key="ci_start")
+    with ci_c2:
+        ci_stop = st.button("🛑 Stop & Keep Found Leads", use_container_width=True, key="ci_stop", type="secondary")
+
+    if ci_start:
+        if not competitors:
+            st.error("Please enter at least one competitor company name.")
+            st.stop()
+        if not ci_locs:
+            st.error("Please select at least one geography.")
+            st.stop()
+
+        st.session_state.ci_leads = []
+        st.session_state.ci_company_summaries = {}
+        existing_ci_urls = set()
+
+        with st.status(f"🔍 Scanning {len(competitors)} competitors for event attendees...", expanded=True) as ci_status:
+            ci_status.write(f"🏢 Competitors: `{'`, `'.join(competitors)}`")
+            ci_status.write(f"📍 Locations: `{'`, `'.join(ci_locs)}`")
+            ci_status.write(f"👤 Roles: `{'`, `'.join(ci_roles[:5])}{'...' if len(ci_roles)>5 else ''}`")
+            ci_status.write(f"⚡ Event keywords: `{'`, `'.join(ci_event_kws[:6])}{'...' if len(ci_event_kws)>6 else ''}`")
+
+            found = scrape_competitor_event_attendees(
+                competitors, ci_roles, ci_locs, ci_event_kws,
+                ci_count, existing_ci_urls, ci_status
+            )
+            st.session_state.ci_leads = found
+
+            # ── Fetch company summaries for all unique companies ──
+            if found:
+                unique_companies = list({l.get("Company", "") for l in found if l.get("Company","") not in ("","Unknown")})
+                if unique_companies:
+                    ci_status.write(f"")
+                    ci_status.write(f"🏢 **Fetching company intelligence for {len(unique_companies)} unique companies...**")
+                    st.session_state.ci_company_summaries = fetch_company_summary_batch(unique_companies, ci_status)
+                    ci_status.write(f"✅ Company intelligence fetched for {len(st.session_state.ci_company_summaries)} companies.")
+
+            ci_status.update(
+                label=f"✅ Done! Found {len(found)} profiles across {len(competitors)} competitors.",
+                state="complete", expanded=True
+            )
+
+    # ── Always render results ──
+    if st.session_state.ci_leads:
+        # Apply company summaries to leads
+        company_summaries = st.session_state.ci_company_summaries or {}
+        leads_ci_raw = [
+            {**l,
+             "Company_Description": company_summaries.get(l.get("Company",""), {}).get("description", "—"),
+             "Net_Profit": company_summaries.get(l.get("Company",""), {}).get("net_profit", "—"),
+            }
+            for l in st.session_state.ci_leads
+            if l.get("LinkedIn_URL", "") not in st.session_state.ci_blacklist
+        ]
+        leads_ci_raw.sort(key=lambda x: x["Lead_Score"], reverse=True)
+        for i, l in enumerate(leads_ci_raw):
+            l["Rank"] = i + 1
+
+        df_ci = pd.DataFrame(leads_ci_raw) if leads_ci_raw else pd.DataFrame()
+
+        # ── Metrics ──
+        st.markdown("---")
+        if not leads_ci_raw:
+            st.warning("All profiles have been removed / blacklisted. Clear blacklist to restore them.")
+        else:
+            m1, m2, m3, m4, m5 = st.columns(5)
+            m1.metric("Total Profiles", len(leads_ci_raw))
+            n_comp = df_ci["Competitor_Source"].nunique() if "Competitor_Source" in df_ci.columns else 0
+            m2.metric("Competitors Covered", n_comp)
+            high_prob = df_ci[df_ci["Lead_Score"] >= 80] if "Lead_Score" in df_ci.columns else pd.DataFrame()
+            m3.metric("High Event Intent", len(high_prob))
+            loc_ok = df_ci["Location_Verified"].str.contains("Yes").sum() if "Location_Verified" in df_ci.columns else 0
+            m4.metric("Location Confirmed", loc_ok)
+            m5.metric("Blacklisted", len(st.session_state.ci_blacklist))
+
+            # ── Competitor Breakdown ──
+            st.subheader("📊 Competitor Breakdown")
+            comp_counts = df_ci["Competitor_Source"].value_counts().reset_index()
+            comp_counts.columns = ["Competitor", "Profiles Found"]
+            st.dataframe(comp_counts, use_container_width=True)
+
+            # ── Full Results Table ──
+            st.subheader("📋 All Competitor Event Attendees")
+            display_ci_cols = [
+                "Rank", "Full_Name", "Designation", "Company",
+                "Company_Description", "Net_Profit",
+                "LinkedIn_URL", "Competitor_Source", "Source_Post",
+                "Event_Signal", "Event_Probability",
+                "Location_Verified", "Query_Bucket", "Matched_Parameters"
+            ]
+            display_ci_cols = [c for c in display_ci_cols if c in df_ci.columns]
+            st.dataframe(df_ci[display_ci_cols], use_container_width=True)
+
+            # ── Remove Label / Blacklist ──
+            st.markdown("---")
+            st.subheader("🗑️ Remove Leads from List")
+            st.caption("Select profiles to remove (blacklist) — they won't appear in exports or future views this session.")
+
+            all_lead_labels = [
+                f"{l['Rank']}. {l.get('Full_Name','?')} — {l.get('Designation','?')} @ {l.get('Company','?')}"
+                for l in leads_ci_raw
+            ]
+            label_to_url = {
+                f"{l['Rank']}. {l.get('Full_Name','?')} — {l.get('Designation','?')} @ {l.get('Company','?')}": l.get("LinkedIn_URL","")
+                for l in leads_ci_raw
+            }
+
+            to_remove = st.multiselect(
+                "Select profiles to remove:",
+                options=all_lead_labels,
+                placeholder="Choose profiles to blacklist…",
+                key="ci_remove_select"
+            )
+
+            rmv_col1, rmv_col2 = st.columns(2)
+            with rmv_col1:
+                if st.button("❌ Remove Selected Leads", use_container_width=True, key="ci_remove_btn"):
+                    for label in to_remove:
+                        url = label_to_url.get(label, "")
+                        if url:
+                            st.session_state.ci_blacklist.add(url)
+                    st.success(f"✅ {len(to_remove)} lead(s) removed from list.")
+                    st.rerun()
+
+            with rmv_col2:
+                if st.button("🔄 Clear Blacklist (Restore All)", use_container_width=True, key="ci_clear_blacklist", type="secondary"):
+                    st.session_state.ci_blacklist = set()
+                    st.success("✅ Blacklist cleared — all leads restored.")
+                    st.rerun()
+
+            if st.session_state.ci_blacklist:
+                st.caption(f"🚫 **{len(st.session_state.ci_blacklist)}** profile(s) currently blacklisted this session.")
+
+            # ── CSEV Export ──
+            st.markdown("---")
+            st.subheader("💾 Export as CSEV (Competitor Event) Sheet")
+
+            df_ci_export = pd.DataFrame({
+                "Name": df_ci["Full_Name"],
+                "COMPANY": df_ci["Company"],
+                "DESIGNATION": df_ci["Designation"],
+                "PHONE NUMBER": "",
+                "LinkedIn Id": df_ci["LinkedIn_URL"],
+                "Competitor Source": df_ci["Competitor_Source"],
+                "Event Signal": df_ci.get("Event_Signal", ""),
+                "Event Probability": df_ci.get("Event_Probability", ""),
+                "Location Verified": df_ci.get("Location_Verified", ""),
+                "What Company Does": df_ci.get("Company_Description", "—"),
+                "Net Profit": df_ci.get("Net_Profit", "—"),
+                "Matched Parameters": df_ci.get("Matched_Parameters", ""),
+            })
+
+            st.dataframe(df_ci_export, use_container_width=True)
+
+            ts = datetime.now().strftime("%Y%m%d_%H%M")
+            fname = f"CSEV_Competitor_Event_{ts}"
+
+            dl1, dl2 = st.columns(2)
+            dl1.download_button(
+                "📥 Download CSV (CSEV)",
+                df_ci_export.to_csv(index=False).encode(),
+                f"{fname}.csv", "text/csv",
+                type="primary", use_container_width=True
+            )
+            buf = io.BytesIO()
+            with pd.ExcelWriter(buf, engine='openpyxl') as w:
+                df_ci_export.to_excel(w, index=False, sheet_name='CSEV')
+            dl2.download_button(
+                "📥 Download Excel (CSEV Sheet)",
+                buf.getvalue(), f"{fname}.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                type="primary", use_container_width=True
+            )

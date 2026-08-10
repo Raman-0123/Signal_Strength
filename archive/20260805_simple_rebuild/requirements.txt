@@ -1,0 +1,14 @@
+beautifulsoup4>=4.12,<5
+APScheduler>=3.11.3,<4
+ddgs>=9,<10
+fastapi>=0.139,<1
+httpx>=0.28,<1
+openpyxl>=3.1,<4
+pandas>=2.0,<3
+playwright>=1.45,<2
+prometheus-client>=0.22,<1
+python-multipart>=0.0.20,<1
+PyYAML>=6.0.3,<7
+requests[socks]>=2.31,<3
+streamlit>=1.37,<2
+uvicorn[standard]>=0.35,<1

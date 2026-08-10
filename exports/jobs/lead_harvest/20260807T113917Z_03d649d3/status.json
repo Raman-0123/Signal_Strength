@@ -1,0 +1,22 @@
+{
+  "state": "failed",
+  "workflow": "lead_harvest",
+  "job_id": "20260807T113917Z_03d649d3",
+  "message": "Page.content: Unable to retrieve content because the page is navigating and changing the content.",
+  "processed": 0,
+  "total": 80,
+  "updated_at": "2026-08-07T11:40:00.388407+00:00",
+  "pid": 32597,
+  "phase": "search",
+  "candidates": 0,
+  "matched": 0,
+  "rejected": 0,
+  "searches_completed": 0,
+  "searches_total": 80,
+  "heartbeat_at": "2026-08-07T11:39:58.467276+00:00",
+  "heartbeat_tick": 20,
+  "activity": "Public candidate search in progress",
+  "current_query": "site:linkedin.com/in (CIO OR \"Chief Information Officer\") Razorpay (Bengaluru OR Bangalore OR \"Bengaluru, Karnataka, India\")",
+  "current_source": "google_browser",
+  "current_page": 1
+}

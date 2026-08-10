@@ -1,0 +1,22 @@
+{
+  "state": "completed",
+  "workflow": "company_pocs",
+  "job_id": "20260810T080257Z_1ab55a2e",
+  "message": "Completed with 2 matched POCs",
+  "processed": 106,
+  "total": 106,
+  "updated_at": "2026-08-10T08:06:57.916119+00:00",
+  "pid": 13412,
+  "matched": 2,
+  "searches_completed": 212,
+  "searches_total": 212,
+  "current_company": "FinBox",
+  "current_designation": "CTO",
+  "current_source": "ddgs",
+  "current_query": "site:linkedin.com/in \"FinBox\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\") \"Mumbai\"",
+  "heartbeat_at": "2026-08-10T08:06:56.630158+00:00",
+  "heartbeat_tick": 0,
+  "activity": "Public search request in progress",
+  "csv_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260810T080257Z_1ab55a2e/Company_Designation_POCs.csv",
+  "xlsx_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260810T080257Z_1ab55a2e/Company_Designation_POCs.xlsx"
+}

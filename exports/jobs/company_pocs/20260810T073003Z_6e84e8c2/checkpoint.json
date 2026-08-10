@@ -1,0 +1,324 @@
+{
+  "version": 1,
+  "task_index": 7,
+  "source_index": 0,
+  "pocs": [
+    {
+      "name": "Ben Padley",
+      "designation": "CMO and Marketing Director. Expertise in",
+      "company": "Dyson",
+      "linkedin_url": "https://www.linkedin.com/in/benpadley/",
+      "source": "ddgs",
+      "confidence": 92,
+      "evidence": "Ben Padley - CMO and Marketing Director. Expertise in I am a results-driven, innovative marketer with extensive experience across e-Commerce… · Experience: Dyson · Location: London · 500+ connections on LinkedIn. View Ben Padley’s profile on LinkedIn, a professional community of 1 billion ...",
+      "requested_company": "Dyson",
+      "requested_designation": "CMO"
+    },
+    {
+      "name": "Aakash Sharma",
+      "designation": "Category Marketing Head",
+      "company": "Dyson",
+      "linkedin_url": "https://www.linkedin.com/in/aakash-sharma-29b95b18/",
+      "source": "ddgs",
+      "confidence": 92,
+      "evidence": "Aakash Sharma - Category Marketing Head at Dyson We cannot provide a description for this page right now",
+      "requested_company": "Dyson",
+      "requested_designation": "Head of Marketing"
+    },
+    {
+      "name": "Ankit Jain",
+      "designation": "Managing Director, Dyson Middle East and Africa",
+      "company": "Dyson",
+      "linkedin_url": "https://www.linkedin.com/in/ankit-jain-14471a8/",
+      "source": "ddgs",
+      "confidence": 92,
+      "evidence": "Ankit Jain - Managing Director, Dyson Middle East and Africa At Dyson, I have shaped the brand’s trajectory, strengthened its market position and driven performance that balances strategic ambition with financial results. My career spans high stakes... Management Director at Dyson · Experience: Dyson · Location: South East Delhi · 18 connections on LinkedIn. View Satishwar Rama’s profile on LinkedIn, a professional community of 1... Message me for more details regarding potential opportunities · Experience: Dyson · Education: The Wharton School · Location: New York · 14 connections on LinkedIn. Managing Director at Dyson Group plc · Experience: Dyson Group plc · Location: Sheffield · 108 con",
+      "requested_company": "Dyson",
+      "requested_designation": "Director"
+    },
+    {
+      "name": "Satishwar Rama",
+      "designation": "Management Director",
+      "company": "Dyson",
+      "linkedin_url": "https://www.linkedin.com/in/satishwar-rama-a50198301/",
+      "source": "ddgs",
+      "confidence": 92,
+      "evidence": "Satishwar Rama - Management Director at Dyson Management Director at Dyson · Experience: Dyson · Location: South East Delhi · 18 connections on LinkedIn. View Satishwar Rama’s profile on LinkedIn, a professional community of 1... Message me for more details regarding potential opportunities · Experience: Dyson · Education: The Wharton School · Location: New York · 14 connections on LinkedIn. Managing Director at Dyson Group plc · Experience: Dyson Group plc · Location: Sheffield · 108 connections on LinkedIn. View Gavin Rosson’s profile on LinkedIn, a professional community... Independent Director · Experienced strategic leader with more than 20 years’ experience in Defense and Federal Finan",
+      "requested_company": "Dyson",
+      "requested_designation": "Director"
+    },
+    {
+      "name": "Sheena Walsh",
+      "designation": "Director",
+      "company": "Dyson",
+      "linkedin_url": "https://www.linkedin.com/in/sheena-walsh-6ba66b277/",
+      "source": "ddgs",
+      "confidence": 92,
+      "evidence": "Sheena Walsh - Director at Dyson Message me for more details regarding potential opportunities · Experience: Dyson · Education: The Wharton School · Location: New York · 14 connections on LinkedIn. Managing Director at Dyson Group plc · Experience: Dyson Group plc · Location: Sheffield · 108 connections on LinkedIn. View Gavin Rosson’s profile on LinkedIn, a professional community... Independent Director · Experienced strategic leader with more than 20 years’ experience in Defense and Federal Financial Management. Global Director at Dyson | RAEng Visiting Professor, University of Southampton · Technical Engineering Manager; Doctorate (EngD) qualified Chartered Engineer (CEng) and Chartered T",
+      "requested_company": "Dyson",
+      "requested_designation": "Director"
+    },
+    {
+      "name": "Justin Burt",
+      "designation": "Director of Retail Marketing",
+      "company": "Dyson",
+      "linkedin_url": "https://www.linkedin.com/in/justinburt/",
+      "source": "ddgs",
+      "confidence": 92,
+      "evidence": "Justin Burt - Director of Retail Marketing at Dyson Director of Retail Marketing at Dyson · Marketing professional with advertising & retail background. Currently focused on premium retail experiences at Dyson. Category Management, Product Ranging and Marketing, Pricing, P&L, Analytics, Growth, Expansion, Media and Brand Communications Brand Strategy, GTM & Marketing, Current Dyson, Mini MBA Marketing & Brand Management · Currently Head of Marketing at Dyson. As Senior Marketing Manager for Dyson’s Home & Audio division, I lead the development and execution of a comprehensive marketing strategy that drives 55% of total company sales and ensures... Senior Marketing Manager with 12+ years of e",
+      "requested_company": "Dyson",
+      "requested_designation": "Marketing"
+    }
+  ],
+  "rejections": [
+    {
+      "Name": "Nikhil Rastogi",
+      "LinkedIn URL": "https://www.linkedin.com/in/rastoginikhil/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Tom Moody",
+      "LinkedIn URL": "https://www.linkedin.com/in/tom-moody-a88aaa4b/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Chief Marketing Officer Job Description Template",
+      "LinkedIn URL": "https://www.linkedin.com/in/en/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Lennard Hoornik",
+      "LinkedIn URL": "https://www.linkedin.com/in/lennard-hoornik-259889/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Donovan Neale-May",
+      "LinkedIn URL": "https://www.linkedin.com/in/donovann1/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Amir Widjaya",
+      "LinkedIn URL": "https://www.linkedin.com/in/amirwidjaya/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Jean-Christophe Danis",
+      "LinkedIn URL": "https://www.linkedin.com/in/jeanchristophedanis/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Brady Josephson",
+      "LinkedIn URL": "https://www.linkedin.com/in/bradyjosephson/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Deb Gooha",
+      "LinkedIn URL": "https://www.linkedin.com/in/deb-gooha-cmo-marketing/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Scott Mager",
+      "LinkedIn URL": "https://www.linkedin.com/in/scottmager/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Sam Knott",
+      "LinkedIn URL": "https://www.linkedin.com/in/samknott3/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rob Long",
+      "LinkedIn URL": "https://www.linkedin.com/in/robowenlong/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Keefe Lee",
+      "LinkedIn URL": "https://www.linkedin.com/in/keefe-lee-67559572/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Isil Bayraktar Buldur",
+      "LinkedIn URL": "https://www.linkedin.com/in/isil-bayraktar-buldur-77798221/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Peshwa Acharya",
+      "LinkedIn URL": "https://www.linkedin.com/in/peshwaacharya/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Minjae Ormes",
+      "LinkedIn URL": "https://www.linkedin.com/in/minjaeormes/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "CMO",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Nikhil Rastogi",
+      "LinkedIn URL": "https://www.linkedin.com/in/rastoginikhil/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Udit Jain",
+      "LinkedIn URL": "https://www.linkedin.com/in/udit-jain-2a22607/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Aimi de Lacy",
+      "LinkedIn URL": "https://www.linkedin.com/in/aimidelacy/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Niharika Khurana",
+      "LinkedIn URL": "https://www.linkedin.com/in/niharika-khurana-75058454/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Head of Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Matthew Dyson",
+      "LinkedIn URL": "https://www.linkedin.com/in/matthew-dyson-688a45129/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "David Palmer",
+      "LinkedIn URL": "https://www.linkedin.com/in/david-palmer01/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Chelsea Radford",
+      "LinkedIn URL": "https://www.linkedin.com/in/chelsearadford/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "APAC Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Christina Wong",
+      "LinkedIn URL": "https://www.linkedin.com/in/christina-wong8/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "APAC Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Neil Lewis",
+      "LinkedIn URL": "https://www.linkedin.com/in/neil-lewis-/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "APAC Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Victoria Lim",
+      "LinkedIn URL": "https://www.linkedin.com/in/velim/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "APAC Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Hanno Kirner",
+      "LinkedIn URL": "https://www.linkedin.com/in/hanno-kirner-94452326/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Director",
+      "Reason": "designation_mismatch"
+    },
+    {
+      "Name": "Gavin Rosson",
+      "LinkedIn URL": "https://www.linkedin.com/in/gavin-rosson-a040003a/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Director",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Karen Dyson",
+      "LinkedIn URL": "https://www.linkedin.com/in/karen-dyson-76a85349/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Director",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Dr Caroline Simcock CEng CTPD FIMechE FIED PMP",
+      "LinkedIn URL": "https://www.linkedin.com/in/dr-caroline-simcock-ceng-ctpd-fimeche-fied-pmp-08622728/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Director",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Keith Anderson",
+      "LinkedIn URL": "https://www.linkedin.com/in/keithmichaelanderson/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rob Taylor",
+      "LinkedIn URL": "https://www.linkedin.com/in/rob-taylor81/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Rodrigo García González",
+      "LinkedIn URL": "https://www.linkedin.com/in/rodrigo-garcía-gonzález-54756314/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Samet Durmaz",
+      "LinkedIn URL": "https://www.linkedin.com/in/samet-durmaz/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Marketing",
+      "Reason": "company_mismatch"
+    },
+    {
+      "Name": "Ya Hsin(Charleen) Huang",
+      "LinkedIn URL": "https://www.linkedin.com/in/ya-hsin-charleen-huang-4b71b8ab/",
+      "Requested Company": "Dyson",
+      "Requested Designation": "Marketing",
+      "Reason": "company_mismatch"
+    }
+  ],
+  "errors": [
+    "google_browser: google_browser challenge detected; this source is disabled for the current job",
+    "ddgs: DDGS failed for query: No results found."
+  ]
+}

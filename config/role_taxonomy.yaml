@@ -1,0 +1,480 @@
+roles:
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # TECHNOLOGY LEADERSHIP
+  # ══════════════════════════════════════════════════════════════════════════════
+
+  CTO:
+    synonyms: [Chief Technology Officer, Chief Technical Officer]
+    function: technology
+    seniority: executive
+    query_group: technology_executive
+    role_family: Technology Leadership
+
+  CIO:
+    synonyms: [Chief Information Officer, Chief Information & Digital Officer]
+    function: information_technology
+    seniority: executive
+    query_group: technology_executive
+    role_family: Technology Leadership
+
+  CDO:
+    synonyms: [Chief Data Officer, Chief Digital Officer, Chief Data and AI Officer, Chief Data & AI Officer]
+    function: data_or_digital
+    seniority: executive
+    query_group: data_digital_executive
+    role_family: Technology Leadership
+
+  CDIO:
+    synonyms: [Chief Digital and Information Officer, Chief Digital & Information Officer, Chief Data & Information Officer]
+    function: data_or_digital
+    seniority: executive
+    query_group: data_digital_executive
+    role_family: Technology Leadership
+
+  Chief Data Officer:
+    synonyms: [Chief Data and AI Officer, Chief Data & AI Officer, Chief Data and Analytics Officer, Chief Data & Analytics Officer]
+    function: data
+    seniority: executive
+    query_group: data_digital_executive
+    role_family: Technology Leadership
+
+  Chief Digital Officer:
+    synonyms: [Chief Digital Transformation Officer, Chief Digital and Innovation Officer]
+    function: digital
+    seniority: executive
+    query_group: data_digital_executive
+    role_family: Technology Leadership
+
+  VP Engineering:
+    synonyms:
+      - Vice President Engineering
+      - VP of Engineering
+      - Vice President of Engineering
+      - SVP Engineering
+      - Senior VP Engineering
+    function: engineering
+    seniority: vice_president
+    query_group: technology_executive
+    role_family: Technology Leadership
+
+  Head of Engineering:
+    synonyms:
+      - Head of Software Engineering
+      - Head of Technology
+      - Head of Tech
+      - Head Engineering
+      - Engineering Head
+    function: engineering
+    seniority: head
+    query_group: technology_executive
+    role_family: Technology Leadership
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # MARKETING LEADERSHIP
+  # ══════════════════════════════════════════════════════════════════════════════
+
+  CMO:
+    synonyms:
+      - Chief Marketing Officer
+      - Chief Brand Officer
+      - Chief Growth Officer
+    function: marketing
+    seniority: executive
+    query_group: marketing_executive
+    role_family: Marketing Leadership
+
+  VP Marketing:
+    synonyms:
+      - Vice President Marketing
+      - VP of Marketing
+      - Vice President of Marketing
+      - SVP Marketing
+      - Senior VP Marketing
+      - VP – Marketing
+    function: marketing
+    seniority: vice_president
+    query_group: marketing_executive
+    role_family: Marketing Leadership
+
+  Head of Marketing:
+    synonyms:
+      - Marketing Head
+      - Head Marketing
+      - Global Head of Marketing
+      - Head – Marketing
+      - Head, Marketing
+    function: marketing
+    seniority: head
+    query_group: marketing_executive
+    role_family: Marketing Leadership
+
+  Director of Marketing:
+    synonyms:
+      - Marketing Director
+      - Director Marketing
+      - Senior Director Marketing
+      - Senior Director of Marketing
+    function: marketing
+    seniority: director
+    query_group: marketing_executive
+    role_family: Marketing Leadership
+
+  Head of Growth:
+    synonyms:
+      - VP Growth
+      - Growth Lead
+      - Head Growth
+      - Director of Growth
+      - Growth Director
+    function: growth
+    seniority: head
+    query_group: marketing_executive
+    role_family: Marketing Leadership
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # REVENUE & SALES LEADERSHIP
+  # ══════════════════════════════════════════════════════════════════════════════
+
+  CRO:
+    synonyms:
+      - Chief Revenue Officer
+      - Chief Commercial Officer
+      - CCO
+    function: revenue
+    seniority: executive
+    query_group: sales_executive
+    role_family: Revenue & Sales
+
+  VP Sales:
+    synonyms:
+      - Vice President Sales
+      - VP of Sales
+      - Vice President of Sales
+      - SVP Sales
+      - Senior VP Sales
+      - VP – Sales
+    function: sales
+    seniority: vice_president
+    query_group: sales_executive
+    role_family: Revenue & Sales
+
+  Head of Sales:
+    synonyms:
+      - Sales Head
+      - Head Sales
+      - Global Head of Sales
+      - Head – Sales
+      - Head, Sales
+    function: sales
+    seniority: head
+    query_group: sales_executive
+    role_family: Revenue & Sales
+
+  Director of Sales:
+    synonyms:
+      - Sales Director
+      - Director Sales
+      - Senior Director of Sales
+      - Senior Director Sales
+    function: sales
+    seniority: director
+    query_group: sales_executive
+    role_family: Revenue & Sales
+
+  VP Business Development:
+    synonyms:
+      - Vice President Business Development
+      - VP of Business Development
+      - VP BD
+      - Head of Business Development
+      - Director of Business Development
+    function: business_development
+    seniority: vice_president
+    query_group: sales_executive
+    role_family: Revenue & Sales
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # FINANCE LEADERSHIP
+  # ══════════════════════════════════════════════════════════════════════════════
+
+  CFO:
+    synonyms:
+      - Chief Financial Officer
+      - Chief Finance Officer
+    function: finance
+    seniority: executive
+    query_group: finance_executive
+    role_family: Finance Leadership
+
+  VP Finance:
+    synonyms:
+      - Vice President Finance
+      - VP of Finance
+      - Vice President of Finance
+      - SVP Finance
+      - Senior VP Finance
+      - VP – Finance
+    function: finance
+    seniority: vice_president
+    query_group: finance_executive
+    role_family: Finance Leadership
+
+  Head of Finance:
+    synonyms:
+      - Finance Head
+      - Head Finance
+      - Global Head of Finance
+      - Head – Finance
+    function: finance
+    seniority: head
+    query_group: finance_executive
+    role_family: Finance Leadership
+
+  Director of Finance:
+    synonyms:
+      - Finance Director
+      - Director Finance
+      - Senior Director Finance
+      - Senior Director of Finance
+    function: finance
+    seniority: director
+    query_group: finance_executive
+    role_family: Finance Leadership
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # PRODUCT LEADERSHIP
+  # ══════════════════════════════════════════════════════════════════════════════
+
+  CPO:
+    synonyms:
+      - Chief Product Officer
+      - Chief Product and Technology Officer
+      - CPTO
+    function: product
+    seniority: executive
+    query_group: product_executive
+    role_family: Product Leadership
+
+  VP Product:
+    synonyms:
+      - Vice President Product
+      - VP of Product
+      - Vice President of Product
+      - SVP Product
+      - VP Product Management
+      - VP – Product
+    function: product
+    seniority: vice_president
+    query_group: product_executive
+    role_family: Product Leadership
+
+  Head of Product:
+    synonyms:
+      - Product Head
+      - Head Product
+      - Head of Product Management
+      - Head – Product
+    function: product
+    seniority: head
+    query_group: product_executive
+    role_family: Product Leadership
+
+  Director of Product:
+    synonyms:
+      - Product Director
+      - Director Product
+      - Senior Director of Product
+      - Senior Director Product Management
+    function: product
+    seniority: director
+    query_group: product_executive
+    role_family: Product Leadership
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # PEOPLE & HR LEADERSHIP
+  # ══════════════════════════════════════════════════════════════════════════════
+
+  CHRO:
+    synonyms:
+      - Chief Human Resources Officer
+      - Chief People Officer
+      - CPO
+      - Chief Talent Officer
+    function: human_resources
+    seniority: executive
+    query_group: hr_executive
+    role_family: People & HR
+
+  VP HR:
+    synonyms:
+      - Vice President HR
+      - VP Human Resources
+      - VP of HR
+      - VP People
+      - VP People & Culture
+      - SVP HR
+    function: human_resources
+    seniority: vice_president
+    query_group: hr_executive
+    role_family: People & HR
+
+  Head of HR:
+    synonyms:
+      - HR Head
+      - Head Human Resources
+      - Head of People
+      - Head of Talent
+      - Head People & Culture
+    function: human_resources
+    seniority: head
+    query_group: hr_executive
+    role_family: People & HR
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # CUSTOMER SUCCESS & EXPERIENCE
+  # ══════════════════════════════════════════════════════════════════════════════
+
+  Chief Customer Officer:
+    synonyms: [CCO, Chief Client Officer, Chief Customer Experience Officer]
+    function: customer
+    seniority: executive
+    query_group: customer_executive
+    role_family: Customer Success & Experience
+
+  Head of Customer Success:
+    synonyms:
+      - Head Customer Success
+      - Customer Success Head
+      - Global Head of Customer Success
+      - Head - Customer Success
+      - Head, Customer Success
+    function: customer_success
+    seniority: head
+    query_group: customer_success
+    role_family: Customer Success & Experience
+
+  VP Customer Success:
+    synonyms:
+      - Vice President Customer Success
+      - VP of Customer Success
+      - Vice President of Customer Success
+      - SVP Customer Success
+      - Senior VP Customer Success
+      - VP – Customer Success
+    function: customer_success
+    seniority: vice_president
+    query_group: customer_success
+    role_family: Customer Success & Experience
+
+  Director Customer Success:
+    synonyms:
+      - Director of Customer Success
+      - Customer Success Director
+      - Senior Director Customer Success
+      - Senior Director of Customer Success
+    function: customer_success
+    seniority: director
+    query_group: customer_success
+    role_family: Customer Success & Experience
+
+  Customer Success Leader:
+    synonyms: [Customer Success Lead, Customer Success Leadership]
+    function: customer_success
+    seniority: leader
+    query_group: customer_success
+    role_family: Customer Success & Experience
+
+  Head of Customer Experience:
+    synonyms:
+      - Head Customer Experience
+      - Customer Experience Head
+      - Head of CX
+      - Head – Customer Experience
+      - Head, Customer Experience
+    function: customer_experience
+    seniority: head
+    query_group: customer_experience
+    role_family: Customer Success & Experience
+
+  VP Customer Experience:
+    synonyms:
+      - Vice President Customer Experience
+      - VP of Customer Experience
+      - VP CX
+      - SVP Customer Experience
+      - Senior VP Customer Experience
+    function: customer_experience
+    seniority: vice_president
+    query_group: customer_experience
+    role_family: Customer Success & Experience
+
+  Director Customer Experience:
+    synonyms:
+      - Director of Customer Experience
+      - Customer Experience Director
+      - Director CX
+      - Senior Director of Customer Experience
+      - Senior Director Customer Experience
+    function: customer_experience
+    seniority: director
+    query_group: customer_experience
+    role_family: Customer Success & Experience
+
+  CX Leader:
+    synonyms: [Customer Experience Leader, CX Lead]
+    function: customer_experience
+    seniority: leader
+    query_group: customer_experience
+    role_family: Customer Success & Experience
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # COMPANY LEADERSHIP
+  # ══════════════════════════════════════════════════════════════════════════════
+
+  CEO:
+    synonyms: [Chief Executive Officer, Founder and CEO, Founder & CEO, MD & CEO, Managing Director & CEO]
+    function: executive
+    seniority: executive
+    query_group: company_leadership
+    role_family: Company Leadership
+
+  Co-founder:
+    synonyms: [Cofounder, Co-Founder, Co-founder and CEO, Co-Founder & CEO]
+    function: founder
+    seniority: executive
+    query_group: company_leadership
+    role_family: Company Leadership
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # GENERIC SENIOR TITLES
+  # ══════════════════════════════════════════════════════════════════════════════
+
+  VP:
+    synonyms:
+      - Vice President
+      - VP -
+      - VP |
+    function: generic_vp
+    seniority: vice_president
+    query_group: senior_leader
+    role_family: Senior Leadership (Generic)
+
+  Senior Director:
+    synonyms:
+      - Senior Director -
+      - Senior Director |
+    function: generic_director
+    seniority: director
+    query_group: senior_leader
+    role_family: Senior Leadership (Generic)
+
+  Head of Business:
+    synonyms:
+      - Head of Business Operations
+      - Head of Business Development
+      - Head - Business
+    function: business
+    seniority: head
+    query_group: senior_leader
+    role_family: Senior Leadership (Generic)

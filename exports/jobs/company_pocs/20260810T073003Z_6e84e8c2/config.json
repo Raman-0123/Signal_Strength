@@ -1,0 +1,22 @@
+{
+  "companies": [
+    "Dyson"
+  ],
+  "designations": [
+    "CMO",
+    "Head of Marketing",
+    "VP Marketing",
+    "AVP Marketing",
+    "APAC Marketing",
+    "Director",
+    "Marketing"
+  ],
+  "target_count": 15,
+  "sources": [
+    "google_browser",
+    "ddgs"
+  ],
+  "browser_headless": true,
+  "google_manual_challenge_seconds": 0,
+  "max_results_per_search": 25
+}

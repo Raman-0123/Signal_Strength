@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=78", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "speedy-scraper"
+version = "2.0.0"
+description = "Persistent lead intelligence and public search orchestration"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "APScheduler>=3.11.3,<4",
+  "beautifulsoup4>=4.12,<5",
+  "ddgs>=9,<10",
+  "fastapi>=0.139,<1",
+  "httpx>=0.28,<1",
+  "openpyxl>=3.1,<4",
+  "pandas>=2,<3",
+  "playwright>=1.45,<2",
+  "prometheus-client>=0.22,<1",
+  "python-multipart>=0.0.20,<1",
+  "PyYAML>=6.0.3,<7",
+  "requests[socks]>=2.31,<3",
+  "streamlit>=1.37,<2",
+  "uvicorn[standard]>=0.35,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.17,<2",
+  "pytest>=8.4,<9",
+  "pytest-cov>=6.2,<7",
+  "ruff>=0.12,<1",
+  "types-PyYAML>=6.0.12",
+  "types-requests>=2.31",
+]
+
+[project.scripts]
+speedy-scraper = "speedy_scraper.cli:main"
+
+[tool.setuptools]
+packages = ["speedy_scraper", "core", "public_contact_finder"]
+
+[tool.setuptools.data-files]
+config = ["config/default.yaml", "config/catalog.yaml"]
+migrations = ["migrations/001_initial.sql", "migrations/002_retention_and_schedule_indexes.sql"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 110
+exclude = [".venv", "data", "legacy", "__pycache__"]
+
+[tool.ruff.lint]
+select = ["E9", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["core.*", "public_contact_finder.*"]
+ignore_errors = true
+
+[tool.coverage.run]
+branch = true
+source = ["speedy_scraper"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true

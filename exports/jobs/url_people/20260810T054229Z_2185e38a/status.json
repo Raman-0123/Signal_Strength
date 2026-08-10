@@ -1,0 +1,10 @@
+{
+  "state": "failed",
+  "workflow": "url_people",
+  "job_id": "20260810T054229Z_2185e38a",
+  "message": "No supported people dataset was found. Supported: event speaker JSON, Next.js embedded people/speakers data, JSON-LD Person, or visible LinkedIn profile links.",
+  "processed": 0,
+  "total": 0,
+  "updated_at": "2026-08-10T05:42:29.877397+00:00",
+  "pid": 2116
+}

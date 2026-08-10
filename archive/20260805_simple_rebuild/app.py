@@ -1,0 +1,1591 @@
+import hashlib
+import importlib
+import io
+from datetime import datetime
+
+import pandas as pd
+import streamlit as st
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
+
+import core.google_search as core_google_search
+import core.query_builder as core_query_builder
+import core.utils as core_utils
+from speedy_scraper.gateway import create_gateway
+
+# Streamlit retains imported dependency modules while hot-reloading app.py.
+# Refresh the dependency graph only when the loaded query strategy is stale or
+# the Google CAPTCHA helper is absent. Unconditional reloads create duplicate
+# exception-class identities and can prevent GoogleSecurityCheck from bubbling
+# through the engine.
+importlib.invalidate_caches()
+_EXPECTED_QUERY_STRATEGY_VERSION = 11
+_core_refresh_required = (
+    getattr(core_query_builder, "QUERY_STRATEGY_VERSION", 0)
+    != _EXPECTED_QUERY_STRATEGY_VERSION
+    or not hasattr(core_google_search, "google_security_check_resolved")
+)
+if _core_refresh_required:
+    core_utils = importlib.reload(core_utils)
+    core_query_builder = importlib.reload(core_query_builder)
+    core_google_search = importlib.reload(core_google_search)
+
+st.set_page_config(
+    page_title="AI Lead Intelligence Platform",
+    page_icon="chart-line",
+    layout="wide",
+)
+
+@st.cache_resource
+def _gateway_resource():
+    return create_gateway(start_runner=True)
+
+
+gateway = _gateway_resource()
+_catalog = gateway.catalog()
+LOCATIONS = _catalog["locations"]
+ROLES = _catalog["roles"]
+INDUSTRIES = _catalog["industries"]
+SIGNALS = _catalog["signals"]
+ROLE_LABELS = _catalog["role_labels"]
+INDUSTRY_LABELS = _catalog["industry_labels"]
+
+normalize_linkedin_url = core_utils.normalize_linkedin_url
+person_identity_key = core_utils.person_identity_key
+is_export_ready_profile = core_utils.is_export_ready_profile
+check_role_in_title = core_utils.check_role_in_title
+any_term_matches = core_utils.any_term_matches
+
+QUERY_STRATEGY_VERSION = core_query_builder.QUERY_STRATEGY_VERSION
+query_budget_for = core_query_builder.query_budget_for
+build_query_plan = core_query_builder.build_query_plan
+build_query_matrix = core_query_builder.build_query_matrix
+ensure_query_filters = core_query_builder.ensure_query_filters
+
+GoogleSecurityCheck = core_google_search.GoogleSecurityCheck
+close_google_browser = core_google_search.close_google_browser
+google_security_check_resolved = (
+    core_google_search.google_security_check_resolved
+)
+
+def formatted_excel_bytes(
+    df,
+    sheet_name="Leads",
+    *,
+    extra_sheets=None,
+):
+    """Create a readable multi-sheet Excel export."""
+    buf = io.BytesIO()
+    sheets = {sheet_name: df}
+    sheets.update(extra_sheets or {})
+    with pd.ExcelWriter(buf, engine="openpyxl") as writer:
+        for current_sheet, current_df in sheets.items():
+            current_df.to_excel(
+                writer,
+                index=False,
+                sheet_name=str(current_sheet)[:31],
+            )
+            ws = writer.sheets[str(current_sheet)[:31]]
+            ws.freeze_panes = "A2"
+            ws.auto_filter.ref = ws.dimensions
+            header_fill = PatternFill("solid", fgColor="1F4E78")
+            for cell in ws[1]:
+                cell.fill = header_fill
+                cell.font = Font(color="FFFFFF", bold=True)
+                cell.alignment = Alignment(
+                    horizontal="center", vertical="center"
+                )
+            for idx, column in enumerate(current_df.columns, start=1):
+                values = [str(column)] + [
+                    str(value)
+                    for value in current_df[column].dropna().head(500)
+                ]
+                width = min(max(len(value) for value in values) + 2, 48)
+                ws.column_dimensions[get_column_letter(idx)].width = max(
+                    width, 12
+                )
+            for row in ws.iter_rows(min_row=2):
+                for cell in row:
+                    cell.alignment = Alignment(
+                        vertical="top", wrap_text=True
+                    )
+    return buf.getvalue()
+
+
+def _find_column(columns, accepted_names=(), fragments=()):
+    normalized = {
+        "".join(ch for ch in str(column).lower() if ch.isalnum()): column
+        for column in columns
+    }
+    for accepted in accepted_names:
+        if accepted in normalized:
+            return normalized[accepted]
+    return next(
+        (original for key, original in normalized.items()
+         if any(fragment in key for fragment in fragments)),
+        None,
+    )
+
+
+def extract_existing_identities(df):
+    """Extract URL and name/company identities from an arbitrary lead sheet."""
+    urls = set()
+    people = set()
+    url_col = _find_column(df.columns, fragments=("linkedin", "linkdin"))
+    name_col = _find_column(
+        df.columns,
+        accepted_names=("name", "fullname", "contactname", "personname"),
+    )
+    company_col = _find_column(
+        df.columns,
+        accepted_names=("company", "companyname", "organisation", "organization", "employer"),
+    )
+    if url_col:
+        urls.update(
+            normalized
+            for value in df[url_col].dropna().tolist()
+            if (normalized := normalize_linkedin_url(value))
+        )
+    if name_col and company_col:
+        for name, company in zip(df[name_col], df[company_col]):
+            if identity := person_identity_key(name, company):
+                people.add(identity)
+    return urls, people
+
+
+@st.fragment(run_every=2)
+def verification_panel():
+    """Poll waiting provider checks and resume automatically when ready."""
+    check = st.session_state.get("harvest_security_check")
+    if not check:
+        return
+
+    engine = str(check.get("engine") or check.get("provider") or "Google")
+    is_ddgs_check = engine.strip().lower() in {"duckduckgo", "ddgs"}
+    active_job_id = st.session_state.get("active_job_id", "")
+    if active_job_id:
+        try:
+            verification_job = gateway.check_verification(active_job_id)
+            resolved = verification_job.get("status") != "waiting_verification"
+        except Exception:
+            resolved = False
+    elif is_ddgs_check:
+        resolved = False
+    else:
+        resolved = google_security_check_resolved(
+            st.session_state.get("harvest_google_browser"),
+            check,
+        )
+    if resolved:
+        st.session_state.harvest_security_check = None
+        st.session_state.harvest_outcome = "Running"
+        st.session_state.is_harvesting = True
+        st.session_state.stop_requested = False
+        st.toast(f"{engine} verification completed; continuing automatically.")
+        st.rerun(scope="app")
+
+    if is_ddgs_check:
+        with st.container(border=True):
+            st.warning(
+                "DuckDuckGo temporarily blocked or refused search requests. "
+                "The job is paused on the saved request and will retry after "
+                "the cooldown."
+            )
+            retry_at = check.get("retry_at", "")
+            st.caption(
+                f"Paused phase: {check.get('phase', 'discovery')} · "
+                f"page {check.get('page', 1)}"
+                + (f" · retry after {retry_at}" if retry_at else "")
+            )
+            with st.expander("Show paused DuckDuckGo query"):
+                st.code(check.get("query", ""), language=None)
+            col_retry, col_cancel = st.columns(2)
+            with col_retry:
+                if st.button(
+                    "Retry DuckDuckGo now",
+                    type="secondary",
+                    disabled=not bool(active_job_id),
+                    key="retry_ddgs_verification",
+                ):
+                    gateway.resume(active_job_id)
+                    st.session_state.harvest_security_check = None
+                    st.session_state.harvest_outcome = "Running"
+                    st.session_state.is_harvesting = True
+                    st.rerun(scope="app")
+            with col_cancel:
+                if st.button(
+                    "Cancel retry and keep found leads",
+                    type="secondary",
+                    key="cancel_ddgs_verification",
+                ):
+                    if active_job_id:
+                        gateway.cancel(active_job_id)
+                    st.session_state.harvest_security_check = None
+                    st.session_state.harvest_outcome = "Stopped"
+                    st.session_state.is_harvesting = False
+                    st.session_state.stop_requested = True
+                    st.rerun(scope="app")
+        return
+
+    with st.container(border=True):
+        st.warning(
+            "Google verification is waiting in the visible Chrome for Testing "
+            "window. Solve it there; this notice disappears automatically."
+        )
+        st.caption(
+            f"Paused phase: {check.get('phase', 'discovery')} · "
+            f"page {check.get('page', 1)} · checking every 2 seconds"
+        )
+        with st.expander("Show paused Google query"):
+            st.code(check.get("query", ""), language=None)
+        if st.button(
+            "Cancel verification and keep found leads",
+            type="secondary",
+            key="cancel_google_verification",
+        ):
+            if active_job_id:
+                gateway.cancel(active_job_id)
+            else:
+                close_google_browser(
+                    st.session_state.get("harvest_google_browser")
+                )
+            st.session_state.harvest_security_check = None
+            st.session_state.harvest_outcome = "Stopped"
+            st.session_state.is_harvesting = False
+            st.session_state.stop_requested = True
+            st.rerun(scope="app")
+
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="css"] { 
+    font-family: 'Outfit', sans-serif; 
+}
+
+/* Headers with Gradient Text */
+h1 {
+    background: linear-gradient(135deg, #4F46E5 0%, #10B981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700 !important;
+    letter-spacing: -1px;
+}
+h2, h3 { font-weight: 600 !important; }
+
+/* Stunning Buttons */
+.stButton>button {
+    background: linear-gradient(135deg, #10B981 0%, #3B82F6 100%);
+    color: white !important; 
+    font-weight: 600; 
+    border-radius: 12px; 
+    border: none;
+    padding: 0.75rem 2rem; 
+    font-size: 1.05rem;
+    box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    letter-spacing: 0.5px;
+}
+.stButton>button:hover { 
+    transform: translateY(-2px) scale(1.01); 
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5); 
+    filter: brightness(1.1);
+}
+
+/* Secondary Button Styling */
+div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="secondary"] {
+    background: var(--background-color) !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
+    color: var(--text-color) !important;
+    box-shadow: none;
+}
+div[data-testid="stVerticalBlock"] > div > div > div > div > button[kind="secondary"]:hover {
+    border: 1px solid #EF4444 !important;
+    color: #EF4444 !important;
+    background: rgba(239, 68, 68, 0.05) !important;
+}
+
+/* Glassmorphism Metric Cards */
+.metric-card {
+    background: rgba(128, 128, 128, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(128, 128, 128, 0.15);
+    border-radius: 16px;
+    padding: 24px; 
+    text-align: center;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+.metric-card:hover {
+    transform: translateY(-5px);
+    border: 1px solid var(--primary-color);
+}
+.metric-value { 
+    background: linear-gradient(135deg, var(--primary-color) 0%, #3B82F6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2.8rem; 
+    font-weight: 700; 
+    margin: 8px 0; 
+}
+.metric-label { 
+    color: var(--text-color);
+    opacity: 0.65;
+    font-size: 0.85rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    font-weight: 500;
+}
+
+/* Sleek Streamlit Tabs */
+button[data-baseweb="tab"] {
+    background-color: transparent !important;
+    border-bottom: 2px solid transparent !important;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+button[data-baseweb="tab"][aria-selected="true"] {
+    color: #10B981 !important;
+    border-bottom: 2px solid #10B981 !important;
+}
+
+/* Status / Expander */
+div[data-testid="stStatusWidget"] { 
+    border-radius: 12px; 
+}
+div[data-testid="stDataFrame"] {
+    border-radius: 12px;
+    overflow: hidden;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.title("AI Lead Intelligence Platform")
+st.markdown(
+    "Persistent DuckDuckGo lead generation · Background jobs · "
+    "Strict parameter verification"
+)
+
+tab1, tab2, tab3, tab4 = st.tabs(["AI Lead Generator", "Universal CSV Reconciler", "Company Intelligence", "Competitor Event Intel"])
+
+
+# ========================================
+# TAB 1: AI LEAD GENERATOR
+# ========================================
+with tab1:
+    loc_options  = [f"{k} - {v[0]}" for k, v in LOCATIONS.items()]
+    role_options = [f"{k} - {ROLE_LABELS.get(k, v[0])}" for k, v in ROLES.items()]
+    ind_options  = [f"{k} - {INDUSTRY_LABELS.get(k, v[0])}" for k, v in INDUSTRIES.items()]
+    sig_options  = [f"{k} - {v[0]}" for k, v in SIGNALS.items()]
+    filters_locked = bool(
+        st.session_state.get("is_harvesting")
+        or st.session_state.get("harvest_security_check")
+    )
+
+    with st.sidebar:
+        st.header("Query Constructor")
+        st.caption("Select **multiple** parameters to build concurrent queries.")
+
+        sel_locs = st.multiselect(
+            "Geography", loc_options, disabled=filters_locked,
+        )
+        sel_roles = st.multiselect(
+            "Persona / Role", role_options, disabled=filters_locked,
+        )
+        sel_inds = st.multiselect(
+            "Industry", ind_options, disabled=filters_locked,
+        )
+        sel_sigs = st.multiselect(
+            "Event / Intent Signals", sig_options, disabled=filters_locked,
+        )
+
+        st.markdown("---")
+        st.subheader("Company Fit")
+        business_model = st.selectbox(
+            "Business Model",
+            ["Any", "B2B only", "B2C only", "Hybrid (B2B + B2C)"],
+            disabled=filters_locked,
+            help=(
+                "Keeps person discovery broad, then runs one cached company "
+                "evidence search and rejects companies without the selected fit."
+            ),
+        )
+        company_type = st.selectbox(
+            "Company Type",
+            ["Any company type", "GCC / Global Capability Centre only"],
+            disabled=filters_locked,
+            help=(
+                "Validates Global Capability Centre, Global In-house Centre, "
+                "and captive-centre evidence after profile discovery."
+            ),
+        )
+        gcc_only = company_type.startswith("GCC")
+
+        st.markdown("---")
+        st.subheader("Custom Keywords")
+        custom_keywords = st.text_input(
+            "Add keywords (comma separated)",
+            placeholder="e.g. B2B, Series A, AI Builder",
+            disabled=filters_locked,
+        )
+
+        st.markdown("---")
+        st.subheader("Organisation Name Filter")
+        st.caption("Paste company names to **only** return people from those orgs.")
+        org_filter = st.text_input(
+            "Company names (comma separated)",
+            placeholder="e.g. Infosys, Wipro, TCS",
+            key="org_filter",
+            disabled=filters_locked,
+        )
+
+        st.markdown("---")
+        lead_count = st.number_input(
+            "Target Net-New POCs",
+            min_value=1,
+            max_value=500,
+            value=15,
+            disabled=filters_locked,
+            help=(
+                "The crawler expands the discovery plan and stops when this "
+                "many unique profiles pass the required role, verified "
+                "location, organisation allow-list, and four-field gates. "
+                "Strict company/signal matches are shown as a subset."
+            ),
+        )
+
+        st.markdown("---")
+        st.header("Deduplication Engine")
+        st.caption("Upload one or more previous databases to return only net-new people.")
+        uploaded_files = st.file_uploader(
+            "Upload Existing CSV/Excel Files",
+            type=['csv', 'xlsx'],
+            accept_multiple_files=True,
+        )
+
+    # Extract both URL and name/company identities from every file and Excel sheet.
+    existing_urls = set()
+    existing_people = set()
+    loaded_sheets = 0
+    for uploaded_file in uploaded_files or []:
+        try:
+            uploaded_file.seek(0)
+            if uploaded_file.name.lower().endswith('.csv'):
+                frames = {uploaded_file.name: pd.read_csv(uploaded_file)}
+            else:
+                frames = pd.read_excel(uploaded_file, sheet_name=None)
+            for df_exist in frames.values():
+                file_urls, file_people = extract_existing_identities(df_exist)
+                existing_urls.update(file_urls)
+                existing_people.update(file_people)
+                loaded_sheets += 1
+        except Exception as e:
+            st.sidebar.error(f"Could not read {uploaded_file.name}: {e}")
+    if uploaded_files:
+        st.sidebar.success(
+            f"Deduplication loaded {len(uploaded_files)} files / {loaded_sheets} sheets: "
+            f"{len(existing_urls)} LinkedIn profiles and {len(existing_people)} person-company identities."
+        )
+
+    # Resolve selections to flat keyword lists
+    def resolve_locs(sel):
+        return [l for sk in sel for l in LOCATIONS[sk.split(" - ")[0]]]
+
+    def resolve_roles(sel):
+        # Interleave role families so each selected persona reaches the bounded
+        # query plan before secondary aliases from the first selection.
+        groups = [ROLES[sk.split(" - ")[0]] for sk in sel]
+        resolved = []
+        for alias_idx in range(max((len(group) for group in groups), default=0)):
+            for group in groups:
+                if alias_idx < len(group) and group[alias_idx] not in resolved:
+                    resolved.append(group[alias_idx])
+        return resolved
+
+    def resolve_inds(sel):
+        # Give every selected industry a primary query before adding aliases.
+        groups = [INDUSTRIES[sk.split(" - ")[0]] for sk in sel]
+        resolved = []
+        for alias_idx in range(max((len(group) for group in groups), default=0)):
+            for group in groups:
+                if alias_idx < len(group) and group[alias_idx] not in resolved:
+                    resolved.append(group[alias_idx])
+        return resolved
+
+    def resolve_sigs(sel):
+        # Interleave selected signal families so a bounded evidence query does
+        # not consume its whole term budget on the first selected family.
+        groups = [
+            [
+                signal for signal in SIGNALS[sk.split(" - ")[0]]
+                if signal != "None - General Prospecting"
+            ]
+            for sk in sel
+        ]
+        resolved = []
+        for alias_idx in range(max((len(group) for group in groups), default=0)):
+            for group in groups:
+                if alias_idx < len(group) and group[alias_idx] not in resolved:
+                    resolved.append(group[alias_idx])
+        return resolved
+
+    def selected_groups(sel, source):
+        return [source[sk.split(" - ")[0]] for sk in sel]
+
+    # Selecting every industry is logically the same as no industry
+    # restriction. Treat it as "Any" so the app does not issue a company
+    # evidence search containing dozens of unrelated sectors for each lead.
+    all_industries_selected = bool(ind_options) and (
+        set(sel_inds) == set(ind_options)
+    )
+    effective_sel_inds = [] if all_industries_selected else sel_inds
+    if all_industries_selected:
+        st.warning(
+            "All industries selected = Any industry. Industry evidence searches "
+            "are disabled for this run; B2B and selected signals remain strict."
+        )
+
+    # Editable discovery plan — regenerates when any filter changes
+    edited_queries_text = ""
+    if sel_locs or sel_roles:
+        all_locs  = resolve_locs(sel_locs)
+        all_roles = resolve_roles(sel_roles)
+        all_inds  = resolve_inds(effective_sel_inds)
+        all_sigs  = resolve_sigs(sel_sigs)
+
+        full_plan = build_query_plan(
+            all_locs, all_roles, all_inds, all_sigs, custom_keywords,
+            max_queries=query_budget_for(lead_count, all_locs, all_roles, all_inds, all_sigs),
+            organization_kws=org_filter,
+            business_model=business_model,
+            gcc_only=gcc_only,
+            include_recovery=False,
+            role_groups=selected_groups(sel_roles, ROLES),
+            location_groups=selected_groups(sel_locs, LOCATIONS),
+            include_context_terms=True,
+        )
+
+        # Keep one stable widget key and explicitly replace its content when a
+        # role/location selection changes. Dynamic widget keys left stale
+        # query values in Streamlit state and made the browser appear detached
+        # from the current prompt.
+        discovery_sig = "|".join([
+            ",".join(sorted(sel_locs)),
+            ",".join(sorted(sel_roles)),
+            str(int(lead_count)),
+            str(QUERY_STRATEGY_VERSION),
+        ])
+        discovery_hash = hashlib.sha256(
+            discovery_sig.encode()
+        ).hexdigest()[:16]
+
+        default_queries = "\n".join(q["query"] for q in full_plan)
+        if (
+            st.session_state.get("discovery_queries_signature")
+            != discovery_hash
+        ):
+            st.session_state.discovery_queries_text = default_queries
+            st.session_state.discovery_queries_signature = discovery_hash
+        st.caption(
+            f"**{len(full_plan)} discovery queries** generated for the "
+            f"{int(lead_count)}-POC target. Every query contains the selected "
+            "role family and location; company fit and signals are validated "
+            "separately."
+        )
+        edited_queries_text = st.text_area(
+            "Discovery Queries (one per line)",
+            height=260,
+            key="discovery_queries_text",
+            disabled=filters_locked,
+        )
+        fallback_queries = [
+            item.get("fallback_query", "")
+            for item in full_plan
+            if item.get("fallback_query")
+        ]
+        if fallback_queries:
+            with st.expander(
+                "One-shot alternate-title fallback (empty or low-yield primary)"
+            ):
+                st.code("\n".join(fallback_queries), language=None)
+
+        validation_labels = []
+        if effective_sel_inds:
+            validation_labels.append(
+                "Industry: " + ", ".join(
+                    INDUSTRY_LABELS.get(item.split(" - ")[0], item)
+                    for item in effective_sel_inds
+                )
+            )
+        elif all_industries_selected:
+            validation_labels.append("Industry: Any")
+        if business_model != "Any":
+            validation_labels.append(f"Business model: {business_model}")
+        if gcc_only:
+            validation_labels.append("Company type: GCC")
+        if sel_sigs:
+            validation_labels.append("Selected person/event signals")
+        if custom_keywords:
+            validation_labels.append(f"Custom: {custom_keywords}")
+        if org_filter:
+            validation_labels.append(f"Organisation: {org_filter}")
+        if validation_labels:
+            st.info(
+                "Mandatory after profile discovery: "
+                + " · ".join(validation_labels)
+                + ". These filters are intentionally not added to the person "
+                "query; a candidate is rejected if separate evidence fails."
+            )
+
+    # ── Session state initialisation ──────────────────────────────────────
+    for key, default in {
+        "tab1_leads": [],
+        "tab1_all_pocs": [],
+        "engine_label": "",
+        "is_harvesting": False,
+        "stop_requested": False,
+        "harvest_query_plan": [],
+        "harvest_query_idx": 0,
+        "harvest_existing_urls": set(),
+        "harvest_existing_people": set(),
+        "session_seen_urls": set(),
+        "session_seen_people": set(),
+        "harvest_params": {},
+        "harvest_partial_profiles": {},
+        "harvest_outcome": "Ready",
+        "harvest_google_browser": {},
+        "harvest_security_check": None,
+        "harvest_company_evidence_cache": {},
+        "harvest_person_evidence_cache": {},
+        "harvest_query_strategy_version": 0,
+        "discovery_queries_text": "",
+        "discovery_queries_signature": "",
+        "active_job_id": "",
+        "history_job_id": "",
+        "gateway_event_cursor": 0,
+        "legacy_session_imported": False,
+    }.items():
+        if key not in st.session_state:
+            st.session_state[key] = default
+
+    # A hot upgrade can still see the prior in-memory result lists. Import
+    # them once into SQLite before the compatibility state is eventually
+    # discarded; a process restart cannot recover state that never reached
+    # disk, so this bridge deliberately runs as early as possible.
+    if (
+        not st.session_state.legacy_session_imported
+        and (st.session_state.tab1_all_pocs or st.session_state.tab1_leads)
+    ):
+        try:
+            migrated = gateway.import_legacy(
+                st.session_state.tab1_all_pocs or st.session_state.tab1_leads,
+                st.session_state.tab1_leads,
+            )
+            if migrated and not st.session_state.active_job_id:
+                st.session_state.active_job_id = migrated["id"]
+        except Exception:
+            pass
+        st.session_state.legacy_session_imported = True
+
+    try:
+        historical_jobs = [
+            job for job in gateway.list_jobs(limit=100)
+            if job.get("workflow") == "lead"
+        ]
+    except Exception:
+        historical_jobs = []
+    if historical_jobs:
+        history_by_id = {job["id"]: job for job in historical_jobs}
+        with st.expander("Persisted lead-job history", expanded=False):
+            st.dataframe(
+                pd.DataFrame([
+                    {
+                        "Job ID": job["id"], "Status": job["status"],
+                        "Qualified": job.get("qualified_count", 0),
+                        "Strict": job.get("strict_count", 0),
+                        "Updated": job.get("updated_at", ""),
+                    }
+                    for job in historical_jobs
+                ]),
+                width="stretch",
+                hide_index=True,
+            )
+            selected_history = st.text_input(
+                "Job ID to load",
+                placeholder="Paste a Job ID from the table",
+                key="history_job_id",
+            )
+            if st.button(
+                "Load selected job",
+                disabled=selected_history not in history_by_id,
+                key="load_history_job",
+            ):
+                selected_job = history_by_id[selected_history]
+                request = selected_job.get("request", {})
+                st.session_state.active_job_id = selected_history
+                st.session_state.harvest_params = {
+                    "all_locs": request.get("locations", []),
+                    "all_roles": request.get("roles", []),
+                    "all_inds": request.get("industries", []),
+                    "all_sigs": request.get("signals", []),
+                    "custom_keywords": ", ".join(request.get("custom_keywords", [])),
+                    "organization_kws": ", ".join(request.get("organizations", [])),
+                    "business_model": request.get("business_model", "Any"),
+                    "gcc_only": request.get("gcc_only", False),
+                }
+                st.rerun()
+
+    strategy_was_replaced = False
+    if st.session_state.harvest_query_strategy_version != QUERY_STRATEGY_VERSION:
+        strategy_was_replaced = bool(st.session_state.harvest_query_plan)
+        # Never leave a tab running an obsolete hidden/fallback query after a
+        # query-strategy deployment, even when the prior plan already ended.
+        close_google_browser(st.session_state.harvest_google_browser)
+        if strategy_was_replaced:
+            st.session_state.is_harvesting = False
+            st.session_state.stop_requested = False
+            st.session_state.harvest_query_plan = []
+            st.session_state.harvest_query_idx = 0
+            st.session_state.harvest_security_check = None
+            st.session_state.harvest_outcome = "Query strategy updated"
+        st.session_state.harvest_company_evidence_cache = {}
+        st.session_state.harvest_person_evidence_cache = {}
+        st.session_state.harvest_query_strategy_version = QUERY_STRATEGY_VERSION
+
+    if strategy_was_replaced:
+        st.warning(
+            "The obsolete discovery plan was stopped and cleared. Any accepted "
+            "leads were preserved. Click Start Lead Harvest to use the "
+            "target-scaled discovery strategy."
+        )
+
+    # ── Controls ───────────────────────────────────────────────────────────
+    col1, col2 = st.columns(2)
+    with col1:
+        start_harvest = st.button(
+            "Start Lead Harvest",
+            width="stretch",
+            disabled=(
+                st.session_state.is_harvesting
+                or bool(st.session_state.harvest_security_check)
+            ),
+        )
+    with col2:
+        stop_harvest = st.button(
+            "Stop Scraping & Keep Found Leads",
+            width="stretch",
+            type="secondary",
+            disabled=not st.session_state.is_harvesting,
+        )
+
+    # ── Stop requested ─────────────────────────────────────────────────────
+    if stop_harvest and st.session_state.is_harvesting:
+        if st.session_state.active_job_id:
+            try:
+                gateway.pause(st.session_state.active_job_id)
+            except Exception as exc:
+                st.error(f"Could not pause the persisted job: {exc}")
+        st.session_state.stop_requested = True
+        st.session_state.is_harvesting = False
+        st.session_state.harvest_outcome = "Paused"
+        st.info(
+            "Stopped. "
+            f"{len(st.session_state.tab1_all_pocs)} qualified POCs and "
+            f"{len(st.session_state.tab1_leads)} strict matches preserved."
+        )
+
+    if st.session_state.harvest_security_check:
+        verification_panel()
+
+    # ── Start new harvest ──────────────────────────────────────────────────
+    if start_harvest:
+        if not sel_roles or not sel_locs:
+            st.error("Please select at least one Role and one Geography.")
+            st.stop()
+
+        all_locs  = resolve_locs(sel_locs)
+        all_roles = resolve_roles(sel_roles)
+        all_inds  = resolve_inds(effective_sel_inds)
+        all_sigs  = resolve_sigs(sel_sigs)
+        org_terms = ", ".join([o.strip() for o in org_filter.split(",") if o.strip()]) if org_filter else ""
+
+        dedup_import_ids = []
+        if existing_urls or existing_people:
+            try:
+                for uploaded_file in uploaded_files or []:
+                    uploaded_file.seek(0)
+                    imported = gateway.import_dedup_file(
+                        uploaded_file.name, uploaded_file.read(),
+                    )
+                    dedup_import_ids.append(imported["id"])
+            except Exception as exc:
+                st.warning(f"Could not persist uploaded exclusions: {exc}")
+
+        job_request = {
+            "workflow": "lead",
+            "locations": all_locs,
+            "roles": all_roles,
+            "industries": all_inds,
+            "signals": all_sigs,
+            "custom_keywords": custom_keywords,
+            "organizations": org_terms,
+            "business_model": business_model,
+            "gcc_only": gcc_only,
+            "target_count": int(lead_count),
+            "discovery_provider": "ddgs",
+            "validation_provider": "ddgs",
+            "edited_queries": [
+                line.strip() for line in edited_queries_text.splitlines()
+                if line.strip()
+            ],
+            "dedup_import_ids": dedup_import_ids,
+        }
+        try:
+            persisted_job = gateway.create_job(job_request)
+        except Exception as exc:
+            st.error(f"Could not create the scrape job: {exc}")
+            st.stop()
+
+        st.session_state.tab1_leads = []
+        st.session_state.tab1_all_pocs = []
+        st.session_state.active_job_id = persisted_job["id"]
+        st.session_state.gateway_event_cursor = 0
+        st.session_state.harvest_query_plan = persisted_job["request"].get(
+            "query_plan", []
+        )
+        st.session_state.harvest_query_idx = 0
+        st.session_state.harvest_params = {
+            "all_locs": all_locs, "all_roles": all_roles,
+            "all_inds": all_inds,  "all_sigs":  all_sigs,
+            "custom_keywords": custom_keywords,
+            "organization_kws": org_terms,
+            "business_model": business_model,
+            "gcc_only": gcc_only,
+            "target_count": int(lead_count),
+            "search_provider": "ddgs",
+        }
+        st.session_state.harvest_partial_profiles = {}
+        st.session_state.harvest_company_evidence_cache = {}
+        st.session_state.harvest_person_evidence_cache = {}
+        st.session_state.harvest_query_strategy_version = QUERY_STRATEGY_VERSION
+        st.session_state.harvest_outcome = "Running"
+        st.session_state.harvest_security_check = None
+        st.session_state.is_harvesting = True
+        st.session_state.stop_requested = False
+        st.rerun()
+
+    # ── Persisted job polling ──────────────────────────────────────────────
+    if st.session_state.active_job_id:
+        try:
+            active_job = gateway.get_job(st.session_state.active_job_id)
+            checkpoint = active_job.get("checkpoint", {})
+            st.session_state.harvest_query_idx = int(
+                checkpoint.get("query_index", 0)
+            )
+            st.session_state.harvest_query_plan = active_job["request"].get(
+                "query_plan", st.session_state.harvest_query_plan
+            )
+
+            def _legacy_row(row):
+                legacy = dict(row.get("evaluation", {}).get("legacy", {}))
+                legacy.update({
+                    "Full_Name": row.get("name", ""),
+                    "Designation": row.get("designation", ""),
+                    "Company": row.get("company", ""),
+                    "LinkedIn_URL": row.get("linkedin_url", ""),
+                    "Location_Evidence": row.get("verified_location", ""),
+                    "Location_Verified": "Confirmed" if row.get("verified_location") else "Check",
+                    "Lead_Score": row.get("score", 50),
+                })
+                return legacy
+
+            st.session_state.tab1_all_pocs = [
+                _legacy_row(row)
+                for row in gateway.results(
+                    st.session_state.active_job_id, "qualified", "full"
+                )
+            ]
+            st.session_state.tab1_leads = [
+                _legacy_row(row)
+                for row in gateway.results(
+                    st.session_state.active_job_id, "strict", "full"
+                )
+            ]
+            current_status = active_job["status"]
+            st.session_state.is_harvesting = current_status in {
+                "queued", "running", "pause_requested"
+            }
+            st.session_state.harvest_outcome = active_job.get(
+                "outcome", current_status.replace("_", " ").title()
+            )
+            if current_status == "waiting_verification":
+                st.session_state.harvest_security_check = checkpoint.get(
+                    "security_check"
+                )
+                st.session_state.is_harvesting = False
+            elif st.session_state.harvest_security_check:
+                st.session_state.harvest_security_check = None
+
+            if st.session_state.is_harvesting:
+                target = int(active_job["request"].get("target_count", 15))
+                total = len(st.session_state.harvest_query_plan)
+                qualified_pocs = active_job.get("qualified_count", 0)
+                strict_found = active_job.get("strict_count", 0)
+                st.markdown("---")
+                st.progress(
+                    min(qualified_pocs / target, 1.0),
+                    text=(
+                        f"Collecting qualified POCs… {qualified_pocs}/{target} "
+                        f"found · {strict_found} strict matches · search "
+                        f"{st.session_state.harvest_query_idx}/{total}"
+                    ),
+                )
+                with st.status(
+                    f"Persisted job {active_job['id'][:8]} · "
+                    f"{qualified_pocs}/{target} qualified POCs",
+                    expanded=True,
+                ) as persisted_status:
+                    events = gateway.events(
+                        active_job["id"], st.session_state.gateway_event_cursor
+                    )
+                    for event in events[-20:]:
+                        persisted_status.write(event.get("message", ""))
+                    if events:
+                        st.session_state.gateway_event_cursor = events[-1]["id"]
+                    persisted_status.update(label="Job running in the persistent worker", state="running")
+                import time as _time
+                _time.sleep(0.2)
+                st.rerun()
+        except Exception as exc:
+            st.warning(f"Persisted job status is temporarily unavailable: {exc}")
+
+    # Defensively enforce every selected category again before display/export.
+    if st.session_state.tab1_leads:
+        prevalidated_leads = []
+        active_filters = st.session_state.get("harvest_params", {})
+        selected_roles = active_filters.get("all_roles", [])
+        for lead in st.session_state.tab1_leads:
+            url_key = normalize_linkedin_url(lead.get("LinkedIn_URL", ""))
+            if not is_export_ready_profile(
+                lead.get("Full_Name", ""),
+                lead.get("Company", ""),
+                url_key,
+                designation=lead.get("Designation", ""),
+            ):
+                continue
+            # Role check only — location is enforced in the engine
+            if selected_roles and not check_role_in_title(
+                lead.get("Designation", ""), "", selected_roles,
+            ):
+                continue
+            if (active_filters.get("all_inds")
+                    and lead.get("Industry_Verified") != "Confirmed"):
+                continue
+            if (active_filters.get("all_sigs")
+                    and lead.get("Signal_Verified") != "Confirmed"):
+                continue
+            if (active_filters.get("custom_keywords")
+                    and not str(lead.get("Matched_Custom", "")).strip()):
+                continue
+            if (active_filters.get("organization_kws")
+                    and not str(lead.get("Matched_Organisation", "")).strip()):
+                continue
+            if (active_filters.get("business_model", "Any") != "Any"
+                    and lead.get("Business_Model_Verified") != "Confirmed"):
+                continue
+            if (active_filters.get("gcc_only")
+                    and lead.get("GCC_Verified") != "Confirmed"):
+                continue
+            prevalidated_leads.append(lead)
+        removed_count = len(st.session_state.tab1_leads) - len(prevalidated_leads)
+        st.session_state.tab1_leads = prevalidated_leads
+        if removed_count:
+            st.info(
+                f"Removed {removed_count} incomplete/off-role profile"
+                f"{'s' if removed_count != 1 else ''} from this session."
+            )
+
+    # ── Render all role/location-qualified POCs and strict matches ─────────
+    if st.session_state.tab1_all_pocs or st.session_state.tab1_leads:
+        def _dedupe_ready_profiles(candidates, *, ranked=False):
+            ordered = (
+                sorted(
+                    candidates,
+                    key=lambda lead: lead.get("Lead_Score", 0),
+                    reverse=True,
+                )
+                if ranked else list(candidates)
+            )
+            unique = []
+            seen_urls = set()
+            seen_people = set()
+            for lead in ordered:
+                url_key = normalize_linkedin_url(
+                    lead.get("LinkedIn_URL", "")
+                )
+                if not is_export_ready_profile(
+                    lead.get("Full_Name", ""),
+                    lead.get("Company", ""),
+                    url_key,
+                    designation=lead.get("Designation", ""),
+                ):
+                    continue
+                person_key = person_identity_key(
+                    lead.get("Full_Name", ""), lead.get("Company", "")
+                )
+                if (
+                    (url_key and url_key in seen_urls)
+                    or (person_key and person_key in seen_people)
+                ):
+                    continue
+                lead["LinkedIn_URL"] = url_key
+                seen_urls.add(url_key)
+                if person_key:
+                    seen_people.add(person_key)
+                unique.append(lead)
+            return unique
+
+        def _get_location(lead):
+            """Return verified profile evidence without inventing a location."""
+            location = str(
+                lead.get("Location_Evidence", "")
+            ).strip()
+            if location not in {"", "Not requested", "Unknown"}:
+                return location
+            return str(lead.get("Matched_Location", "")).strip()
+
+        def _four_field_frame(leads):
+            return pd.DataFrame(
+                [
+                    {
+                        "Name": lead.get("Full_Name", ""),
+                        "Designation": lead.get("Designation", ""),
+                        "Company": lead.get("Company", ""),
+                        "Location": _get_location(lead),
+                    }
+                    for lead in leads
+                ],
+                columns=["Name", "Designation", "Company", "Location"],
+            )
+
+        st.session_state.tab1_all_pocs = _dedupe_ready_profiles(
+            st.session_state.tab1_all_pocs
+        )
+        st.session_state.tab1_leads = _dedupe_ready_profiles(
+            st.session_state.tab1_leads,
+            ranked=True,
+        )
+        df_all_pocs = _four_field_frame(
+            st.session_state.tab1_all_pocs
+        )
+        df_strict_matches = _four_field_frame(
+            st.session_state.tab1_leads
+        )
+
+        st.markdown("---")
+        c1, c2, c3 = st.columns(3)
+        c1.markdown(
+            '<div class="metric-card"><div class="metric-label">'
+            "All Qualified POCs</div><div class=\"metric-value\">"
+            f"{len(df_all_pocs)}</div></div>",
+            unsafe_allow_html=True,
+        )
+        c2.markdown(
+            '<div class="metric-card"><div class="metric-label">'
+            "Strict Matches</div><div class=\"metric-value\">"
+            f"{len(df_strict_matches)}</div></div>",
+            unsafe_allow_html=True,
+        )
+        run_status = (
+            "Running"
+            if st.session_state.is_harvesting
+            else st.session_state.get("harvest_outcome", "Complete")
+        )
+        c3.markdown(
+            '<div class="metric-card"><div class="metric-label">'
+            "Status</div><div class=\"metric-value\" "
+            f'style="font-size:1.2rem">{run_status}</div></div>',
+            unsafe_allow_html=True,
+        )
+
+        st.subheader("All Qualified POCs")
+        st.caption(
+            "Every unique net-new profile that passed current role, verified "
+            "location, organisation allow-list, and four-field completeness."
+        )
+        st.dataframe(
+            df_all_pocs,
+            width="stretch",
+            height=500,
+            hide_index=True,
+        )
+
+        with st.expander(
+            f"Strict Matches ({len(df_strict_matches)})",
+            expanded=not df_strict_matches.empty,
+        ):
+            st.caption(
+                "Subset that also passed every selected industry, B2B/B2C, "
+                "GCC, custom-keyword, and person-signal evidence gate."
+            )
+            st.dataframe(
+                df_strict_matches,
+                width="stretch",
+                hide_index=True,
+            )
+
+        st.markdown("---")
+        st.subheader("Download Results")
+        st.caption(
+            "4 fields per row: Name · Designation · Company · Location. "
+            "Excel includes two sheets: All Qualified POCs and Strict Matches."
+        )
+        ts = datetime.now().strftime("%Y%m%d_%H%M")
+        fname = f"POCs_{ts}"
+        ec1, ec2, ec3 = st.columns(3)
+        ec1.download_button(
+            "All POCs CSV",
+            df_all_pocs.to_csv(index=False).encode(),
+            f"{fname}_All.csv",
+            "text/csv",
+            type="primary",
+            width="stretch",
+        )
+        ec2.download_button(
+            "Strict Matches CSV",
+            df_strict_matches.to_csv(index=False).encode(),
+            f"{fname}_Strict.csv",
+            "text/csv",
+            type="primary",
+            width="stretch",
+        )
+        ec3.download_button(
+            "Download Excel (Both Sheets)",
+            formatted_excel_bytes(
+                df_all_pocs,
+                sheet_name="All Qualified POCs",
+                extra_sheets={"Strict Matches": df_strict_matches},
+            ),
+            f"{fname}.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            type="primary",
+            width="stretch",
+        )
+
+
+
+# ========================================
+# TAB 2: UNIVERSAL CSV RECONCILER
+# ========================================
+with tab2:
+    st.header("Universal CSV Schema Reconciler")
+    st.markdown("Upload any raw CSV with messy columns → map to your required schema → export cleanly.")
+
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.subheader("1. Define Target Schema")
+        target_schema_input = st.text_input(
+            "Target column names (comma-separated):",
+            value="Name, COMPANY, DESIGNATION, PHONE NUMBER, Linkdin Id"
+        )
+        target_columns = [c.strip() for c in target_schema_input.split(",") if c.strip()]
+
+    with col_b:
+        st.subheader("2. Upload Raw Data")
+        raw_file = st.file_uploader("Upload raw CSV or Excel", type=['csv', 'xlsx'], key="reconciler_uploader")
+
+    if raw_file and target_columns:
+        st.markdown("---")
+        st.subheader("3. Map Columns")
+        try:
+            df_raw = pd.read_csv(raw_file) if raw_file.name.endswith('.csv') else pd.read_excel(raw_file)
+            raw_columns = df_raw.columns.tolist()
+            st.success(f"Loaded: {len(raw_columns)} columns × {len(df_raw)} rows")
+
+            mapping = {}
+            map_cols = st.columns(min(3, len(target_columns)))
+            for i, tc in enumerate(target_columns):
+                default_idx = 0
+                for j, rc in enumerate(raw_columns):
+                    if tc.lower().replace(" ", "").replace("_", "") in rc.lower().replace(" ", "").replace("_", ""):
+                        default_idx = j + 1
+                        break
+                with map_cols[i % len(map_cols)]:
+                    mapping[tc] = st.selectbox(f"**{tc}**", options=[""] + raw_columns, index=default_idx, key=f"map_{i}")
+
+            st.markdown("---")
+            if st.button("Format & Reconcile Data", width="stretch"):
+                with st.spinner("Reconciling..."):
+                    reconciled = {}
+                    for tc, rc in mapping.items():
+                        reconciled[tc] = df_raw[rc] if rc else [""] * len(df_raw)
+                    df_rec = pd.DataFrame(reconciled)
+                    reconciliation_job = gateway.create_job({
+                        "workflow": "reconcile",
+                        "rows": df_raw.fillna("").to_dict(orient="records"),
+                        "mapping": mapping,
+                    })
+                    gateway.wait(reconciliation_job["id"])
+                    st.success("Reconciled successfully!")
+                    st.caption(
+                        f"Persisted reconciliation job: {reconciliation_job['id']}"
+                    )
+                    st.dataframe(df_rec, width="stretch")
+
+                    ts = datetime.now().strftime("%Y%m%d_%H%M")
+                    rc1, rc2 = st.columns(2)
+                    rc1.download_button("CSV", df_rec.to_csv(index=False).encode(), f"Reconciled_{ts}.csv", "text/csv", type="primary", width="stretch")
+                    buf = io.BytesIO()
+                    with pd.ExcelWriter(buf, engine='openpyxl') as w:
+                        df_rec.to_excel(w, index=False, sheet_name='Reconciled')
+                    rc2.download_button("Excel", buf.getvalue(), f"Reconciled_{ts}.xlsx",
+                                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                        type="primary", width="stretch")
+        except Exception as e:
+            st.error(f"Error: {str(e)}")
+
+
+# ========================================
+# TAB 3: COMPANY INTELLIGENCE
+# ========================================
+with tab3:
+    st.header("Company Intelligence Hub")
+    st.markdown("Search any company → get full profile + scrape all key employees by role.")
+
+    ci1, ci2, ci3 = st.columns([2, 1, 1])
+    with ci1:
+        company_query = st.text_input("Company Name", placeholder="e.g. Microsoft India, Infosys, Razorpay", key="company_input")
+    with ci2:
+        location_query = st.text_input("Location (Optional)", placeholder="e.g. Mumbai, New York", key="company_loc")
+    with ci3:
+        emp_count = st.number_input("Employees to Find", min_value=1, max_value=300, value=20, key="emp_count")
+
+    all_role_opts = [f"{k} - {ROLE_LABELS.get(k, v[0])}" for k, v in ROLES.items()]
+    selected_emp_roles = st.multiselect("Filter by Role/Seniority (leave blank = all senior leaders)", all_role_opts, key="emp_roles")
+
+    emp_role_keywords = [r for sk in selected_emp_roles for r in ROLES[sk.split(" - ")[0]]] if selected_emp_roles else []
+    existing_emp_urls: set = set()
+
+    if st.button("Fetch Company Profile & Employees", width="stretch", key="company_btn"):
+        if not company_query.strip():
+            st.error("Please enter a company name.")
+            st.stop()
+
+        with st.status(f"Fetching intelligence for **{company_query}**...", expanded=True) as ci_status:
+            ci_status.write("Creating a persisted company-intelligence job...")
+            company_job = gateway.create_job({
+                "workflow": "company",
+                "company_name": company_query.strip(),
+                "location": location_query.strip(),
+                "roles": emp_role_keywords,
+                "target_count": int(emp_count),
+            })
+            company_job = gateway.wait(company_job["id"])
+            artifacts = gateway.results(company_job["id"], detail="full")
+            artifact_payloads = {
+                item.get("artifact_type", ""): item.get("payload", {})
+                for item in artifacts
+            }
+            profile = artifact_payloads.get("company_profile", {
+                "name": company_query.strip(), "employees": "", "revenue": "",
+                "profit": "", "founded": "", "hq": "", "description": "",
+                "top_leaders": "", "kpis": "", "linkedin_page": "", "website": "",
+            })
+            employees = artifact_payloads.get("company_employees", [])
+            ci_status.write("Company profile and employee artifacts persisted.")
+
+        st.markdown("---")
+        st.subheader(f"Company Profile — {profile['name']}")
+
+        pc1, pc2, pc3, pc4, pc5 = st.columns(5)
+        pc1.metric("Employees", profile['employees'] or "—")
+        pc2.metric("Revenue", profile['revenue'] or "—")
+        pc3.metric("Profit", profile['profit'] or "—")
+        pc4.metric("Founded", profile['founded'] or "—")
+        pc5.metric("HQ", profile['hq'] or "—")
+
+        if profile['description']:
+            st.info(f"**About:** {profile['description'][:600]}{'...' if len(profile['description']) > 600 else ''}")
+
+        intel1, intel2 = st.columns(2)
+        with intel1:
+            st.markdown("**Top Leaders & Management**")
+            st.info(profile['top_leaders'] or "Data not found. Try searching specific leaders.")
+        with intel2:
+            st.markdown("**Key Performance Indicators (KPIs)**")
+            st.info(profile['kpis'] or "Data not found. Typical KPIs include growth, margins, etc.")
+
+        link_cols = st.columns(3)
+        if profile['linkedin_page']:
+            link_cols[0].markdown(f"[![LinkedIn](https://img.shields.io/badge/LinkedIn-Company_Page-0077B5?logo=linkedin)]({profile['linkedin_page']})")
+        if profile['website']:
+            link_cols[1].markdown(f"[Company Website]({profile['website']})")
+
+        st.markdown("---")
+        st.subheader(f"Employees at {company_query}")
+
+        with st.status(f"Loading persisted employees at {company_query}...", expanded=True) as emp_status:
+            emp_status.update(label=f"Found {len(employees)} employees at {company_query}", state="complete", expanded=True)
+
+        if not employees:
+            st.warning("No employees found. Try a different company name or broader role filter.")
+        else:
+            employees.sort(key=lambda x: x["Lead_Score"], reverse=True)
+            for i, e in enumerate(employees):
+                e["Rank"] = i + 1
+
+            df_emp = pd.DataFrame(employees)
+
+            em1, em2, em3 = st.columns(3)
+            em1.metric("Profiles Found", len(employees))
+            high_intent = df_emp[df_emp["Lead_Score"] >= 80]
+            em2.metric("High Event Intent (≥80%)", len(high_intent))
+            em3.metric("Avg Event Probability", f"{int(df_emp['Lead_Score'].mean())}%")
+
+            st.dataframe(df_emp[["Rank","Full_Name","Designation","Company","Location_Match","LinkedIn_URL","Event_Probability","Signal","Query_Bucket","Matched_Parameters"]], width="stretch")
+
+            df_emp_export = pd.DataFrame({
+                "Name": df_emp["Full_Name"],
+                "COMPANY": df_emp["Company"],
+                "DESIGNATION": df_emp["Designation"],
+                "LOCATION MATCH": df_emp["Location_Match"],
+                "PHONE NUMBER": "",
+                "Linkdin Id": df_emp["LinkedIn_URL"],
+                "Event Probability": df_emp["Event_Probability"],
+                "Signal Detected": df_emp["Signal"],
+                "Query Bucket": df_emp.get("Query_Bucket", ""),
+                "Matched Parameters": df_emp.get("Matched_Parameters", ""),
+            })
+
+            ts = datetime.now().strftime("%Y%m%d_%H%M")
+            fname = f"{company_query.replace(' ','_')}_Employees_{ts}"
+
+            st.subheader("Export Employee List")
+            st.dataframe(df_emp_export, width="stretch")
+
+            dl1, dl2 = st.columns(2)
+            dl1.download_button("Download CSV", df_emp_export.to_csv(index=False).encode(), f"{fname}.csv", "text/csv", type="primary", width="stretch")
+            buf = io.BytesIO()
+            with pd.ExcelWriter(buf, engine='openpyxl') as w:
+                df_emp_export.to_excel(w, index=False, sheet_name='Employees')
+            dl2.download_button("Download Excel", buf.getvalue(), f"{fname}.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary", width="stretch")
+
+
+# ========================================
+# TAB 4: COMPETITOR EVENT INTELLIGENCE
+# ========================================
+with tab4:
+    st.header("Competitor Event Intelligence")
+    st.markdown("""
+    Find people who attend your competitor's roundtables/events — filtered by location and role.
+    Enter competitor company names → we scrape LinkedIn for their event attendees, speakers, and panelists.
+    Export the list and invite them to your events.
+    """)
+
+    st.markdown("---")
+
+    st.subheader("1. List Your Competitors")
+    comp_input = st.text_area("Enter competitor company names (one per line):", placeholder="e.g.\nMcKinsey\nBCG\nBain & Company\nDeloitte\nAccenture", height=150, key="comp_input")
+
+    st.subheader("2. Target Parameters")
+    ci_col1, ci_col2 = st.columns(2)
+
+    with ci_col1:
+        loc_options_ci = [f"{k} - {v[0]}" for k, v in LOCATIONS.items()]
+        sel_ci_locs = st.multiselect("Filter by Geography", loc_options_ci, key="ci_locs")
+
+    with ci_col2:
+        role_options_ci = [f"{k} - {ROLE_LABELS.get(k, v[0])}" for k, v in ROLES.items()]
+        sel_ci_roles = st.multiselect("Filter by Role/Seniority", role_options_ci, key="ci_roles")
+
+    st.subheader("3. Event Types to Target")
+    event_presets = {
+        "GCC Roundtable": [
+            "GCC roundtable", "Global Capability Center roundtable",
+            "Global Capability Centre roundtable", "GCC leadership forum",
+            "GCC summit", "GCC conclave",
+        ],
+        "CMO Roundtable": ["CMO roundtable", "CMO event", "marketing roundtable", "CMO summit"],
+        "CXO Leadership Summit": ["CXO roundtable", "leadership summit", "executive roundtable", "C-suite event"],
+        "Tech Conference": ["tech conference", "developer summit", "CTO roundtable", "engineering meetup"],
+        "Sales Kickoff": ["sales kickoff", "revenue summit", "CRO roundtable", "sales event"],
+        "Industry Awards": ["award ceremony", "awards night", "40 under 40", "industry recognition"],
+        "Speaker / Panelist": ["speaker", "panelist", "keynote", "panel discussion"],
+        "Custom": [],
+    }
+    sel_event_types = st.multiselect("Event Types", list(event_presets.keys()), key="ci_events")
+
+    custom_event_kws = ""
+    if "Custom" in sel_event_types:
+        custom_event_kws = st.text_input("Custom event keywords (comma separated):", placeholder="e.g. dinner, fireside chat, workshop", key="ci_custom_events")
+
+    ci_count = st.number_input("Total Leads to Find", min_value=1, max_value=500, value=50, key="ci_count")
+
+    ci_locs  = [l for sk in sel_ci_locs  for l in LOCATIONS[sk.split(" - ")[0]]]
+    ci_roles = [r for sk in sel_ci_roles for r in ROLES[sk.split(" - ")[0]]]
+
+    ci_event_kws = []
+    for et in sel_event_types:
+        if et != "Custom":
+            ci_event_kws.extend(event_presets[et])
+    if custom_event_kws:
+        ci_event_kws.extend([k.strip() for k in custom_event_kws.split(",") if k.strip()])
+
+    competitors = [c.strip() for c in comp_input.strip().split("\n") if c.strip()] if comp_input.strip() else []
+
+    if competitors and ci_locs:
+        st.info(f"**{len(competitors)}** competitors × **{len(ci_locs)}** locations × **{len(ci_roles)}** roles × **{len(ci_event_kws)}** event signals")
+
+    if "ci_leads" not in st.session_state:
+        st.session_state.ci_leads = []
+    if "ci_blacklist" not in st.session_state:
+        st.session_state.ci_blacklist = set()
+    if "ci_company_summaries" not in st.session_state:
+        st.session_state.ci_company_summaries = {}
+
+    st.markdown("---")
+
+    ci_c1, ci_c2 = st.columns(2)
+    with ci_c1:
+        ci_start = st.button("Scan Competitor Events & Find Attendees", width="stretch", key="ci_start")
+    with ci_c2:
+        ci_stop = st.button("Stop & Keep Found Leads", width="stretch", key="ci_stop", type="secondary")
+
+    if ci_start:
+        if not competitors:
+            st.error("Please enter at least one competitor company name.")
+            st.stop()
+        if not ci_locs:
+            st.error("Please select at least one geography.")
+            st.stop()
+
+        st.session_state.ci_leads = []
+        st.session_state.ci_company_summaries = {}
+        with st.status(f"Scanning {len(competitors)} competitors for event attendees...", expanded=True) as ci_status:
+            ci_status.write(f"Competitors: `{'`, `'.join(competitors)}`")
+            ci_status.write(f"Locations: `{'`, `'.join(ci_locs)}`")
+            ci_status.write(f"Roles: `{'`, `'.join(ci_roles[:5])}{'...' if len(ci_roles)>5 else ''}`")
+            ci_status.write(f"Event keywords: `{'`, `'.join(ci_event_kws[:6])}{'...' if len(ci_event_kws)>6 else ''}`")
+
+            competitor_job = gateway.create_job({
+                "workflow": "competitor",
+                "competitors": competitors,
+                "roles": ci_roles,
+                "locations": ci_locs,
+                "event_keywords": ci_event_kws,
+                "target_count": int(ci_count),
+            })
+            competitor_job = gateway.wait(competitor_job["id"])
+            artifacts = gateway.results(competitor_job["id"], detail="full")
+            artifact_payloads = {
+                item.get("artifact_type", ""): item.get("payload", {})
+                for item in artifacts
+            }
+            found = artifact_payloads.get("competitor_leads", [])
+            st.session_state.ci_leads = found
+            st.session_state.ci_company_summaries = artifact_payloads.get(
+                "company_summaries", {}
+            )
+
+            ci_status.update(label=f"Done! Found {len(found)} profiles across {len(competitors)} competitors.", state="complete", expanded=True)
+
+    if st.session_state.ci_leads:
+        company_summaries = st.session_state.ci_company_summaries or {}
+        leads_ci_raw = [
+            {**l,
+             "Company_Description": company_summaries.get(l.get("Company",""), {}).get("description", "—"),
+             "Net_Profit": company_summaries.get(l.get("Company",""), {}).get("net_profit", "—"),
+            }
+            for l in st.session_state.ci_leads
+            if l.get("LinkedIn_URL", "") not in st.session_state.ci_blacklist
+        ]
+        leads_ci_raw.sort(key=lambda x: x["Lead_Score"], reverse=True)
+        for i, l in enumerate(leads_ci_raw):
+            l["Rank"] = i + 1
+
+        df_ci = pd.DataFrame(leads_ci_raw) if leads_ci_raw else pd.DataFrame()
+
+        st.markdown("---")
+        if not leads_ci_raw:
+            st.warning("All profiles have been removed / blacklisted. Clear blacklist to restore them.")
+        else:
+            m1, m2, m3, m4, m5 = st.columns(5)
+            m1.metric("Total Profiles", len(leads_ci_raw))
+            n_comp = df_ci["Competitor_Source"].nunique() if "Competitor_Source" in df_ci.columns else 0
+            m2.metric("Competitors Covered", n_comp)
+            high_prob = df_ci[df_ci["Lead_Score"] >= 80] if "Lead_Score" in df_ci.columns else pd.DataFrame()
+            m3.metric("High Event Intent", len(high_prob))
+            loc_ok = df_ci["Location_Verified"].str.contains("Yes").sum() if "Location_Verified" in df_ci.columns else 0
+            m4.metric("Location Confirmed", loc_ok)
+            m5.metric("Blacklisted", len(st.session_state.ci_blacklist))
+
+            st.subheader("Competitor Breakdown")
+            comp_counts = df_ci["Competitor_Source"].value_counts().reset_index()
+            comp_counts.columns = ["Competitor", "Profiles Found"]
+            st.dataframe(comp_counts, width="stretch")
+
+            st.subheader("All Competitor Event Attendees")
+            display_ci_cols = ["Rank", "Full_Name", "Designation", "Company", "Company_Description", "Net_Profit", "LinkedIn_URL", "Competitor_Source", "Source_Post", "Event_Signal", "Event_Probability", "Signal_Confidence", "Signal_Evidence", "Location_Verified", "Query_Bucket", "Matched_Parameters"]
+            display_ci_cols = [c for c in display_ci_cols if c in df_ci.columns]
+            st.dataframe(df_ci[display_ci_cols], width="stretch", height=500)
+
+            st.markdown("---")
+            st.subheader("Remove Leads from List")
+            st.caption("Select profiles to remove (blacklist) — they won't appear in exports or future views this session.")
+
+            all_lead_labels = [f"{l['Rank']}. {l.get('Full_Name','?')} — {l.get('Designation','?')} @ {l.get('Company','?')}" for l in leads_ci_raw]
+            label_to_url = {f"{l['Rank']}. {l.get('Full_Name','?')} — {l.get('Designation','?')} @ {l.get('Company','?')}": l.get("LinkedIn_URL","") for l in leads_ci_raw}
+
+            to_remove = st.multiselect("Select profiles to remove:", options=all_lead_labels, placeholder="Choose profiles to blacklist…", key="ci_remove_select")
+
+            rmv_col1, rmv_col2 = st.columns(2)
+            with rmv_col1:
+                if st.button("Remove Selected Leads", width="stretch", key="ci_remove_btn"):
+                    for label in to_remove:
+                        url = label_to_url.get(label, "")
+                        if url:
+                            st.session_state.ci_blacklist.add(url)
+                    st.success(f"{len(to_remove)} lead(s) removed from list.")
+                    st.rerun()
+
+            with rmv_col2:
+                if st.button("Clear Blacklist (Restore All)", width="stretch", key="ci_clear_blacklist", type="secondary"):
+                    st.session_state.ci_blacklist = set()
+                    st.success("Blacklist cleared — all leads restored.")
+                    st.rerun()
+
+            if st.session_state.ci_blacklist:
+                st.caption(f"**{len(st.session_state.ci_blacklist)}** profile(s) currently blacklisted this session.")
+
+            st.subheader("Export as CSEV (Competitor Event) Sheet")
+
+            df_ci_export = pd.DataFrame({
+                "Name": df_ci["Full_Name"],
+                "COMPANY": df_ci["Company"],
+                "DESIGNATION": df_ci["Designation"],
+                "PHONE NUMBER": "",
+                "LinkedIn Id": df_ci["LinkedIn_URL"],
+                "Competitor Source": df_ci["Competitor_Source"],
+                "Event Signal": df_ci.get("Event_Signal", ""),
+                "Event Probability": df_ci.get("Event_Probability", ""),
+                "Signal Confidence": df_ci.get("Signal_Confidence", ""),
+                "Signal Evidence": df_ci.get("Signal_Evidence", ""),
+                "Location Verified": df_ci.get("Location_Verified", ""),
+                "What Company Does": df_ci.get("Company_Description", "—"),
+                "Net Profit": df_ci.get("Net_Profit", "—"),
+                "Matched Parameters": df_ci.get("Matched_Parameters", ""),
+            })
+
+            st.dataframe(df_ci_export, width="stretch", height=600)
+
+            ts = datetime.now().strftime("%Y%m%d_%H%M")
+            fname = f"CSEV_Competitor_Event_{ts}"
+
+            dl1, dl2 = st.columns(2)
+            dl1.download_button("Download CSV (CSEV)", df_ci_export.to_csv(index=False).encode(), f"{fname}.csv", "text/csv", type="primary", width="stretch")
+            buf = io.BytesIO()
+            with pd.ExcelWriter(buf, engine='openpyxl') as w:
+                df_ci_export.to_excel(w, index=False, sheet_name='CSEV')
+            dl2.download_button("Download Excel (CSEV Sheet)", buf.getvalue(), f"{fname}.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary", width="stretch")

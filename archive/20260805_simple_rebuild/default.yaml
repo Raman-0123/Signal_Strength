@@ -1,0 +1,54 @@
+data_dir: data
+log_level: INFO
+api_host: 127.0.0.1
+api_port: 8000
+storage:
+  database_path: data/speedy_scraper.db
+  busy_timeout_ms: 10000
+  retention_days: 90
+retry:
+  max_attempts: 3
+  base_delay_seconds: 1.0
+  multiplier: 2.0
+  max_delay_seconds: 30.0
+  jitter_ratio: 1.0
+browser:
+  profile_root: data/browser_profiles
+  interactive_headed: true
+  scheduled_headless: true
+  captcha_poll_seconds: 2.0
+  navigation_timeout_seconds: 60.0
+  page_settle_min_seconds: 1.2
+  page_settle_max_seconds: 2.2
+  post_search_min_seconds: 0.7
+  post_search_max_seconds: 1.2
+proxy:
+  enabled: false
+  strategy: sticky_failure_only
+  failure_threshold: 2
+  cooldown_seconds: 300
+scheduler:
+  timezone: Asia/Kolkata
+  max_workers: 2
+  misfire_grace_seconds: 900
+  cleanup_interval_seconds: 3600
+query_budget:
+  acceptance_rate: 0.15
+  citations_per_query: 30
+  headroom: 1.4
+  maximum_queries: 180
+scoring:
+  role: 12
+  location: 10
+  industry: 5
+  custom: 8
+  company_known: 2
+  business_model: 6
+  minimum: 50
+  maximum: 99
+rate_limits:
+  google: {requests_per_minute: 20, minimum_interval_seconds: 1.5}
+  ddgs: {requests_per_minute: 20, minimum_interval_seconds: 2.0}
+  brave: {requests_per_minute: 30, minimum_interval_seconds: 1.0}
+  event_page: {requests_per_minute: 30, minimum_interval_seconds: 0.5}
+  public_contact: {requests_per_minute: 30, minimum_interval_seconds: 0.5}

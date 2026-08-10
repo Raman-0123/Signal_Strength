@@ -1,0 +1,10 @@
+{
+  "state": "running",
+  "workflow": "company_pocs",
+  "job_id": "20260805T114452Z_d9ab82d9",
+  "processed": 10,
+  "total": 66,
+  "matched": 17,
+  "message": "Found 17 POCs · completed 10/66 query groups",
+  "updated_at": "2026-08-05T11:55:11.717378+00:00"
+}

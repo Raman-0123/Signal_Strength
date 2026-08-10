@@ -1,0 +1,31 @@
+{
+  "companies": [
+    "Razorpay",
+    "PhonePe",
+    "CRED",
+    "NIRA",
+    "KreditPe",
+    "Yubi",
+    "Falcon",
+    "PayU India",
+    "PayPal India",
+    "Visa India",
+    "Mastercard India"
+  ],
+  "designations": [
+    "CIO",
+    "CDO",
+    "Chief Data Officer",
+    "VP Customer Success",
+    "CX",
+    "head of Customer success"
+  ],
+  "target_count": 50,
+  "sources": [
+    "ddgs",
+    "bing_browser",
+    "duckduckgo_browser"
+  ],
+  "browser_headless": false,
+  "max_results_per_search": 25
+}

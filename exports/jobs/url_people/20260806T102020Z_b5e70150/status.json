@@ -1,0 +1,22 @@
+{
+  "state": "completed",
+  "workflow": "url_people",
+  "job_id": "20260806T102020Z_b5e70150",
+  "message": "Completed",
+  "processed": 296,
+  "total": 296,
+  "updated_at": "2026-08-06T10:28:05.011096+00:00",
+  "pid": 27329,
+  "pending": 0,
+  "provided": 141,
+  "matched": 73,
+  "ambiguous": 63,
+  "not_found": 19,
+  "current_name": "Vinit Bajaj",
+  "heartbeat_at": "2026-08-06T10:28:03.712596+00:00",
+  "heartbeat_tick": 0,
+  "activity": "Searching public results for the current person",
+  "current_company": "Axis Bank",
+  "csv_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/url_people/20260806T102020Z_b5e70150/URL_People_LinkedIn.csv",
+  "xlsx_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/url_people/20260806T102020Z_b5e70150/URL_People_LinkedIn.xlsx"
+}

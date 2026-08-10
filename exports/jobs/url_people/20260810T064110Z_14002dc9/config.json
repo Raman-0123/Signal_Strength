@@ -1,0 +1,14 @@
+{
+  "source_urls": [
+    "https://www.intriguesummit.com/madverse2026singapore",
+    "https://conferences.marketing-interactive.com/digital-marketing-asia/"
+  ],
+  "source_url": "https://www.intriguesummit.com/madverse2026singapore",
+  "enrich_missing": true,
+  "sources": [
+    "google_browser",
+    "google_browser"
+  ],
+  "browser_headless": false,
+  "google_manual_challenge_seconds": 180
+}

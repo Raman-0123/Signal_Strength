@@ -1,0 +1,81 @@
+{
+  "preset": "bengaluru_fintech_tech_cx",
+  "target_count": 150,
+  "business_model": "Any",
+  "roles": [
+    "CTO",
+    "CIO",
+    "CDO",
+    "Chief Data Officer",
+    "Chief Digital Officer",
+    "Chief Customer Officer",
+    "Head of Customer Success",
+    "VP Customer Success",
+    "Director Customer Success",
+    "Customer Success Leader",
+    "Head of Customer Experience",
+    "VP Customer Experience",
+    "CX Leader"
+  ],
+  "locations": [
+    "Bengaluru"
+  ],
+  "industries": [
+    "FinTech",
+    "Payments",
+    "Payment Technology",
+    "Digital Payments",
+    "WealthTech",
+    "Lending",
+    "Banking Technology",
+    "Financial Services"
+  ],
+  "company_names": [
+    "Razorpay",
+    "PhonePe",
+    "Cashfree Payments",
+    "CRED",
+    "Angel One",
+    "BharatPe",
+    "Digit Insurance",
+    "Fi Money",
+    "Fisdom",
+    "Groww",
+    "Juspay",
+    "KreditBee",
+    "Lendingkart",
+    "M2P Fintech",
+    "Moneyview",
+    "Navi",
+    "Niyo",
+    "NPCI",
+    "Open Financial Technologies",
+    "Paytm",
+    "Perfios",
+    "Pine Labs",
+    "Setu",
+    "Slice",
+    "Smallcase",
+    "Upstox",
+    "Yubi",
+    "Zerodha"
+  ],
+  "sources": [
+    "google_browser",
+    "bing_browser",
+    "duckduckgo_browser"
+  ],
+  "max_queries": 90,
+  "max_results_per_query": 30,
+  "max_pages_per_query": 3,
+  "source_failure_limit": 3,
+  "candidate_pool_multiplier": 4,
+  "browser_headless": false,
+  "require_target_company": true,
+  "minimum_confidence": 85,
+  "minimum_sources": 1,
+  "existing_files": [
+    "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/lead_harvest/20260807T053136Z_463d514f/dedupe_inputs/linkedin_profiles_1785940016746.xlsx",
+    "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/lead_harvest/20260807T053136Z_463d514f/dedupe_inputs/linkedin_profiles_1785931413444.xlsx"
+  ]
+}

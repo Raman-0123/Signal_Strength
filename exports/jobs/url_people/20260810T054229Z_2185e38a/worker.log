@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/url_people_job.py", line 231, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/url_people_job.py", line 227, in main
+    run_url_people_job(args.job_dir)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/url_people_job.py", line 56, in run_url_people_job
+    speakers = extract_people_records(fetch(source_url), source_url)
+  File "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/speedy_scraper/event_speakers.py", line 246, in extract_people_records
+    raise NoSpeakersFoundError(
+    ...<2 lines>...
+    )
+speedy_scraper.event_speakers.NoSpeakersFoundError: No supported people dataset was found. Supported: event speaker JSON, Next.js embedded people/speakers data, JSON-LD Person, or visible LinkedIn profile links.

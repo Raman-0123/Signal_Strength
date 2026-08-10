@@ -1,0 +1,22 @@
+{
+  "state": "completed",
+  "workflow": "url_people",
+  "job_id": "20260810T064110Z_14002dc9",
+  "message": "Completed",
+  "processed": 75,
+  "total": 75,
+  "updated_at": "2026-08-10T06:52:11.204508+00:00",
+  "pid": 5247,
+  "pending": 0,
+  "provided": 43,
+  "matched": 5,
+  "ambiguous": 6,
+  "not_found": 21,
+  "current_name": "A’bidah Zaid Shirbeeni",
+  "heartbeat_at": "2026-08-10T06:52:11.105870+00:00",
+  "heartbeat_tick": 0,
+  "activity": "Searching public results for the current person",
+  "current_company": "MARKETING-INTERACTIVE",
+  "csv_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/url_people/20260810T064110Z_14002dc9/URL_People_LinkedIn.csv",
+  "xlsx_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/url_people/20260810T064110Z_14002dc9/URL_People_LinkedIn.xlsx"
+}
