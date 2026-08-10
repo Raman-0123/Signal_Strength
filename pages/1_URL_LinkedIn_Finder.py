@@ -19,7 +19,13 @@ from speedy_scraper.background_jobs import (
 from speedy_scraper.event_speakers import speakers_frame
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
 from speedy_scraper.url_people_job import load_checkpoint_speakers
-from speedy_scraper.ui import captcha_recovery_panel, light_mode_css, render_theme_toggle
+from speedy_scraper.ui import (
+    captcha_recovery_panel,
+    download_gsheet,
+    enable_manual_recovery,
+    light_mode_css,
+    render_theme_toggle,
+)
 
 st.set_page_config(
     page_title="URL People LinkedIn Finder · Speedy Scraper",
@@ -225,6 +231,11 @@ with st.form("url_people_form"):
         accept_multiple_files=True,
         help="Existing LinkedIn URLs and name/company identities are removed before enrichment.",
     )
+    gsheet_url = st.text_input(
+        "Or Google Sheet URL to exclude",
+        placeholder="https://docs.google.com/spreadsheets/d/...",
+        help="Paste a public Google Sheet URL to exclude existing POCs from the search.",
+    )
 
     submitted = st.form_submit_button("⚡ Start URL People Job", type="primary", use_container_width=True)
 
@@ -268,7 +279,7 @@ if submitted:
             "existing_files": [],
         }
         job_dir = create_job("url_people", job_config).resolve()
-        job_config["existing_files"] = _save_uploads(existing_files, job_dir)
+        job_config["existing_files"] = _save_uploads(existing_files, job_dir) + download_gsheet(gsheet_url, job_dir)
         write_json(job_dir / "config.json", job_config)
         launch_job(job_dir, "speedy_scraper.url_people_job")
         st.session_state.url_people_job_dir = str(job_dir)

@@ -26,7 +26,12 @@ from speedy_scraper.config import load_catalog
 from speedy_scraper.exports import leads_frame, rejections_frame
 from speedy_scraper.lead_job import load_lead_job_checkpoint
 from speedy_scraper.sources import independent_source_families
-from speedy_scraper.ui import captcha_recovery_panel, light_mode_css, render_theme_toggle
+from speedy_scraper.ui import (
+    captcha_recovery_panel,
+    download_gsheet,
+    light_mode_css,
+    render_theme_toggle,
+)
 
 st.set_page_config(page_title="Speedy Scraper · Lead Operations", page_icon="◉", layout="wide")
 
@@ -518,8 +523,13 @@ with st.form("lead_contract", clear_on_submit=False):
             accept_multiple_files=True,
             help=(
                 "Upload one or more previous exports. Every sheet in every workbook is scanned "
-                "for LinkedIn URLs, and any match is excluded from the next run."
+                "for valid LinkedIn URLs. Any matching leads will be skipped across all searches."
             ),
+        )
+        gsheet_url = h.text_input(
+            "Or Google Sheet URL to exclude",
+            placeholder="https://docs.google.com/spreadsheets/d/...",
+            help="Paste a public Google Sheet URL to exclude existing POCs from the search.",
         )
         q1, q2, q3 = st.columns([1, 1, 1])
         query_mode = q1.selectbox(
@@ -599,7 +609,7 @@ if submitted:
             "existing_files": [],
         }
         job_dir = create_job("lead_harvest", config).resolve()
-        config["existing_files"] = _save_uploads(dedupe_files, job_dir)
+        config["existing_files"] = _save_uploads(dedupe_files, job_dir) + download_gsheet(gsheet_url, job_dir)
         write_json(job_dir / "config.json", config)
         launch_job(job_dir, "speedy_scraper.lead_job")
         st.session_state.lead_job_dir = str(job_dir)

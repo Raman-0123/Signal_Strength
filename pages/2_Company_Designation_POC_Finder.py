@@ -19,7 +19,12 @@ from speedy_scraper.background_jobs import (
 )
 from speedy_scraper.company_pocs import company_pocs_frame, load_company_poc_checkpoint
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
-from speedy_scraper.ui import captcha_recovery_panel, light_mode_css, render_theme_toggle
+from speedy_scraper.ui import (
+    captcha_recovery_panel,
+    light_mode_css,
+    render_theme_toggle,
+    download_gsheet,
+)
 
 _config_dir = Path(__file__).parent.parent / "config"
 
@@ -179,6 +184,11 @@ with st.form("company_poc_form"):
         accept_multiple_files=True,
         help="Existing LinkedIn URLs and name/company identities will not be returned again.",
     )
+    gsheet_url = st.text_input(
+        "Or Google Sheet URL to exclude",
+        placeholder="https://docs.google.com/spreadsheets/d/...",
+        help="Paste a public Google Sheet URL to exclude existing POCs from the search.",
+    )
     start = st.form_submit_button("Start Company POC Job", type="primary", width="stretch")
 
 if "company_poc_job_dir" not in st.session_state:
@@ -221,7 +231,7 @@ if start:
             "existing_files": [],
         }
         job_dir = create_job("company_pocs", config).resolve()
-        config["existing_files"] = _save_uploads(existing_files, job_dir)
+        config["existing_files"] = _save_uploads(existing_files, job_dir) + download_gsheet(gsheet_url, job_dir)
         write_json(job_dir / "config.json", config)
         launch_job(job_dir, "speedy_scraper.company_pocs")
         st.session_state.company_poc_job_dir = str(job_dir)

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import re
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -99,3 +101,27 @@ def captcha_recovery_panel(
             launch_job(job_dir, module)
             st.rerun(scope="fragment")
     right.caption("DDG failures automatically keep other selected sources in the plan; this recovery adds Google if needed.")
+
+def download_gsheet(url: str, job_dir: Path) -> list[str]:
+    if not url or not url.strip():
+        return []
+    match = re.search(r"/spreadsheets/d/([a-zA-Z0-9-_]+)", url)
+    if not match:
+        st.error("Invalid Google Sheet URL format. Make sure it contains /spreadsheets/d/...")
+        return []
+    sheet_id = match.group(1)
+    
+    gid_match = re.search(r"[#&]gid=([0-9]+)", url)
+    gid = gid_match.group(1) if gid_match else "0"
+    
+    export_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid={gid}"
+    upload_dir = job_dir / "dedupe_inputs"
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    target = upload_dir / f"gsheet_{sheet_id}_{gid}.csv"
+    
+    try:
+        urllib.request.urlretrieve(export_url, target)
+        return [str(target.resolve())]
+    except Exception as exc:
+        st.error(f"Could not download Google Sheet: {exc}")
+        return []
