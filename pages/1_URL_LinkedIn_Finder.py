@@ -170,8 +170,21 @@ if previous_jobs:
             previous_jobs,
             format_func=lambda v: f"{v.name} · {read_status(v).get('state', 'unknown')}",
         )
-        if st.button("Open selected job"):
+        col1, col2, col3 = st.columns([1, 1, 1])
+        if col1.button("Open selected job"):
             st.session_state.url_people_job_dir = str(selected.resolve())
+            st.rerun()
+        if col2.button("❌ Delete selected job"):
+            import shutil
+            shutil.rmtree(selected)
+            if st.session_state.get("url_people_job_dir") == str(selected.resolve()):
+                st.session_state.url_people_job_dir = ""
+            st.rerun()
+        if col3.button("🗑️ Clear all jobs"):
+            import shutil
+            for j in previous_jobs:
+                shutil.rmtree(j)
+            st.session_state.url_people_job_dir = ""
             st.rerun()
 
 # ─────────────────────────────────────────────────────────────────────────────
