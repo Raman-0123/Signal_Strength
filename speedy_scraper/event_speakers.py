@@ -231,16 +231,39 @@ def extract_people_records(html: str, source_url: str) -> list[EventSpeaker]:
     speakers: list[EventSpeaker] = []
     seen_ids: set[str] = set()
     seen_people: set[str] = set()
+    seen_urls: set[str] = set()
+    url_indexes: dict[str, int] = {}
     for dataset_name, rows in datasets:
         for index, raw in enumerate(rows):
             speaker = _speaker_from_raw(raw, source_url, dataset_name, index)
             if speaker is None:
                 continue
             identity = f"{normalize_text(speaker.name)}|{normalize_text(speaker.company)}"
-            if speaker.speaker_id in seen_ids or identity in seen_people:
+            canonical_url = normalize_linkedin_url(speaker.linkedin_url)
+            if (
+                speaker.speaker_id in seen_ids
+                or identity in seen_people
+                or (canonical_url and canonical_url in seen_urls)
+            ):
+                if canonical_url and canonical_url in url_indexes:
+                    current_index = url_indexes[canonical_url]
+                    current = speakers[current_index]
+                    current_quality = sum(bool(value) for value in (current.designation, current.company, current.country))
+                    speaker_quality = sum(bool(value) for value in (speaker.designation, speaker.company, speaker.country))
+                    if (
+                        speaker_quality > current_quality
+                        or (
+                            speaker_quality == current_quality
+                            and len(normalize_text(speaker.name).split()) < len(normalize_text(current.name).split())
+                        )
+                    ):
+                        speakers[current_index] = speaker
                 continue
             seen_ids.add(speaker.speaker_id)
             seen_people.add(identity)
+            if canonical_url:
+                seen_urls.add(canonical_url)
+                url_indexes[canonical_url] = len(speakers)
             speakers.append(speaker)
     if not speakers:
         raise NoSpeakersFoundError(
@@ -256,13 +279,23 @@ def enrich_speaker(
     sources: list[SearchSource],
     *,
     headless: bool = True,
+    include_terms: list[str] | None = None,
+    exclude_terms: list[str] | None = None,
+    on_source_error: ProgressCallback | None = None,
 ) -> EventSpeaker:
     results: list[SearchResult] = []
-    for query in speaker_queries(speaker):
+    for query in speaker_queries(speaker, include_terms=include_terms, exclude_terms=exclude_terms):
         for source in sources:
             try:
                 results.extend(source.search(query, max_results=10, headless=headless))
-            except SourceError:
+            except SourceError as exc:
+                if on_source_error:
+                    _emit(
+                        on_source_error,
+                        "captcha_required" if exc.challenge else "source_error",
+                        source=source.name,
+                        message=str(exc),
+                    )
                 continue
         decision = choose_speaker_match(speaker, results)
         if decision.match_status == "matched":
@@ -270,14 +303,21 @@ def enrich_speaker(
     return choose_speaker_match(speaker, results)
 
 
-def speaker_queries(speaker: EventSpeaker) -> list[str]:
+def speaker_queries(
+    speaker: EventSpeaker,
+    *,
+    include_terms: list[str] | None = None,
+    exclude_terms: list[str] | None = None,
+) -> list[str]:
     name = _quote(speaker.name)
     queries = []
     if speaker.company:
         queries.append(f"site:linkedin.com/in {name} {_quote(speaker.company)}")
     if speaker.designation:
         queries.append(f"site:linkedin.com/in {name} {_quote(speaker.designation)}")
-    queries.append(f"site:linkedin.com/in {name}")
+    include_clause = " ".join(_quote(term) for term in (include_terms or []) if clean_spaces(term))
+    exclude_clause = " ".join(f'-{_quote(term)}' for term in (exclude_terms or []) if clean_spaces(term))
+    queries.append(f"site:linkedin.com/in {name} {include_clause} {exclude_clause}".strip())
     return list(dict.fromkeys(queries))
 
 
@@ -681,6 +721,13 @@ def _speaker_from_raw(
             "headline",
         ),
     )
+    parsed_name, parsed_designation, parsed_company = parse_profile_fields(
+        name, " ".join(value for value in (designation, company) if value)
+    )
+    if parsed_name and normalize_text(parsed_name) not in {"unknown", "linkedin member"}:
+        name = parsed_name
+    designation = designation or parsed_designation
+    company = company or parsed_company
     country = _country_value(
         _value_from_keys(raw, ("country", "countryName", "location", "address", "city"))
     )

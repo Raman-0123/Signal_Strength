@@ -19,12 +19,14 @@ from speedy_scraper.background_jobs import (
 from speedy_scraper.event_speakers import speakers_frame
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
 from speedy_scraper.url_people_job import load_checkpoint_speakers
+from speedy_scraper.ui import captcha_recovery_panel, light_mode_css, render_theme_toggle
 
 st.set_page_config(
     page_title="URL People LinkedIn Finder · Speedy Scraper",
     page_icon="◉",
     layout="wide",
 )
+light_mode = render_theme_toggle("url_people_light_mode")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CSS — matches the dark glassmorphism theme of the main app
@@ -128,6 +130,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+st.markdown(light_mode_css(light_mode), unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Hero
@@ -204,6 +207,24 @@ with st.form("url_people_form"):
         disabled=not headful or "google_browser" not in sources,
         help="Wait up to 180s for manual CAPTCHA solving.",
     )
+    include_terms_text = st.text_area(
+        "Required search terms — one per line",
+        placeholder="e.g. fintech\nleadership",
+        height=80,
+        help="Adds quoted context to the person lookup queries.",
+    )
+    exclude_terms_text = st.text_area(
+        "Exclude search terms — one per line",
+        placeholder="e.g. jobs\nrecruiter",
+        height=80,
+        help="Adds negative clauses to reduce irrelevant LinkedIn results.",
+    )
+    existing_files = st.file_uploader(
+        "Prior POC/speaker exports to exclude",
+        type=["csv", "xlsx", "xls"],
+        accept_multiple_files=True,
+        help="Existing LinkedIn URLs and name/company identities are removed before enrichment.",
+    )
 
     submitted = st.form_submit_button("⚡ Start URL People Job", type="primary", use_container_width=True)
 
@@ -213,11 +234,28 @@ with st.form("url_people_form"):
 if "url_people_job_dir" not in st.session_state:
     st.session_state.url_people_job_dir = ""
 
+
+def _lines(value: str) -> list[str]:
+    return [line.strip() for line in value.splitlines() if line.strip()]
+
+
+def _save_uploads(files, job_dir: Path) -> list[str]:
+    upload_dir = job_dir / "dedupe_inputs"
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    saved = []
+    for file in files or []:
+        target = upload_dir / Path(file.name).name
+        target.write_bytes(file.getbuffer())
+        saved.append(str(target.resolve()))
+    return saved
+
 if submitted:
     urls = [u.strip() for u in source_urls_raw.splitlines() if u.strip()]
     if not urls:
         st.error("Enter at least one URL.")
     else:
+        if any(source in {"ddgs", "duckduckgo_browser"} for source in sources) and "google_browser" not in sources:
+            sources = ["google_browser", *sources]
         job_config = {
             "source_urls": urls,
             "source_url": urls[0],  # backward-compat
@@ -225,8 +263,12 @@ if submitted:
             "sources": sources or list(DEFAULT_SOURCE_NAMES),
             "browser_headless": not headful,
             "google_manual_challenge_seconds": (180 if headful and manual_recovery else 0),
+            "include_terms": _lines(include_terms_text),
+            "exclude_terms": _lines(exclude_terms_text),
+            "existing_files": [],
         }
         job_dir = create_job("url_people", job_config).resolve()
+        job_config["existing_files"] = _save_uploads(existing_files, job_dir)
         write_json(job_dir / "config.json", job_config)
         launch_job(job_dir, "speedy_scraper.url_people_job")
         st.session_state.url_people_job_dir = str(job_dir)
@@ -297,6 +339,16 @@ def job_monitor() -> None:
     )
     if stale:
         st.warning("The saved worker is no longer running. Relaunch it to continue from its checkpoint.")
+
+    captcha_recovery_panel(
+        status,
+        job_dir=job_dir,
+        module="speedy_scraper.url_people_job",
+        button_key="url_people_captcha_recovery",
+        launch_job=launch_job,
+        request_stop=request_stop,
+        read_status=read_status,
+    )
 
     st.caption(f"Auto-refreshes every 2 s · {datetime.now().strftime('%H:%M:%S')}")
 

@@ -80,6 +80,9 @@ class ScrapeConfig:
     minimum_confidence: int = 85
     minimum_sources: int = 1
     source_failure_limit: int = 3
+    include_terms: list[str] = field(default_factory=list)
+    exclude_terms: list[str] = field(default_factory=list)
+    query_mode: str = "Balanced"
     existing_files: list[Path] = field(default_factory=list)
 
 

@@ -14,9 +14,16 @@ from speedy_scraper.models import SearchPage, SearchResult
 
 
 class SourceError(RuntimeError):
-    def __init__(self, message: str, *, disable_source: bool = False):
+    def __init__(
+        self,
+        message: str,
+        *,
+        disable_source: bool = False,
+        challenge: bool = False,
+    ):
         super().__init__(message)
         self.disable_source = disable_source
+        self.challenge = challenge
 
 
 GOOGLE_CHALLENGE_SOURCE = "google_browser"
@@ -243,7 +250,7 @@ class BrowserSearchSource(SearchSource):
         headless: bool = True,
     ) -> SearchPage:
         if self._disabled_reason:
-            raise SourceError(self._disabled_reason, disable_source=True)
+            raise SourceError(self._disabled_reason, disable_source=True, challenge=True)
         page_number = max(1, int(page))
         page_size = min(10, max(1, int(max_results)))
         encoded = urllib.parse.quote_plus(query)
@@ -294,6 +301,7 @@ class BrowserSearchSource(SearchSource):
             raise SourceError(
                 self._disabled_reason,
                 disable_source=True,
+                challenge=True,
             )
         return SearchPage(
             results=results,
@@ -387,15 +395,19 @@ class BrowserSearchSource(SearchSource):
         try:
             # Wait for the URL to change, confirming navigation has actually started,
             # then wait for the page to reach domcontentloaded.
-            page_obj.wait_for_function(
-                "url => window.location.href !== url",
-                pre_nav_url,
-                timeout=8000,
-            )
+            wait_for_function = getattr(page_obj, "wait_for_function", None)
+            if callable(wait_for_function):
+                wait_for_function(
+                    "url => window.location.href !== url",
+                    pre_nav_url,
+                    timeout=8000,
+                )
             page_obj.wait_for_load_state("domcontentloaded", timeout=45000)
         except Exception:
             # Google can update the result page without a traditional navigation event.
-            page_obj.wait_for_timeout(800)
+            wait_for_timeout = getattr(page_obj, "wait_for_timeout", None)
+            if callable(wait_for_timeout):
+                wait_for_timeout(800)
 
     def _wait_for_request_slot(self, page_obj: Any) -> None:
         if self._last_request_started_at is not None:

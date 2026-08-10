@@ -21,6 +21,9 @@ from speedy_scraper.event_speakers import (
     write_speaker_exports,
 )
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
+from speedy_scraper.linkedin import normalize_linkedin_url
+from speedy_scraper.pipeline import load_existing_people_keys, load_existing_urls
+from speedy_scraper.text import normalize_text
 from speedy_scraper.sources import (
     SearchSource,
     build_sources,
@@ -49,7 +52,7 @@ def run_url_people_job(
     search_sources: list[SearchSource] = []
     try:
         if isinstance(checkpoint, dict) and checkpoint.get("speakers"):
-            speakers = [_speaker_from_data(item) for item in checkpoint["speakers"]]
+            speakers = _unique_speakers([_speaker_from_data(item) for item in checkpoint["speakers"]])
             next_index = int(checkpoint.get("next_index") or 0)
         else:
             # Support both a single URL and a list of URLs
@@ -62,9 +65,11 @@ def run_url_people_job(
                 raise ValueError("No source URL(s) provided in job config.")
 
             # Extract from each URL and deduplicate by name+company
+            existing_files = [Path(item) for item in _string_list(config.get("existing_files"))]
+            existing_urls = load_existing_urls(existing_files)
+            existing_people = load_existing_people_keys(existing_files)
             seen_people: set[str] = set()
             speakers: list[EventSpeaker] = []
-            from speedy_scraper.text import normalize_text
             for url in source_urls:
                 try:
                     page_html = fetch(url)
@@ -82,7 +87,12 @@ def run_url_people_job(
                     continue
                 for sp in page_speakers:
                     key = f"{normalize_text(sp.name)}|{normalize_text(sp.company)}"
-                    if key not in seen_people:
+                    profile_url = normalize_linkedin_url(sp.linkedin_url)
+                    if (
+                        key not in seen_people
+                        and key not in existing_people
+                        and profile_url not in existing_urls
+                    ):
                         seen_people.add(key)
                         speakers.append(sp)
 
@@ -99,6 +109,24 @@ def run_url_people_job(
             int(config.get("google_manual_challenge_seconds") or 0),
         )
         enrich_missing = bool(config.get("enrich_missing", True))
+        include_terms = _string_list(config.get("include_terms"))
+        exclude_terms = _string_list(config.get("exclude_terms"))
+        captcha_required = False
+
+        def _source_progress(event: dict[str, object]) -> None:
+            nonlocal captcha_required
+            if event.get("event") in {"captcha_required", "source_error"}:
+                captcha_required = True
+                update_status(
+                    path,
+                    captcha_required=True,
+                    captcha_source=str(event.get("source") or ""),
+                    fallback_recommended=True,
+                    message=(
+                        f"{event.get('source') or 'A search source'} failed or was challenged. "
+                        "Google browser is the recommended fallback; pause and resume visibly if needed."
+                    ),
+                )
         _status(path, "running", speakers, next_index, total, "Enrichment running")
 
         for index in range(next_index, total):
@@ -117,6 +145,9 @@ def run_url_people_job(
                         speaker,
                         search_sources,
                         headless=bool(config.get("browser_headless", True)),
+                        include_terms=include_terms,
+                        exclude_terms=exclude_terms,
+                        on_source_error=_source_progress,
                     )
             next_index = index + 1
             _save_checkpoint(checkpoint_path, speakers, next_index)
@@ -128,6 +159,7 @@ def run_url_people_job(
                 total,
                 f"Processed {next_index}/{total}: {speaker.name}",
                 current_name=speaker.name,
+                captcha_required=captcha_required,
             )
 
         csv_path, xlsx_path = write_speaker_exports(speakers, path / "URL_People_LinkedIn")
@@ -164,7 +196,7 @@ def load_checkpoint_speakers(job_dir: Path | str) -> tuple[list[EventSpeaker], i
     checkpoint = read_json(Path(job_dir) / "checkpoint.json", default={})
     if not isinstance(checkpoint, dict):
         return [], 0
-    speakers = [_speaker_from_data(item) for item in checkpoint.get("speakers") or []]
+    speakers = _unique_speakers([_speaker_from_data(item) for item in checkpoint.get("speakers") or []])
     return speakers, int(checkpoint.get("next_index") or 0)
 
 
@@ -210,6 +242,7 @@ def _status(
 
 
 def _save_checkpoint(path: Path, speakers: list[EventSpeaker], next_index: int) -> None:
+    speakers = _unique_speakers(speakers)
     write_json(
         path,
         {
@@ -218,6 +251,17 @@ def _save_checkpoint(path: Path, speakers: list[EventSpeaker], next_index: int) 
             "speakers": [_speaker_to_data(speaker) for speaker in speakers],
         },
     )
+
+
+def _unique_speakers(speakers: list[EventSpeaker]) -> list[EventSpeaker]:
+    unique: dict[str, EventSpeaker] = {}
+    for speaker in speakers:
+        canonical = normalize_linkedin_url(speaker.linkedin_url)
+        key = canonical or f"{normalize_text(speaker.name)}|{normalize_text(speaker.company)}"
+        current = unique.get(key)
+        if current is None or speaker.confidence > current.confidence:
+            unique[key] = speaker
+    return list(unique.values())
 
 
 def _speaker_to_data(speaker: EventSpeaker) -> dict[str, object]:

@@ -15,9 +15,11 @@ from speedy_scraper.background_jobs import (
     list_jobs,
     read_status,
     request_stop,
+    write_json,
 )
 from speedy_scraper.company_pocs import company_pocs_frame, load_company_poc_checkpoint
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
+from speedy_scraper.ui import captcha_recovery_panel, light_mode_css, render_theme_toggle
 
 _config_dir = Path(__file__).parent.parent / "config"
 
@@ -34,6 +36,7 @@ _all_locations = list(_location_tax.keys())
 _all_roles = list(_role_tax.keys())
 
 st.set_page_config(page_title="Company + Designation POC Finder", layout="wide")
+light_mode = render_theme_toggle("company_poc_light_mode")
 st.markdown(
     """
     <style>
@@ -113,6 +116,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+st.markdown(light_mode_css(light_mode), unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -157,6 +161,24 @@ with st.form("company_poc_form"):
         disabled=not headful or "google_browser" not in sources,
         help="Off by default: Google challenges fail fast and the other sources continue.",
     )
+    include_terms_text = st.text_area(
+        "Required search terms — one per line",
+        placeholder="e.g. payments\ncustomer experience",
+        height=80,
+        help="Adds quoted context to every company/designation query.",
+    )
+    exclude_terms_text = st.text_area(
+        "Exclude search terms — one per line",
+        placeholder="e.g. jobs\nrecruiter",
+        height=80,
+        help="Adds negative clauses to reduce hiring and directory noise.",
+    )
+    existing_files = st.file_uploader(
+        "Prior POC/speaker exports to exclude",
+        type=["csv", "xlsx", "xls"],
+        accept_multiple_files=True,
+        help="Existing LinkedIn URLs and name/company identities will not be returned again.",
+    )
     start = st.form_submit_button("Start Company POC Job", type="primary", width="stretch")
 
 if "company_poc_job_dir" not in st.session_state:
@@ -167,26 +189,40 @@ def _lines(value: str) -> list[str]:
     return [line.strip() for line in value.splitlines() if line.strip()]
 
 
+def _save_uploads(files, job_dir: Path) -> list[str]:
+    upload_dir = job_dir / "dedupe_inputs"
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    saved = []
+    for file in files or []:
+        target = upload_dir / Path(file.name).name
+        target.write_bytes(file.getbuffer())
+        saved.append(str(target.resolve()))
+    return saved
+
+
 if start:
     companies = _lines(companies_text)
     if not companies or not designations:
         st.error("Enter at least one company and one designation.")
     else:
-        job_dir = create_job(
-            "company_pocs",
-            {
-                "companies": companies,
-                "designations": designations,
-                "locations": locations,
-                "target_count": int(target_count),
-                "sources": sources or list(DEFAULT_SOURCE_NAMES),
-                "browser_headless": not headful,
-                "google_manual_challenge_seconds": (
-                    180 if headful and manual_google_recovery else 0
-                ),
-                "max_results_per_search": 25,
-            },
-        ).resolve()
+        if any(source in {"ddgs", "duckduckgo_browser"} for source in sources) and "google_browser" not in sources:
+            sources = ["google_browser", *sources]
+        config = {
+            "companies": companies,
+            "designations": designations,
+            "locations": locations,
+            "target_count": int(target_count),
+            "sources": sources or list(DEFAULT_SOURCE_NAMES),
+            "browser_headless": not headful,
+            "google_manual_challenge_seconds": 180 if headful and manual_google_recovery else 0,
+            "max_results_per_search": 25,
+            "include_terms": _lines(include_terms_text),
+            "exclude_terms": _lines(exclude_terms_text),
+            "existing_files": [],
+        }
+        job_dir = create_job("company_pocs", config).resolve()
+        config["existing_files"] = _save_uploads(existing_files, job_dir)
+        write_json(job_dir / "config.json", config)
         launch_job(job_dir, "speedy_scraper.company_pocs")
         st.session_state.company_poc_job_dir = str(job_dir)
         st.rerun()
@@ -228,6 +264,15 @@ def job_monitor() -> None:
     elif total:
         st.progress(min(processed / total, 1.0), text=f"{processed}/{total} query groups")
     st.info(f"{state.upper()} · {status.get('message', '')}")
+    captcha_recovery_panel(
+        status,
+        job_dir=job_dir,
+        module="speedy_scraper.company_pocs",
+        button_key="company_poc_captcha_recovery",
+        launch_job=launch_job,
+        request_stop=request_stop,
+        read_status=read_status,
+    )
     if stale:
         st.warning("The saved worker is no longer running. Relaunch it to continue from its checkpoint.")
 

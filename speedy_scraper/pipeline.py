@@ -34,6 +34,7 @@ class LeadScraper:
         queries = build_queries(config)
         metrics: Counter[str] = Counter()
         source_errors: list[str] = []
+        captcha_required = False
         disabled_sources: set[str] = set()
         source_failures: Counter[str] = Counter()
         candidates_by_url: dict[str, RawCandidate] = {}
@@ -87,6 +88,8 @@ class LeadScraper:
                                 source_errors.append(message)
                             metrics[f"{source.name}_errors"] += 1
                             source_failures[source.name] += 1
+                            if exc.challenge:
+                                captcha_required = True
                             if (
                                 exc.disable_source
                                 or source_failures[source.name] >= config.source_failure_limit
@@ -104,6 +107,13 @@ class LeadScraper:
                                 merge_candidates(candidates_by_url[candidate.linkedin_url], candidate)
                             else:
                                 candidates_by_url[candidate.linkedin_url] = candidate
+                        if captcha_required:
+                            self._emit(
+                                progress,
+                                "captcha_required",
+                                source=source.name,
+                                message="A search source was challenged; Google browser manual recovery is available.",
+                            )
                         self._emit(progress, "candidates", candidates=len(candidates_by_url))
                     if len(exhausted_sources) >= len(sources):
                         break
@@ -223,6 +233,32 @@ def load_existing_urls(paths: list[Path]) -> set[str]:
                     if url:
                         urls.add(url)
     return urls
+
+
+def load_existing_people_keys(paths: list[Path]) -> set[str]:
+    """Load stable name/company identities from prior exports for cross-run dedupe."""
+    keys: set[str] = set()
+    for path in paths:
+        if not path.exists():
+            continue
+        try:
+            frames = _load_existing_frames(path)
+        except Exception:
+            continue
+        for frame in frames:
+            columns = {str(column).strip().lower(): column for column in frame.columns}
+            name_column = next((column for key, column in columns.items() if key in {"name", "person", "full name", "speaker"}), None)
+            company_column = next((column for key, column in columns.items() if key in {"company", "organization", "organisation", "employer"}), None)
+            if name_column is None:
+                continue
+            for _, row in frame.iterrows():
+                raw_name = row.get(name_column)
+                raw_company = row.get(company_column) if company_column is not None else ""
+                name = "" if pd.isna(raw_name) else clean_spaces(str(raw_name or ""))
+                company = "" if pd.isna(raw_company) else clean_spaces(str(raw_company or ""))
+                if name:
+                    keys.add(f"{name.lower()}|{company.lower()}")
+    return keys
 
 
 def _load_existing_frames(path: Path) -> list[pd.DataFrame]:

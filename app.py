@@ -26,8 +26,11 @@ from speedy_scraper.config import load_catalog
 from speedy_scraper.exports import leads_frame, rejections_frame
 from speedy_scraper.lead_job import load_lead_job_checkpoint
 from speedy_scraper.sources import independent_source_families
+from speedy_scraper.ui import captcha_recovery_panel, light_mode_css, render_theme_toggle
 
 st.set_page_config(page_title="Speedy Scraper · Lead Operations", page_icon="◉", layout="wide")
+
+light_mode = render_theme_toggle("lead_harvest_light_mode")
 
 first_paint = "ui_mounted" not in st.session_state
 st.session_state.ui_mounted = True
@@ -117,7 +120,7 @@ entry_css = """
     [data-testid="stMainBlockContainer"] {animation:unifiedIn .42s cubic-bezier(.2,.7,.2,1) both;}
     </style>
 """
-st.markdown(base_css + (entry_css if first_paint else ""), unsafe_allow_html=True)
+st.markdown(base_css + light_mode_css(light_mode) + (entry_css if first_paint else ""), unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Load configs
@@ -518,6 +521,24 @@ with st.form("lead_contract", clear_on_submit=False):
                 "for LinkedIn URLs, and any match is excluded from the next run."
             ),
         )
+        q1, q2, q3 = st.columns([1, 1, 1])
+        query_mode = q1.selectbox(
+            "Query strategy",
+            ["Balanced", "Exact / strict", "Exploratory"],
+            help="Balanced mixes precise company-role searches with wider context queries.",
+        )
+        include_terms_text = q2.text_area(
+            "Required query terms",
+            placeholder="e.g. payments\ncustomer experience",
+            height=90,
+            help="Every term is quoted and added to each search query.",
+        )
+        exclude_terms_text = q3.text_area(
+            "Exclude from queries",
+            placeholder="e.g. jobs\nrecruiter",
+            height=90,
+            help="Terms become negative search clauses, useful for removing hiring noise.",
+        )
     contract_left, contract_right = st.columns([1.45, 1])
     with contract_left:
         submitted = st.form_submit_button("Commit contract & start background job", width="stretch")
@@ -530,6 +551,9 @@ with st.form("lead_contract", clear_on_submit=False):
 if submitted:
     # roles, locations, and industries are already lists from multiselect
     companies = _lines(companies_text)
+    effective_sources = list(sources)
+    if any(source in {"ddgs", "duckduckgo_browser"} for source in effective_sources) and "google_browser" not in effective_sources:
+        effective_sources = ["google_browser", *effective_sources]
     errors = []
     if not roles:
         errors.append("Enter at least one role/persona.")
@@ -539,7 +563,7 @@ if submitted:
         errors.append("Hard company filtering requires at least one target company.")
     if not sources:
         errors.append("Select at least one search source.")
-    if int(minimum_sources) > len(independent_source_families(sources)):
+    if int(minimum_sources) > len(independent_source_families(effective_sources)):
         errors.append(
             "Minimum evidence sources cannot exceed the number of independent selected sources."
         )
@@ -547,6 +571,7 @@ if submitted:
         for message in errors:
             st.error(message)
     else:
+        sources = effective_sources
         config = {
             "preset": preset_name,
             "target_count": int(target_count),
@@ -568,6 +593,9 @@ if submitted:
             "require_target_company": require_target_company,
             "minimum_confidence": int(minimum_confidence),
             "minimum_sources": int(minimum_sources),
+            "query_mode": query_mode,
+            "include_terms": _lines(include_terms_text),
+            "exclude_terms": _lines(exclude_terms_text),
             "existing_files": [],
         }
         job_dir = create_job("lead_harvest", config).resolve()
@@ -655,6 +683,16 @@ def job_monitor() -> None:
     if stale:
         st.warning("This worker is no longer alive. Relaunching continues from its last atomic checkpoint.")
 
+    captcha_recovery_panel(
+        status,
+        job_dir=job_dir,
+        module="speedy_scraper.lead_job",
+        button_key="lead_captcha_recovery",
+        launch_job=launch_job,
+        request_stop=request_stop,
+        read_status=read_status,
+    )
+
     processed = int(status.get("processed") or 0)
     total = int(status.get("total") or 0)
     if total:
@@ -713,6 +751,9 @@ def job_monitor() -> None:
             "Query budget": job_config.get("max_queries") or "default",
             "Results / query": job_config.get("max_results_per_query") or "default",
             "Pages / query": job_config.get("max_pages_per_query") or "default",
+            "Query strategy": job_config.get("query_mode") or "Balanced",
+            "Required terms": ", ".join(job_config.get("include_terms") or []) or "None",
+            "Excluded terms": ", ".join(job_config.get("exclude_terms") or []) or "None",
         }
         st.dataframe(
             [{"Filter": key, "Committed value": str(value)} for key, value in summary.items()],

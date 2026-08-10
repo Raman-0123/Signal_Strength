@@ -49,6 +49,9 @@ def config_from_mapping(value: dict[str, Any], *, catalog: dict[str, Any] | None
         ),
         minimum_sources=max(1, int(merged.get("minimum_sources") or 1)),
         source_failure_limit=max(1, int(merged.get("source_failure_limit") or 3)),
+        include_terms=_list(merged.get("include_terms")),
+        exclude_terms=_list(merged.get("exclude_terms")),
+        query_mode=str(merged.get("query_mode") or "Balanced"),
         existing_files=[Path(item) for item in _list(merged.get("existing_files"))],
     )
 

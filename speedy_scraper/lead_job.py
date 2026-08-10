@@ -314,6 +314,9 @@ def _run_search_phase(
             for key, value in dict(checkpoint.get("source_failures") or {}).items()
         }
     )
+    captcha_required = False
+    captcha_source = ""
+    fallback_recommended = False
     completed = (query_index * page_budget + page_index) * len(sources) + source_index
     _lead_status(
         path,
@@ -364,6 +367,11 @@ def _run_search_phase(
                             source_errors.append(message)
                         metrics[f"{source.name}_errors"] += 1
                         source_failures[source.name] += 1
+                        if exc.challenge:
+                            captcha_required = True
+                            captcha_source = source.name
+                        if source.name in {"ddgs", "duckduckgo_browser"}:
+                            fallback_recommended = True
                         if exc.disable_source or source_failures[source.name] >= config.source_failure_limit:
                             disabled_sources.add(source.name)
                             exhausted_sources.add(source.name)
@@ -424,6 +432,10 @@ def _run_search_phase(
                 current_query=query,
                 current_source=source.name,
                 current_page=page_index + 1,
+                captcha_required=captcha_required,
+                captcha_source=captcha_source,
+                fallback_recommended=fallback_recommended,
+                source_errors=source_errors,
             )
     finally:
         close_sources(sources)

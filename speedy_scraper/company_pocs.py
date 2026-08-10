@@ -18,6 +18,7 @@ from speedy_scraper.background_jobs import (
 from speedy_scraper.linkedin import linkedin_id, normalize_linkedin_url
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
 from speedy_scraper.parser import candidates_from_results
+from speedy_scraper.pipeline import load_existing_people_keys, load_existing_urls
 from speedy_scraper.sources import (
     SearchSource,
     SourceError,
@@ -62,7 +63,13 @@ class CompanyPoc:
         }
 
 
-def build_company_poc_tasks(companies: list[str], designations: list[str], locations: list[str] = None) -> list[dict[str, str]]:
+def build_company_poc_tasks(
+    companies: list[str],
+    designations: list[str],
+    locations: list[str] = None,
+    include_terms: list[str] | None = None,
+    exclude_terms: list[str] | None = None,
+) -> list[dict[str, str]]:
     tasks: list[dict[str, str]] = []
     locs = unique_terms(locations) if locations else [""]
     for company in unique_terms(companies):
@@ -70,12 +77,14 @@ def build_company_poc_tasks(companies: list[str], designations: list[str], locat
             for loc in locs:
                 role_clause = or_group(_role_aliases(designation))
                 loc_clause = f' "{_safe_quote(loc)}"' if loc else ""
+                include_clause = " ".join(f'"{_safe_quote(term)}"' for term in unique_terms(include_terms or []))
+                exclude_clause = " ".join(f'-"{_safe_quote(term)}"' for term in unique_terms(exclude_terms or []))
                 tasks.append(
                     {
                         "company": company,
                         "designation": designation,
                         "location": loc,
-                        "query": f'site:linkedin.com/in "{_safe_quote(company)}" {role_clause}{loc_clause}',
+                        "query": f'site:linkedin.com/in "{_safe_quote(company)}" {role_clause}{loc_clause} {include_clause} {exclude_clause}'.strip(),
                     }
                 )
     return tasks
@@ -95,7 +104,9 @@ def run_company_poc_job(
     tasks = build_company_poc_tasks(
         _strings(config.get("companies")), 
         _strings(config.get("designations")),
-        _strings(config.get("locations"))
+        _strings(config.get("locations")),
+        _strings(config.get("include_terms")),
+        _strings(config.get("exclude_terms")),
     )
     if not tasks:
         raise ValueError("Enter at least one company and one designation")
@@ -117,7 +128,13 @@ def run_company_poc_job(
     errors = list(checkpoint.get("errors", [])) if checkpoint else []
     task_index = int(checkpoint.get("task_index") or 0) if checkpoint else 0
     source_index = int(checkpoint.get("source_index") or 0) if checkpoint else 0
-    seen = {poc.linkedin_url for poc in pocs}
+    existing_files = [Path(item) for item in _strings(config.get("existing_files"))]
+    existing_urls = load_existing_urls(existing_files)
+    existing_people = load_existing_people_keys(existing_files)
+    seen = {poc.linkedin_url for poc in pocs if poc.linkedin_url} | existing_urls
+    seen_people = {f"{normalize_text(poc.name)}|{normalize_text(poc.company)}" for poc in pocs}
+    seen_people |= existing_people
+    captcha_required = False
     try:
         _write_poc_status(
             path,
@@ -167,6 +184,7 @@ def run_company_poc_job(
                 current_query=task["query"],
             )
             try:
+                results = []
                 with JobHeartbeat(
                     path,
                     activity="Public search request in progress",
@@ -182,14 +200,24 @@ def run_company_poc_job(
                 if message not in errors:
                     errors.append(message)
                 results = []
+                captcha_required = captcha_required or exc.challenge
+                update_status(
+                    path,
+                    source_errors=errors,
+                    captcha_required=captcha_required,
+                    captcha_source=source.name,
+                    fallback_recommended=True,
+                )
             for candidate in candidates_from_results(results):
                 canonical = normalize_linkedin_url(candidate.linkedin_url)
-                if not canonical or canonical in seen:
+                identity = f"{normalize_text(candidate.name)}|{normalize_text(candidate.company)}"
+                if not canonical or canonical in seen or identity in seen_people:
                     continue
                 poc, reason = _match_candidate(candidate, task["company"], task["designation"])
                 if poc:
                     pocs.append(poc)
                     seen.add(canonical)
+                    seen_people.add(f"{normalize_text(poc.name)}|{normalize_text(poc.company)}")
                     if len(pocs) >= target_count:
                         break
                 else:
@@ -220,6 +248,8 @@ def run_company_poc_job(
                 current_company=task["company"],
                 current_designation=task["designation"],
                 current_source=source.name,
+                captcha_required=captcha_required,
+                captcha_source=source.name if captcha_required else "",
             )
 
         csv_path, xlsx_path = write_company_poc_exports(
@@ -253,12 +283,18 @@ def load_company_poc_checkpoint(job_dir: Path | str) -> tuple[list[CompanyPoc], 
 
 
 def filter_company_pocs(pocs: list[CompanyPoc]) -> list[CompanyPoc]:
-    return [
-        poc
-        for poc in pocs
+    filtered = [
+        poc for poc in pocs
         if role_matches(poc.designation, [poc.requested_designation])
         and company_matches(poc.company, poc.requested_company)
     ]
+    unique: dict[str, CompanyPoc] = {}
+    for poc in filtered:
+        key = normalize_linkedin_url(poc.linkedin_url) or f"{normalize_text(poc.name)}|{normalize_text(poc.company)}"
+        current = unique.get(key)
+        if current is None or poc.confidence > current.confidence:
+            unique[key] = poc
+    return list(unique.values())
 
 
 def company_pocs_frame(pocs: list[CompanyPoc]) -> pd.DataFrame:

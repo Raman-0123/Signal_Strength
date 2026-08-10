@@ -14,6 +14,7 @@ def build_queries(config: ScrapeConfig) -> list[str]:
     company_names = unique_terms(config.company_names)
     industry_groups = _chunks(industries, 2) or [[]]
     business_clause = _business_model_clause(config.business_model)
+    modifiers = _query_modifiers(config)
     precise: list[str] = []
     contextual: list[str] = []
     coverage: list[str] = []
@@ -30,7 +31,7 @@ def build_queries(config: ScrapeConfig) -> list[str]:
         location_clause = (
             or_group(location_groups[location_index]) if location_groups else ""
         )
-        precise.append(_join(LINKEDIN_SITE, role_clause, company_clause, location_clause))
+        precise.append(_join(LINKEDIN_SITE, role_clause, company_clause, location_clause, modifiers))
 
     for role_index, role_group in enumerate(role_groups):
         role_clause = or_group(role_group)
@@ -38,23 +39,23 @@ def build_queries(config: ScrapeConfig) -> list[str]:
             location_clause = or_group(location_group)
             industry_clause = or_group(industry_groups[role_index % len(industry_groups)])
             contextual.append(
-                _join(LINKEDIN_SITE, role_clause, location_clause, industry_clause)
+                _join(LINKEDIN_SITE, role_clause, location_clause, industry_clause, modifiers)
             )
             if business_clause:
                 contextual.append(
-                    _join(LINKEDIN_SITE, role_clause, location_clause, business_clause)
+                    _join(LINKEDIN_SITE, role_clause, location_clause, business_clause, modifiers)
                 )
-            coverage.append(_join(LINKEDIN_SITE, role_clause, location_clause))
+            coverage.append(_join(LINKEDIN_SITE, role_clause, location_clause, modifiers))
         for company_index, company in enumerate(company_names):
             industry_clause = or_group(industry_groups[company_index % len(industry_groups)])
             contextual.append(
-                _join(LINKEDIN_SITE, role_clause, quote_term(company), industry_clause)
+                _join(LINKEDIN_SITE, role_clause, quote_term(company), industry_clause, modifiers)
             )
 
     for role in unique_terms(config.roles):
         for location_group in location_groups:
             for location in location_group:
-                coverage.append(_join(LINKEDIN_SITE, quote_term(role), quote_term(location)))
+                coverage.append(_join(LINKEDIN_SITE, quote_term(role), quote_term(location), modifiers))
 
     if config.require_target_company:
         ordered = _weave([(precise, 3), (contextual, 1), (coverage, 1)])
@@ -74,6 +75,14 @@ def _business_model_clause(value: str) -> str:
     if key in {"b2c", "b2c only"}:
         return or_group(["B2C", "consumer"])
     return ""
+
+
+def _query_modifiers(config: ScrapeConfig) -> str:
+    include = " ".join(quote_term(term) for term in unique_terms(config.include_terms))
+    exclude = " ".join(f"-{quote_term(term)}" for term in unique_terms(config.exclude_terms))
+    if normalize_text(config.query_mode) in {"exact", "exact strict", "exact / strict", "strict"}:
+        include = " ".join(part for part in (include, '"current"') if part)
+    return " ".join(part for part in (include, exclude) if part)
 
 
 def _join(*parts: str) -> str:
