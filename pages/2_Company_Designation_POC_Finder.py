@@ -46,85 +46,7 @@ _all_roles = list(_role_tax.keys())
 
 st.set_page_config(page_title="Company + Designation POC Finder", layout="wide")
 cloud_runtime = is_streamlit_cloud()
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    :root {
-        --night:#071316; --night-2:#0b1d21; --panel:#10282d; --panel-2:#15343a;
-        --line:#28515a; --text:#eef7f4; --muted:#94aaa8; --mint:#72f2c3;
-        --sun:#ffc857; --coral:#ff785a; --blue:#73b7ff; --violet:#c87cf9;
-    }
-    .stApp {color:var(--text); background:
-        radial-gradient(circle at 20% 5%, rgba(114,242,195,.09), transparent 26rem),
-        linear-gradient(135deg, var(--night), #08191d 58%, #071215);}
-    .stApp:before {content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;
-        background-image:linear-gradient(rgba(115,183,255,.08) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(115,183,255,.08) 1px,transparent 1px);
-        background-size:44px 44px;mask-image:linear-gradient(to bottom,black,transparent 70%);}
-    [data-testid="stHeader"] {background:rgba(7,19,22,.84);border-bottom:1px solid var(--line);backdrop-filter:blur(18px);}
-    [data-testid="stSidebar"] {background:#061013;border-right:1px solid var(--line);}
-    [data-testid="stSidebar"] * {color:#d9e8e5;}
-    .block-container {max-width:1320px;padding-top:2.2rem;padding-bottom:5rem;}
-    h1,h2,h3 {font-family:'Avenir Next','Futura',sans-serif!important;color:var(--text)!important;letter-spacing:-.035em;}
-    p,label,div,button,input,textarea,caption {font-family:'SFMono-Regular','Menlo',monospace;}
-    p,.stCaption {color:var(--muted);}
-
-    /* Page hero strip */
-    .url-hero {border:1px solid var(--line);border-radius:20px;padding:28px 32px;margin-bottom:28px;
-        background:linear-gradient(125deg,rgba(21,52,58,.9),rgba(8,24,28,.9));
-        display:flex;gap:28px;align-items:flex-start;position:relative;overflow:hidden;}
-    .url-hero:after {content:"";position:absolute;width:220px;height:220px;border-radius:50%;
-        right:-70px;top:-110px;border:40px solid rgba(114,242,195,.1);}
-    .url-hero-icon {font-size:38px;line-height:1;flex:none;}
-    .url-hero-title {font:700 clamp(22px,3vw,34px)/1.1 'Avenir Next','Futura',sans-serif;
-        color:var(--text);margin:0 0 8px;letter-spacing:-.03em;}
-    .url-hero-title em {font-style:normal;color:var(--mint);}
-    .url-hero-copy {font-size:12px;line-height:1.75;color:#8fb0ad;max-width:640px;}
-
-    /* Form */
-    [data-testid="stForm"] {border:1px solid var(--line);border-radius:18px;padding:20px 22px;
-        background:rgba(11,29,33,.72);box-shadow:0 14px 45px rgba(0,0,0,.16);}
-    [data-baseweb="input"],[data-baseweb="select"],textarea {
-        border-radius:10px!important;background:#0b2024!important;}
-    .stButton>button,.stDownloadButton>button,.stFormSubmitButton>button {
-        border-radius:12px!important;border:1px solid #39756b!important;
-        background:#173e39!important;color:#edfff9!important;
-        text-transform:uppercase!important;letter-spacing:.07em!important;
-        min-height:44px;transition:transform .18s ease,background .18s ease,box-shadow .18s ease;}
-    .stButton>button:hover,.stFormSubmitButton>button:hover,.stDownloadButton>button:hover {
-        background:#20594f!important;border-color:var(--mint)!important;
-        transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.22);}
-
-    /* Metrics */
-    [data-testid="stMetric"] {min-height:100px;background:rgba(16,40,45,.72);
-        border:1px solid var(--line);border-radius:13px;padding:14px;}
-    [data-testid="stMetricLabel"] {text-transform:uppercase;letter-spacing:.08em;color:#8fa5a2;font-size:10px;}
-    [data-testid="stMetricValue"] {font-family:'Avenir Next','Futura',sans-serif;color:var(--text);}
-
-    /* Live ribbon */
-    .live-ribbon {display:flex;gap:13px;align-items:flex-start;
-        border:1px solid var(--line);background:rgba(11,29,33,.88);
-        padding:14px 16px;margin:10px 0;border-radius:13px;}
-    .live-dot {width:9px;height:9px;border-radius:50%;flex:none;margin-top:3px;
-        background:var(--mint);box-shadow:0 0 0 0 rgba(114,242,195,.45);animation:pulse 1.7s infinite;}
-    .live-dot.stale {background:var(--coral);animation:none;}
-    .live-dot.done {background:#6c8582;animation:none;}
-    .live-title {font:700 11px 'SFMono-Regular','Menlo',monospace;letter-spacing:.1em;
-        text-transform:uppercase;color:var(--text);}
-    .live-detail {color:#68675f;font-size:11px;margin-top:3px;}
-    @keyframes pulse {70%{box-shadow:0 0 0 9px rgba(114,242,195,0);}100%{box-shadow:0 0 0 0 rgba(114,242,195,0);}}
-    
-    /* Tabs */
-    .stTabs [data-baseweb="tab-list"] {gap:6px;border-bottom:1px solid var(--line);}
-    .stTabs [data-baseweb="tab"] {border-radius:10px 10px 0 0;padding:10px 16px;
-        text-transform:uppercase;font-size:10px;}
-    .stTabs [aria-selected="true"] {background:var(--panel-2);color:var(--mint);}
-    [data-testid="stDataFrame"] {border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# CSS removed to rely on Streamlit default light theme
 
 st.title("Company + Designation POC Finder")
 st.markdown(
@@ -135,18 +57,18 @@ st.markdown(
 with st.form("company_poc_form"):
     left, mid, right = st.columns(3)
     companies_text = left.text_area(
-        "Company names — one per line", "Razorpay\nPhonePe\nCRED", height=180
+        "Company names — one per line", "", height=180
     )
     designations = mid.multiselect(
         "Designations",
         options=_all_roles,
-        default=["CIO", "CTO", "Chief Data Officer", "VP Customer Success"] if "CIO" in _all_roles else [],
+        default=[],
         placeholder="Select designations...",
     )
     locations = right.multiselect(
         "Locations (optional)",
         options=_all_locations,
-        default=["Bengaluru", "Singapore"] if "Bengaluru" in _all_locations else [],
+        default=[],
         placeholder="Select locations...",
     )
     target_count = st.number_input("Maximum matched POCs", min_value=1, max_value=1000, value=150)

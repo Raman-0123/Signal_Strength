@@ -157,6 +157,26 @@ locations:
       - Greater Paris Metropolitan Region
       - Paris, France
 
+  France:
+    region: EMEA
+    variants:
+      - France
+      - République française
+
+  Rome:
+    region: EMEA
+    variants:
+      - Rome
+      - Rome, Italy
+      - Rome, Latium, Italy
+      - Greater Rome Area
+
+  Italy:
+    region: EMEA
+    variants:
+      - Italy
+      - Italia
+
   Stockholm:
     region: EMEA
     variants:

@@ -377,7 +377,7 @@ with st.form("lead_contract", clear_on_submit=False):
         max_results = d.number_input(
             "Results per query", min_value=5, max_value=100, value=int(source_defaults.get("max_results_per_query") or 20)
         )
-        e, f, g, h = st.columns([1, 1, 1, 2])
+        e, f, g = st.columns([1, 1, 1])
         max_pages = e.number_input(
             "Pages per query",
             min_value=1,
@@ -404,20 +404,6 @@ with st.form("lead_contract", clear_on_submit=False):
                 "enabled; after you solve it, the same query continues automatically."
             ),
         )
-        dedupe_files = h.file_uploader(
-            "Upload prior CSV/XLSX exports to exclude",
-            type=["csv", "xlsx", "xls"],
-            accept_multiple_files=True,
-            help=(
-                "Upload one or more previous exports. Every sheet in every workbook is scanned "
-                "for valid LinkedIn URLs. Any matching leads will be skipped across all searches."
-            ),
-        )
-        gsheet_url = h.text_input(
-            "Or Google Sheet URL to exclude",
-            placeholder="https://docs.google.com/spreadsheets/d/...",
-            help="Paste a public Google Sheet URL to exclude existing POCs from the search.",
-        )
         q1, q2, q3 = st.columns([1, 1, 1])
         query_mode = q1.selectbox(
             "Query strategy",
@@ -436,6 +422,23 @@ with st.form("lead_contract", clear_on_submit=False):
             height=90,
             help="Terms become negative search clauses, useful for removing hiring noise.",
         )
+
+    st.markdown("##### Exclusion list (optional)")
+    h1, h2 = st.columns(2)
+    dedupe_files = h1.file_uploader(
+        "Upload prior CSV/XLSX exports to exclude",
+        type=["csv", "xlsx", "xls"],
+        accept_multiple_files=True,
+        help=(
+            "Upload one or more previous exports. Every sheet in every workbook is scanned "
+            "for valid LinkedIn URLs. Any matching leads will be skipped across all searches."
+        ),
+    )
+    gsheet_url = h2.text_input(
+        "Or Google Sheet URL to exclude",
+        placeholder="https://docs.google.com/spreadsheets/d/...",
+        help="Paste a public Google Sheet URL to exclude existing POCs from the search.",
+    )
     contract_left, contract_right = st.columns([1.45, 1])
     with contract_left:
         submitted = st.form_submit_button("Commit contract & start background job", width="stretch")
