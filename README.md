@@ -1,4 +1,4 @@
-# Speedy Scraper 3
+# Speedy Scraper 
 
 This is a checkpointed lead-research system focused on verified LinkedIn POCs
 from free public browser search results. Google, Bing, and DuckDuckGo run through
