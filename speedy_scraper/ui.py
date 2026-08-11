@@ -174,6 +174,8 @@ def prepare_failed_search_retry(job_dir: Path, *, local_manual: bool) -> dict[st
         sources = [str(item) for item in config.get("sources") or []]
         if "google_browser" not in sources:
             sources.insert(0, "google_browser")
+        if "bing_browser" not in sources:
+            sources.append("bing_browser")
         config.update(
             {
                 "sources": sources,
@@ -214,17 +216,29 @@ def captcha_recovery_panel(
     if not flagged and not provider_failed and not warning_state:
         return
     cloud = is_streamlit_cloud()
-    headline = "Provider recovery required" if warning_state else "Provider fallback active"
+    headline = (
+        "Provider recovery required"
+        if warning_state
+        else "Manual Google recovery required"
+        if source == "google_browser" and not cloud
+        else "Provider fallback active"
+    )
     if cloud:
         detail = (
             f"{source or 'A public search source'} failed or was challenged. The hosted worker cannot expose "
-            "its Chrome window to your computer, so use the automatic provider retry below."
+            "its Chrome window to your computer, so the retry below uses hosted fallback providers."
         )
     else:
-        detail = (
-            f"{source or 'A public search source'} failed or was challenged. Google is available as a fallback; "
-            "a visible local Chrome retry can be used when a CAPTCHA needs manual solving."
-        )
+        if source == "google_browser":
+            detail = (
+                "Google was challenged. The visible local Google retry below reopens the saved searches "
+                "and waits for you to solve the CAPTCHA."
+            )
+        else:
+            detail = (
+                f"{source or 'A public search source'} failed or was challenged. "
+                "A visible local Google retry is available below."
+            )
     st.warning(f"**{headline}**  \n{detail}")
     left, right = st.columns([1.25, 1])
     state = str(status.get("state") or "")
@@ -254,6 +268,9 @@ def captcha_recovery_panel(
                 f"{name}: {outcome.get('results', 0)} results · "
                 f"{outcome.get('errors', 0)} errors · {outcome.get('challenges', 0)} challenges"
             )
+    elif errors:
+        right.caption("Recorded provider failure:")
+        right.caption(errors)
     else:
         right.caption("No provider telemetry recorded yet.")
 

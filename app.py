@@ -436,12 +436,12 @@ st.markdown(
 
 def _phase_markup(current: str, state: str) -> str:
     phases = [("search", "Discover"), ("consolidate", "Consolidate"), ("verify", "Verify"), ("export", "Export")]
-    effective = "export" if state == "completed" else current
+    effective = "export" if state in {"completed", "completed_with_warnings"} else current
     order = {key: index for index, (key, _name) in enumerate(phases)}
     active_index = order.get(effective, 0)
     cells = []
     for index, (_key, name) in enumerate(phases):
-        css = "done" if index < active_index or state == "completed" else ("active" if index == active_index else "")
+        css = "done" if index < active_index or state in {"completed", "completed_with_warnings"} else ("active" if index == active_index else "")
         cells.append(
             f'<div class="phase {css}"><div class="phase-num">0{index + 1}</div><div class="phase-name">{name}</div></div>'
         )

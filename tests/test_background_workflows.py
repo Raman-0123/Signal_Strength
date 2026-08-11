@@ -412,6 +412,94 @@ class StopAfterLeadSearch:
         ]
 
 
+class LeadChallengeSource:
+    name = "google_browser"
+
+    def search(self, query, *, max_results, headless=True):
+        raise SourceError("google challenge", disable_source=True, challenge=True)
+
+
+class LeadRecoverySource:
+    name = "google_browser"
+
+    def search(self, query, *, max_results, headless=True):
+        return [
+            SearchResult(
+                title="Asha Rao - Chief Technology Officer - Razorpay | LinkedIn",
+                body="Location: Bengaluru · Razorpay payments platform.",
+                href="https://www.linkedin.com/in/asha-rao/",
+                source=self.name,
+                query=query,
+            )
+        ]
+
+
+class LeadBingFallbackSource(LeadRecoverySource):
+    name = "bing_browser"
+
+
+def test_lead_google_challenge_adds_bing_fallback_and_continues(tmp_path: Path):
+    job_dir = create_job(
+        "lead_harvest",
+        {
+            "roles": ["CTO"],
+            "locations": ["Bengaluru"],
+            "company_names": ["Razorpay"],
+            "require_target_company": True,
+            "sources": ["google_browser"],
+            "target_count": 1,
+            "max_queries": 1,
+        },
+        jobs_root=tmp_path,
+    )
+
+    def source_builder(names):
+        return [LeadChallengeSource()] if names == ["google_browser"] else [LeadBingFallbackSource()]
+
+    result = run_lead_job(job_dir, source_builder=source_builder)
+
+    status = read_status(job_dir)
+    config = json.loads((job_dir / "config.json").read_text())
+    assert [lead.name for lead in result.leads] == ["Asha Rao"]
+    assert status["state"] == "completed_with_warnings"
+    assert "bing_browser" in config["sources"]
+    assert status["failed_searches"] == 1
+
+
+def test_lead_warning_recovery_replays_completed_checkpoint(tmp_path: Path):
+    job_dir = create_job(
+        "lead_harvest",
+        {
+            "roles": ["CTO"],
+            "locations": ["Bengaluru"],
+            "company_names": ["Razorpay"],
+            "require_target_company": True,
+            "sources": ["google_browser"],
+            "target_count": 1,
+            "max_queries": 1,
+        },
+        jobs_root=tmp_path,
+    )
+
+    run_lead_job(job_dir, source_builder=lambda _names: [LeadChallengeSource()])
+    first_status = read_status(job_dir)
+    assert first_status["state"] == "completed_with_warnings"
+    assert first_status["failed_searches"] == 1
+
+    config = json.loads((job_dir / "config.json").read_text())
+    config["retry_failed_searches"] = True
+    config["browser_headless"] = False
+    config["google_manual_challenge_seconds"] = 1
+    (job_dir / "config.json").write_text(json.dumps(config))
+
+    result = run_lead_job(job_dir, source_builder=lambda _names: [LeadRecoverySource()])
+
+    final_status = read_status(job_dir)
+    assert [lead.name for lead in result.leads] == ["Asha Rao"]
+    assert final_status["state"] == "completed"
+    assert final_status["failed_searches"] == 0
+
+
 def test_main_lead_job_checkpoints_search_and_resumes_into_verification(tmp_path: Path):
     dedupe_path = tmp_path / "existing.csv"
     dedupe_path.write_text(

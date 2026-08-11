@@ -102,6 +102,29 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
     leads = [_verified_lead_from_data(item) for item in checkpoint.get("leads", [])]
     rejections = [_rejection_from_data(item) for item in checkpoint.get("rejections", [])]
     source_errors = [str(item) for item in checkpoint.get("source_errors", [])]
+    failed_searches = [
+        dict(item)
+        for item in checkpoint.get("failed_searches", [])
+        if isinstance(item, dict)
+    ]
+    if raw_config.get("retry_failed_searches") and source_errors:
+        # A pre-recovery checkpoint did not persist the failed query cursor.
+        # Replay from the first known failed query when available; otherwise
+        # replay the plan from the beginning while retaining existing leads.
+        query_index = min(
+            (int(item.get("query_index") or 0) for item in failed_searches),
+            default=0,
+        )
+        source_index = 0
+        page_index = 0
+        validation_index = 0
+        phase = "search"
+        checkpoint["disabled_sources"] = []
+        checkpoint["exhausted_sources"] = []
+        checkpoint["source_failures"] = {}
+        write_json(checkpoint_path, checkpoint)
+        raw_config["retry_failed_searches"] = False
+        write_json(path / "config.json", raw_config)
     metrics: Counter[str] = Counter(
         {str(key): int(value) for key, value in dict(checkpoint.get("metrics") or {}).items()}
     )
@@ -150,6 +173,7 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
                 company_evidence_cache,
                 existing_urls,
                 pool_target,
+                failed_searches,
                 source_builder=source_builder,
             )
             if stop_requested(path):
@@ -254,12 +278,24 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
             source_errors,
             metrics,
             company_evidence_cache,
+            failed_searches=failed_searches,
+        )
+        unresolved_challenge = bool(failed_searches) and any(
+            "challenge" in str(item.get("reason") or "").lower()
+            for item in failed_searches
+        )
+        final_state = "completed_with_warnings" if failed_searches else "completed"
+        final_message = (
+            f"Completed with warnings: {len(leads)} verified leads; "
+            f"{len(failed_searches)} searches need recovery"
+            if final_state == "completed_with_warnings"
+            else f"Completed with {len(leads)} verified leads"
         )
         update_status(
             path,
-            state="completed",
+            state=final_state,
             phase="export",
-            message=f"Completed with {len(leads)} verified leads",
+            message=final_message,
             processed=validation_index,
             total=len(candidates_by_url),
             candidates=len(candidates_by_url),
@@ -267,6 +303,8 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
             rejected=len(rejections),
             csv_path=str(csv_path),
             xlsx_path=str(xlsx_path),
+            failed_searches=len(failed_searches),
+            captcha_required=unresolved_challenge,
         )
         return result
     except Exception as exc:
@@ -335,6 +373,7 @@ def _run_search_phase(
     company_evidence_cache: dict[str, str],
     existing_urls: set[str],
     pool_target: int,
+    failed_searches: list[dict[str, Any]],
     *,
     source_builder=None,
 ) -> tuple[int, int, int]:
@@ -403,6 +442,15 @@ def _run_search_phase(
                             headless=config.browser_headless,
                         )
                         results = batch.results
+                        failed_searches[:] = [
+                            item
+                            for item in failed_searches
+                            if not (
+                                int(item.get("query_index", -1)) == query_index
+                                and int(item.get("page", -1)) == page_index + 1
+                                and str(item.get("source") or "") == source.name
+                            )
+                        ]
                         source_failures[source.name] = 0
                         if not batch.has_next:
                             exhausted_sources.add(source.name)
@@ -410,11 +458,46 @@ def _run_search_phase(
                         message = f"{source.name}: {exc}"
                         if message not in source_errors:
                             source_errors.append(message)
+                        if not any(
+                            int(item.get("query_index", -1)) == query_index
+                            and int(item.get("page", -1)) == page_index + 1
+                            and str(item.get("source") or "") == source.name
+                            for item in failed_searches
+                        ):
+                            failed_searches.append(
+                                {
+                                    "query_index": query_index,
+                                    "page": page_index + 1,
+                                    "source": source.name,
+                                    "query": query,
+                                    "reason": str(exc),
+                                    "challenge": bool(exc.challenge),
+                                }
+                            )
                         metrics[f"{source.name}_errors"] += 1
                         source_failures[source.name] += 1
                         if exc.challenge:
                             captcha_required = True
                             captcha_source = source.name
+                            if source.name == "google_browser" and not any(
+                                item.name == "bing_browser" for item in sources
+                            ):
+                                fallback_builder = source_builder or build_sources
+                                fallback_sources = fallback_builder(["bing_browser"])
+                                if fallback_sources:
+                                    sources.extend(fallback_sources)
+                                    config.sources.append("bing_browser")
+                                    persisted_config = read_json(path / "config.json", default={})
+                                    if isinstance(persisted_config, dict):
+                                        configured_sources = [
+                                            str(item) for item in persisted_config.get("sources") or []
+                                        ]
+                                        if "bing_browser" not in configured_sources:
+                                            configured_sources.append("bing_browser")
+                                            persisted_config["sources"] = configured_sources
+                                            write_json(path / "config.json", persisted_config)
+                                    searches_total = len(queries) * len(sources) * page_budget
+                                    fallback_recommended = True
                         if source.name in {"ddgs", "duckduckgo_browser"}:
                             fallback_recommended = True
                         if exc.disable_source or source_failures[source.name] >= config.source_failure_limit:
@@ -461,6 +544,7 @@ def _run_search_phase(
                 disabled_sources=disabled_sources,
                 exhausted_sources=exhausted_sources,
                 source_failures=dict(source_failures),
+                failed_searches=failed_searches,
             )
             _lead_status(
                 path,
@@ -481,6 +565,7 @@ def _run_search_phase(
                 captcha_source=captcha_source,
                 fallback_recommended=fallback_recommended,
                 source_errors=source_errors,
+                failed_searches=len(failed_searches),
             )
     finally:
         close_sources(sources)
@@ -723,6 +808,7 @@ def _save_checkpoint(
     disabled_sources: set[str] | None = None,
     exhausted_sources: set[str] | None = None,
     source_failures: dict[str, int] | None = None,
+    failed_searches: list[dict[str, Any]] | None = None,
 ) -> None:
     previous = read_json(path, default={})
     previous = previous if isinstance(previous, dict) else {}
@@ -741,6 +827,15 @@ def _save_checkpoint(
             "leads": [asdict(item) for item in leads],
             "rejections": [asdict(item) for item in rejections],
             "source_errors": source_errors,
+            "failed_searches": (
+                failed_searches
+                if failed_searches is not None
+                else [
+                    dict(item)
+                    for item in previous.get("failed_searches") or []
+                    if isinstance(item, dict)
+                ]
+            ),
             "metrics": dict(metrics),
             "company_evidence_cache": company_evidence_cache,
             "disabled_sources": sorted(
