@@ -1,0 +1,32 @@
+{
+  "companies": [
+    "Citi",
+    "Great Eastern",
+    "atome"
+  ],
+  "designations": [
+    "Head of Marketing",
+    "VP Marketing",
+    "Director of Marketing",
+    "CMO"
+  ],
+  "locations": [
+    "Singapore"
+  ],
+  "target_count": 50,
+  "query_passes": 5,
+  "sources": [
+    "ddgs",
+    "google_browser"
+  ],
+  "browser_headless": false,
+  "google_manual_challenge_seconds": 180,
+  "max_results_per_search": 100,
+  "retry_attempts": 3,
+  "include_terms": [],
+  "exclude_terms": [],
+  "existing_files": [
+    "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260811T072208Z_0cfae93c/dedupe_inputs/gsheet_1xT3vCps6a-Y_kcg7I0ifJFuEDhYk_xlPPl0ifR_0WX8_0.csv"
+  ],
+  "retry_failed_searches": false
+}

@@ -1,0 +1,34 @@
+{
+  "companies": [
+    "Atome",
+    "eastspring",
+    "moneysmart",
+    "prudential"
+  ],
+  "designations": [
+    "VP Marketing",
+    "Head of Marketing",
+    "Director of Marketing",
+    "Senior Director",
+    "VP",
+    "CMO"
+  ],
+  "locations": [
+    "Singapore"
+  ],
+  "target_count": 150,
+  "query_passes": 1,
+  "sources": [
+    "google_browser",
+    "ddgs"
+  ],
+  "browser_headless": true,
+  "google_manual_challenge_seconds": 0,
+  "max_results_per_search": 50,
+  "retry_attempts": 2,
+  "include_terms": [],
+  "exclude_terms": [],
+  "existing_files": [
+    "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260811T075329Z_bd390790/dedupe_inputs/gsheet_1xT3vCps6a-Y_kcg7I0ifJFuEDhYk_xlPPl0ifR_0WX8_0.csv"
+  ]
+}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import shutil
 from datetime import datetime
 from pathlib import Path
 
@@ -29,6 +30,7 @@ from speedy_scraper.ui import (
     captcha_recovery_panel,
     download_gsheet,
     is_streamlit_cloud,
+    render_pending_manual_google_dialog,
 )
 
 _config_dir = Path(__file__).parent.parent / "config"
@@ -80,6 +82,25 @@ with st.form("company_poc_form"):
         max_value=5,
         value=2,
         help="Each failed provider search gets targeted fallback attempts before warning completion.",
+    )
+    query_passes = st.number_input(
+        "Search depth — query variants per target",
+        min_value=1,
+        max_value=8,
+        value=1,
+        step=1,
+        help=(
+            "One target is each company + designation + location combination. "
+            "Each extra pass uses a different high-signal query variant for every selected provider."
+        ),
+    )
+    max_results_per_search = st.number_input(
+        "Results returned per search",
+        min_value=5,
+        max_value=100,
+        value=25,
+        step=5,
+        help="Higher values give each query a wider candidate pool but use more provider bandwidth.",
     )
     sources = st.multiselect(
         "Public search sources",
@@ -161,10 +182,11 @@ if start:
             "designations": designations,
             "locations": locations,
             "target_count": int(target_count),
+            "query_passes": int(query_passes),
             "sources": sources or list(DEFAULT_SOURCE_NAMES),
             "browser_headless": cloud_runtime or not headful,
             "google_manual_challenge_seconds": 180 if headful and manual_google_recovery and not cloud_runtime else 0,
-            "max_results_per_search": 25,
+            "max_results_per_search": int(max_results_per_search),
             "retry_attempts": int(retry_attempts),
             "include_terms": _lines(include_terms_text),
             "exclude_terms": _lines(exclude_terms_text),
@@ -185,9 +207,88 @@ if previous_jobs:
             previous_jobs,
             format_func=lambda value: f"{value.name} · {read_status(value).get('state', 'unknown')}",
         )
-        if st.button("Open selected company job"):
-            st.session_state.company_poc_job_dir = str(selected.resolve())
-            st.rerun()
+        selected_status = read_status(selected)
+        selected_state = str(selected_status.get("state") or "unknown")
+        selected_live = selected_state in {"starting", "running", "stopping"} and not job_is_stale(selected_status)
+        archive_open, archive_delete, archive_clear = st.columns([1, 1, 1])
+        with archive_open.container(key="company-open-job-action"):
+            if st.button("Open selected company job", width="stretch"):
+                st.session_state.company_poc_job_dir = str(selected.resolve())
+                st.rerun()
+        with archive_delete.container(key="company-delete-job-action"):
+            if st.button(
+                "Delete selected job",
+                disabled=selected_live,
+                width="stretch",
+                help="Stop a live worker before deleting its saved job.",
+            ):
+                st.session_state.company_delete_job = str(selected.resolve())
+                st.rerun()
+        with archive_clear.container(key="company-clear-jobs-action"):
+            if st.button("Clear all saved jobs", width="stretch"):
+                st.session_state.company_confirm_clear_jobs = True
+                st.rerun()
+
+        delete_target = st.session_state.get("company_delete_job")
+        if delete_target:
+            delete_path = Path(delete_target).resolve()
+            delete_status = read_status(delete_path)
+            delete_live = (
+                str(delete_status.get("state") or "") in {"starting", "running", "stopping"}
+                and not job_is_stale(delete_status)
+            )
+            if delete_live:
+                st.warning("This worker is still live. Stop it first, then delete the saved job.")
+                st.session_state.pop("company_delete_job", None)
+            else:
+                st.warning(f"Delete saved job **{delete_path.name}** and its exports?")
+                confirm_delete, cancel_delete = st.columns(2)
+                with confirm_delete.container(key="company-confirm-delete-action"):
+                    if st.button("Confirm delete", type="primary", width="stretch"):
+                        jobs_root = Path("exports/jobs/company_pocs").resolve()
+                        if delete_path.parent == jobs_root and delete_path.is_dir():
+                            shutil.rmtree(delete_path)
+                        if st.session_state.get("company_poc_job_dir") == str(delete_path):
+                            st.session_state.company_poc_job_dir = ""
+                        st.session_state.pop("company_delete_job", None)
+                        st.rerun()
+                with cancel_delete.container(key="company-cancel-delete-action"):
+                    if st.button("Cancel", width="stretch"):
+                        st.session_state.pop("company_delete_job", None)
+                        st.rerun()
+
+        if st.session_state.get("company_confirm_clear_jobs"):
+            st.warning("Clear every completed or stale Company POC job and its exports? Live jobs will be kept.")
+            confirm_clear, cancel_clear = st.columns(2)
+            with confirm_clear.container(key="company-confirm-clear-action"):
+                if st.button("Confirm clear all saved jobs", type="primary", width="stretch"):
+                    jobs_root = Path("exports/jobs/company_pocs").resolve()
+                    blocked: list[str] = []
+                    current_job = st.session_state.get("company_poc_job_dir")
+                    for job in previous_jobs:
+                        target = job.resolve()
+                        status = read_status(target)
+                        live = str(status.get("state") or "") in {"starting", "running", "stopping"} and not job_is_stale(status)
+                        if live:
+                            blocked.append(target.name)
+                        elif target.parent == jobs_root and target.is_dir():
+                            shutil.rmtree(target)
+                            if current_job == str(target):
+                                st.session_state.company_poc_job_dir = ""
+                    st.session_state.pop("company_confirm_clear_jobs", None)
+                    if blocked:
+                        st.session_state.company_archive_message = f"Kept live jobs: {', '.join(blocked)}"
+                    else:
+                        st.session_state.company_archive_message = "Cleared saved Company POC jobs."
+                    st.rerun()
+            with cancel_clear.container(key="company-cancel-clear-action"):
+                if st.button("Cancel", width="stretch"):
+                    st.session_state.pop("company_confirm_clear_jobs", None)
+                    st.rerun()
+
+        archive_message = st.session_state.pop("company_archive_message", None)
+        if archive_message:
+            st.success(archive_message)
 
 
 @st.fragment(run_every="2s")
@@ -334,3 +435,4 @@ def job_monitor() -> None:
 
 
 job_monitor()
+render_pending_manual_google_dialog(launch_job=launch_job, request_stop=request_stop)

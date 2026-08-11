@@ -73,8 +73,9 @@ def build_company_poc_tasks(
     locations: list[str] = None,
     include_terms: list[str] | None = None,
     exclude_terms: list[str] | None = None,
+    query_passes: int = 1,
 ) -> list[dict[str, str]]:
-    tasks: list[dict[str, str]] = []
+    base_tasks: list[dict[str, str]] = []
     locs = unique_terms(locations) if locations else [""]
     for company in unique_terms(companies):
         for designation in unique_terms(designations):
@@ -83,7 +84,7 @@ def build_company_poc_tasks(
                 loc_clause = f' "{_safe_quote(loc)}"' if loc else ""
                 include_clause = " ".join(f'"{_safe_quote(term)}"' for term in unique_terms(include_terms or []))
                 exclude_clause = " ".join(f'-"{_safe_quote(term)}"' for term in unique_terms(exclude_terms or []))
-                tasks.append(
+                base_tasks.append(
                     {
                         "company": company,
                         "designation": designation,
@@ -91,7 +92,47 @@ def build_company_poc_tasks(
                         "query": f'site:linkedin.com/in "{_safe_quote(company)}" {role_clause}{loc_clause} {include_clause} {exclude_clause}'.strip(),
                     }
                 )
+    passes = max(1, min(int(query_passes or 1), 8))
+    if passes == 1:
+        return base_tasks
+
+    tasks: list[dict[str, str]] = []
+    for task in base_tasks:
+        for variant_index, query in enumerate(_company_query_variants(task), start=1):
+            if variant_index > passes:
+                break
+            tasks.append({
+                **task,
+                "query": query,
+                "query_variant": str(variant_index),
+            })
     return tasks
+
+
+def _company_query_variants(task: dict[str, str]) -> list[str]:
+    """Create distinct high-signal queries for user-selected search depth."""
+    base = str(task.get("query") or "").strip()
+    company = _safe_quote(str(task.get("company") or ""))
+    designation = _safe_quote(str(task.get("designation") or ""))
+    location = _safe_quote(str(task.get("location") or ""))
+    if not base:
+        return []
+
+    candidates = [
+        base,
+        f'{base} "{designation}"',
+        f'{base} intitle:"{designation}"',
+        f'{base} "{company}" "{designation}"',
+        f'{base} "{designation}" "{location}"' if location else f'{base} "{company}"',
+        (
+            f'{base} intitle:"{designation}" "{company}" "{location}"'
+            if location
+            else f'{base} intitle:"{designation}" "{company}"'
+        ),
+        f'{base} "{company}" "{designation}" -jobs -recruiter',
+        f'{base} intitle:"{designation}" -jobs -recruiter',
+    ]
+    return list(dict.fromkeys(" ".join(value.split()) for value in candidates if value.strip()))
 
 
 def run_company_poc_job(
@@ -111,6 +152,7 @@ def run_company_poc_job(
         _strings(config.get("locations")),
         _strings(config.get("include_terms")),
         _strings(config.get("exclude_terms")),
+        int(config.get("query_passes") or 1),
     )
     if not tasks:
         raise ValueError("Enter at least one company and one designation")

@@ -30,6 +30,7 @@ from speedy_scraper.ui import (
     action_button_css,
     captcha_recovery_panel,
     download_gsheet,
+    render_pending_manual_google_dialog,
 )
 
 st.set_page_config(page_title="Speedy Scraper · Lead Operations", page_icon="◉", layout="wide")
@@ -611,3 +612,4 @@ def job_monitor() -> None:
 
 
 job_monitor()
+render_pending_manual_google_dialog(launch_job=launch_job, request_stop=request_stop)

@@ -148,6 +148,18 @@ def test_company_poc_job_uses_company_role_pairs_and_resumes(tmp_path: Path):
     assert {poc.company for poc in pocs} == {"Razorpay", "PhonePe"}
 
 
+def test_company_poc_query_passes_expand_search_plan_for_user_selected_depth():
+    tasks = build_company_poc_tasks(
+        ["Razorpay"],
+        ["CTO"],
+        ["Singapore"],
+        query_passes=3,
+    )
+    assert len(tasks) == 3
+    assert [task["query_variant"] for task in tasks] == ["1", "2", "3"]
+    assert len({task["query"] for task in tasks}) == 3
+
+
 class WrongRoleSource:
     name = "fake"
 

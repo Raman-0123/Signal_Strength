@@ -93,6 +93,24 @@ def action_button_css() -> str:
     .st-key-company-refresh-action button:hover {
         background:var(--action-refresh-hover)!important;
     }
+    .st-key-company-delete-job-action button,
+    .st-key-company-confirm-delete-action button {
+        background:var(--action-stop)!important;
+        color:var(--action-text)!important;
+    }
+    .st-key-company-delete-job-action button:hover,
+    .st-key-company-confirm-delete-action button:hover {
+        background:var(--action-stop-hover)!important;
+    }
+    .st-key-company-clear-jobs-action button,
+    .st-key-company-confirm-clear-action button {
+        background:#b7791f!important;
+        color:var(--action-text)!important;
+    }
+    .st-key-company-clear-jobs-action button:hover,
+    .st-key-company-confirm-clear-action button:hover {
+        background:#8f5d18!important;
+    }
     button:disabled {
         opacity:.48!important;
         transform:none!important;
@@ -196,6 +214,57 @@ def _read_job_config(job_dir: Path) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
+def _open_manual_google_dialog(
+    *,
+    job_dir: Path,
+    module: str,
+    button_key: str,
+    launch_job,
+    request_stop,
+) -> None:
+    """Open a local-only modal explaining how the visible CAPTCHA recovery works."""
+
+    @st.dialog("Manual Google CAPTCHA recovery")
+    def recovery_dialog() -> None:
+        st.warning(
+            "Google challenged this search session. The CAPTCHA cannot be embedded in Streamlit, "
+            "so the worker will open a visible local Chrome window for you."
+        )
+        st.markdown(
+            "1. Click **Start visible Google recovery** below.\n"
+            "2. In the Chrome window that opens, complete Google’s CAPTCHA.\n"
+            "3. Leave Chrome open; the worker continues from the saved checkpoint."
+        )
+        st.caption("This option is available only when Streamlit is running on your computer.")
+        if st.button(
+            "Start visible Google recovery",
+            key=f"{button_key}_start",
+            type="primary",
+            width="stretch",
+        ):
+            st.session_state.pop("_manual_google_recovery_dialog", None)
+            prepare_failed_search_retry(job_dir, local_manual=True)
+            request_stop(job_dir)
+            launch_job(job_dir, module)
+            st.rerun()
+
+    recovery_dialog()
+
+
+def render_pending_manual_google_dialog(*, launch_job, request_stop) -> None:
+    """Render a queued recovery modal outside the auto-refresh job fragment."""
+    pending = st.session_state.get("_manual_google_recovery_dialog")
+    if not isinstance(pending, dict):
+        return
+    _open_manual_google_dialog(
+        job_dir=Path(str(pending.get("job_dir") or "")),
+        module=str(pending.get("module") or ""),
+        button_key=str(pending.get("button_key") or "manual_google_recovery"),
+        launch_job=launch_job,
+        request_stop=request_stop,
+    )
+
+
 def captcha_recovery_panel(
     status: dict[str, Any],
     *,
@@ -251,13 +320,30 @@ def captcha_recovery_panel(
             # after the new retry queue is deployed.
             failed_searches = 1
         if failed_searches:
-            label = "Retry failed searches automatically" if cloud else "Retry failed searches in visible Google"
             with left.container(key=f"{button_key}_action"):
-                if st.button(label, key=button_key, type="primary", width="stretch"):
-                    prepare_failed_search_retry(job_dir, local_manual=not cloud)
-                    request_stop(job_dir)
-                    launch_job(job_dir, module)
-                    st.rerun(scope="fragment")
+                if cloud:
+                    if st.button(
+                        "Retry failed searches automatically",
+                        key=button_key,
+                        type="primary",
+                        width="stretch",
+                    ):
+                        prepare_failed_search_retry(job_dir, local_manual=False)
+                        request_stop(job_dir)
+                        launch_job(job_dir, module)
+                        st.rerun(scope="fragment")
+                elif st.button(
+                    "Open manual Google CAPTCHA recovery",
+                    key=button_key,
+                    type="primary",
+                    width="stretch",
+                ):
+                    st.session_state["_manual_google_recovery_dialog"] = {
+                        "job_dir": str(job_dir),
+                        "module": module,
+                        "button_key": button_key,
+                    }
+                    st.rerun(scope="app")
         else:
             left.success("Fallback succeeded; no failed searches remain.")
     outcomes = status.get("provider_outcomes") or {}

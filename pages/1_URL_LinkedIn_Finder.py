@@ -22,6 +22,7 @@ from speedy_scraper.ui import (
     action_button_css,
     captcha_recovery_panel,
     download_gsheet,
+    render_pending_manual_google_dialog,
 )
 from speedy_scraper.url_people_job import load_checkpoint_speakers
 
@@ -324,3 +325,4 @@ def job_monitor() -> None:
 
 
 job_monitor()
+render_pending_manual_google_dialog(launch_job=launch_job, request_stop=request_stop)

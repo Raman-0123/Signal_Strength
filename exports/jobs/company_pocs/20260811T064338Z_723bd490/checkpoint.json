@@ -1,0 +1,3195 @@
+{
+  "version": 2,
+  "task_index": 42,
+  "source_index": 0,
+  "pocs": [
+    {
+      "name": "Narendra Babu",
+      "designation": "Chief Technology Officer",
+      "company": "PayU",
+      "linkedin_url": "https://www.linkedin.com/in/narendra-babu-4780444/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Narendra Babu - Chief Technology Officer at PayU LinkedIn · Narendra Babu 4.6K+ followers Web results Narendra Babu - Chief Technology Officer at PayU LinkedIn · Narendra Babu 4.6K+ followers LinkedIn · Narendra Babu 4.6K+ followers Bengaluru, Karnataka, India · Chief Technology Officer · PayU Chief Technology Officer at PayU · Technology leader with proven expertise of building highly successful and talented teams. Passionate about scaling tech ...",
+      "requested_company": "PayU",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Hammad Azzam",
+      "designation": "CIO",
+      "company": "Citi -- Operations Technology",
+      "linkedin_url": "https://www.linkedin.com/in/hammad-azzam-27851785/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Hammad Azzam - CIO at Citi -- Operations Technology LinkedIn · Hammad Azzam 5.7K+ followers Hammad Azzam - CIO at Citi -- Operations Technology LinkedIn · Hammad Azzam 5.7K+ followers LinkedIn · Hammad Azzam 5.7K+ followers Hammad Azzam. CIO at Citi -- Operations Technology. Citi Tufts University. Irving, Texas, United States. Read more",
+      "requested_company": "Citi",
+      "requested_designation": "CIO"
+    },
+    {
+      "name": "Finn McCann",
+      "designation": "Chief Technology Officer",
+      "company": "Navi Group",
+      "linkedin_url": "https://www.linkedin.com/in/finnmccann/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Finn McCann - Chief Technology Officer at Navi Group LinkedIn · Finn McCann 830+ followers Finn McCann - Chief Technology Officer at Navi Group LinkedIn · Finn McCann 830+ followers LinkedIn · Finn McCann 830+ followers Ireland · Chief Technology Officer · Navi Group Experience. Navi Group. 9 years 7 months · Navi Group Graphic. Chief Technology Officer . Navi Group. Apr 2020 - Present 6 years 5 months. Dublin, Ireland. Read more",
+      "requested_company": "Navi",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Mubin Yousuf",
+      "designation": "CTO and Co-Founder",
+      "company": "Navi Medical",
+      "linkedin_url": "https://www.linkedin.com/in/mubinyousuf/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Mubin Yousuf - CTO and Co-Founder at Navi Medical Mubin Yousuf - CTO and Co-Founder at Navi Medical ... LinkedIn · Mubin Yousuf 1.7K+ followers LinkedIn · Mubin Yousuf 1.7K+ followers Greater Melbourne Area · CTO and Cofounder · Navi Medical Technologies CTO and Co-Founder at Navi Medical Technologies · Experience: Navi Medical Technologies · Education: University of Melbourne · Location: Greater Melbourne ...",
+      "requested_company": "Navi",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Mark Marinelli",
+      "designation": "CTO",
+      "company": "Navi",
+      "linkedin_url": "https://www.linkedin.com/in/mark-marinelli-70b7a737/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Mark Marinelli - CTO at Navi LinkedIn · Mark Marinelli 950+ followers Mark Marinelli - CTO at Navi LinkedIn · Mark Marinelli 950+ followers LinkedIn · Mark Marinelli 950+ followers St Augustine, Florida, United States · Chief Technology Officer · Navi Experience · Navi Graphic. Chief Technology Officer . Navi · Tamr Inc. 3 years 6 months · Lavastorm. 9 years 4 months · Senior Sales Engineer. Macrovision. Nov 2006 ... Read more",
+      "requested_company": "Navi",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Sudesh Puthran",
+      "designation": "CIO",
+      "company": "Credit Information Bureau (India)",
+      "linkedin_url": "https://www.linkedin.com/in/sudesh-puthran-a80a9416/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Sudesh Puthran - CIO at Credit Information Bureau (India) Sudesh Puthran - CIO at Credit Information Bureau (India) ... LinkedIn · Sudesh Puthran 10+ followers LinkedIn · Sudesh Puthran 10+ followers Mumbai, Maharashtra, India · CIO · Credit Information Bureau (India) Limited Sudesh Puthran · CIO at Credit Information Bureau (India) Limited · View mutual connections with Sudesh · Experience · Education · View Sudesh's full profile. Read more",
+      "requested_company": "Bureau",
+      "requested_designation": "CIO"
+    },
+    {
+      "name": "sandeep verma",
+      "designation": "CIO",
+      "company": "Intelligence Bureau",
+      "linkedin_url": "https://www.linkedin.com/in/sandeep-verma-2a289759/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "sandeep verma - CIO at Intelligence Bureau LinkedIn · sandeep verma 4 followers sandeep verma - CIO at Intelligence Bureau LinkedIn · sandeep verma 4 followers LinkedIn · sandeep verma 4 followers Etawah, Uttar Pradesh, India · CIO · Intelligence Bureau sandeep verma. CIO at Intelligence Bureau . Intelligence Bureau . Etawah, Uttar Pradesh, India. 4 followers. See your mutual connections. View mutual connections ... Read more",
+      "requested_company": "Bureau",
+      "requested_designation": "CIO"
+    },
+    {
+      "name": "Mangala Kuppa",
+      "designation": "Chief Information Officer(CIO) *Views are",
+      "company": "U.S. ... Bureau of Labor Statistics. 10 years 2 months. Read more",
+      "linkedin_url": "https://www.linkedin.com/in/mangala-kuppa/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Mangala Kuppa - Chief Information Officer(CIO) *Views are Mangala Kuppa - Chief Information Officer(CIO) *Views are ... LinkedIn · Mangala Kuppa 1.4K+ followers LinkedIn · Mangala Kuppa 1.4K+ followers Washington DC-Baltimore Area · Chief Information Officer(CIO) · U.S. Department of Labor Chief Information Officer ( CIO ) *Views are personal* · Experience: U.S. ... Bureau of Labor Statistics. 10 years 2 months. Read more",
+      "requested_company": "Bureau",
+      "requested_designation": "CIO"
+    },
+    {
+      "name": "Sandesh Gs",
+      "designation": "CTO, Bureau",
+      "company": "Bureau",
+      "linkedin_url": "https://www.linkedin.com/in/sandeshgs/",
+      "source": "google_browser",
+      "confidence": 92,
+      "evidence": "Sandesh Gs - CTO, Bureau LinkedIn · Sandesh Gs 4.8K+ followers Web results Sandesh Gs - CTO, Bureau LinkedIn · Sandesh Gs 4.8K+ followers LinkedIn · Sandesh Gs 4.8K+ followers Bengaluru, Karnataka, India · CTO · Bureau CTO , Bureau · · Experience: Bureau · Education: R. V. College of Engineering, Bangalore · Location: Bengaluru · 500+ connections on LinkedIn.",
+      "requested_company": "Bureau",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Geoff S.",
+      "designation": "Chief Technology Officer",
+      "company": "Federal Bureau of",
+      "linkedin_url": "https://www.linkedin.com/in/geoffswanstrom/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Geoff S. - Chief Technology Officer at Federal Bureau of Geoff S. - Chief Technology Officer at Federal Bureau of ... LinkedIn · Geoff S. 560+ followers LinkedIn · Geoff S. 560+ followers Chief Technology Officer at Federal Bureau of Investigation (FBI) · I am the CTO and Acting Deputy CIO for the FBI. My work focuses on modernizing and ...",
+      "requested_company": "Bureau",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Keith Atkinson",
+      "designation": "CTO",
+      "company": "Media Bureau Inc.",
+      "linkedin_url": "https://www.linkedin.com/in/keith-atkinson-662a22a/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Keith Atkinson - CTO at Media Bureau Inc. LinkedIn · Keith Atkinson 210+ followers Keith Atkinson - CTO at Media Bureau Inc. LinkedIn · Keith Atkinson 210+ followers LinkedIn · Keith Atkinson 210+ followers Philadelphia, Pennsylvania, United States · Partner · Media Bureau Inc. Keith is the CTO and a founding partner of Media Bureau with 20 years of experience as an engineer providing innovative solutions and strategic planning for ... Read more",
+      "requested_company": "Bureau",
+      "requested_designation": "CTO"
+    },
+    {
+      "name": "Chris M.",
+      "designation": "Chief Technology Officer",
+      "company": "United States Gold Bureau",
+      "linkedin_url": "https://www.linkedin.com/in/marshchris/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Chris M. - Chief Technology Officer LinkedIn · Chris M. 2.4K+ followers Chris M. - Chief Technology Officer LinkedIn · Chris M. 2.4K+ followers LinkedIn · Chris M. 2.4K+ followers Austin, Texas Metropolitan Area · Chief Technology Officer · United States Gold Bureau Chief Technology Officer · Experience: United States Gold Bureau · Education: Louisiana Tech University · Location: Austin, Texas Metropolitan Area · 500+ ...",
+      "requested_company": "Bureau",
+      "requested_designation": "CTO"
+    }
+  ],
+  "rejections": [
+    {
+      "Name": "Narendra Babu",
+      "Designation": "Chief Technology Officer",
+      "Company": "PayU",
+      "LinkedIn URL": "https://www.linkedin.com/in/narendra-babu-4780444/",
+      "Source": "google_browser",
+      "Evidence": "Narendra Babu - Chief Technology Officer at PayU LinkedIn · Narendra Babu 4.6K+ followers Web results Narendra Babu - Chief Technology Officer at PayU LinkedIn · Narendra Babu 4.6K+ followers LinkedIn · Narendra Babu 4.6K+ followers Bengaluru, Karnataka, India · Chief Technology Officer · PayU Chief Technology Officer at PayU · Technology leader with proven expertise of building highly successful and talented teams. Passionate about scaling tech ...",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Neeraj Chauhan",
+      "Designation": "Group CISO & Head of Technology Risk",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/neeraj-s-chauhan/",
+      "Source": "google_browser",
+      "Evidence": "Neeraj Chauhan - Group CISO & Head of Technology Risk LinkedIn · Neeraj Chauhan 3.4K+ followers Neeraj Chauhan - Group CISO & Head of Technology Risk LinkedIn · Neeraj Chauhan 3.4K+ followers LinkedIn · Neeraj Chauhan 3.4K+ followers Bengaluru, Karnataka, India · Group Chief Information Security Officer and Head of technology Risk · PayU PayU Graphic. Chief Information Officer . PayU . Apr 2021 - Aug 2025 4 years 5 months. Bengaluru, Karnataka, India. Directed overarching governance strategies ... Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Narendra Maurya",
+      "Designation": "Chief Information Security Officer (CISO)",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/narendra-maurya-14019312/",
+      "Source": "google_browser",
+      "Evidence": "Narendra Maurya - Chief Information Security Officer (CISO) LinkedIn · Narendra Maurya 190+ followers Narendra Maurya - Chief Information Security Officer (CISO) LinkedIn · Narendra Maurya 190+ followers LinkedIn · Narendra Maurya 190+ followers Thane, Maharashtra, India · CISO · PayU Experience ; CISO. PayU . Jul 2024 ; Manager - Information Security & Compliance. Experian India. Oct 2022 ; Senior Vice President Risk Management. YES BANK. Jan ... Read more Missing: (CIO ‎| Show results with: (CIO",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Suresh Sharma",
+      "Designation": "Executive Vice President",
+      "Company": "Group CISO",
+      "LinkedIn URL": "https://www.linkedin.com/in/suresh-sharma-8877899/",
+      "Source": "google_browser",
+      "Evidence": "Suresh Sharma - Executive Vice President - Group CISO Suresh Sharma - Executive Vice President - Group CISO ... LinkedIn · Suresh Sharma 4.9K+ followers LinkedIn · Suresh Sharma 4.9K+ followers With over 21 years of experience in cybersecurity, product development, and people management, I am currently the Chief Information Security Officer at PayU ... Read more Missing: (CIO ‎| Show results with: (CIO",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Abhinav Sharma",
+      "Designation": "PayU Digital Labs",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhinav-sharma-2754b140/",
+      "Source": "google_browser",
+      "Evidence": "Abhinav Sharma - PayU Digital Labs LinkedIn · Abhinav Sharma 2.3K+ followers Abhinav Sharma - PayU Digital Labs LinkedIn · Abhinav Sharma 2.3K+ followers LinkedIn · Abhinav Sharma 2.3K+ followers Bengaluru, Karnataka, India · PayU Digital Labs Abhinav Sharma. PayU Digital Labs Indian Institute of Foreign Trade. Bengaluru, Karnataka, India. 2K followers ... Read more Missing: (CIO ‎| Show results with: (CIO",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Harshneel Nanche",
+      "Designation": "CISO@PayU Finance",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/harshneelnanche/",
+      "Source": "google_browser",
+      "Evidence": "Harshneel Nanche - CISO@PayU Finance LinkedIn · Harshneel Nanche 5.4K+ followers Harshneel Nanche - CISO@PayU Finance LinkedIn · Harshneel Nanche 5.4K+ followers LinkedIn · Harshneel Nanche 5.4K+ followers Mumbai, Maharashtra, India · Chief Information Security Officer · PayU Finance Harshneel Nanche. CISO@ PayU Finance | Award-Winning CISO | Security & Privacy Leader | Lawyer | Doctoral Scholar | Champion of Cybersecurity Innovation & Risk ... Read more Missing: (CIO ‎| Show results with: (CIO",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Manish Deo",
+      "Designation": "Banking II Payments II Fintech II Credit",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/manish-deo-b512209/",
+      "Source": "google_browser",
+      "Evidence": "Manish Deo - Banking II Payments II Fintech II Credit Manish Deo - Banking II Payments II Fintech II Credit ... LinkedIn · Manish Deo 4K+ followers LinkedIn · Manish Deo 4K+ followers Mumbai, Maharashtra, India · VP- Head Risk & Financial Crime Compliances · PayU PayU Graphic. VP- Head Risk & Financial Crime Compliances. PayU . Jul 2022 - Present 4 years 2 months. Mumbai, Maharashtra, India. IndusInd Bank Graphic. Senior ... Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Raiss Ansari",
+      "Designation": "Banking Products",
+      "Company": "PayU",
+      "LinkedIn URL": "https://www.linkedin.com/in/raiss-ansari-161505217/",
+      "Source": "google_browser",
+      "Evidence": "Raiss Ansari - Banking Products at PayU LinkedIn · Raiss Ansari 1.5K+ followers Raiss Ansari - Banking Products at PayU LinkedIn · Raiss Ansari 1.5K+ followers LinkedIn · Raiss Ansari 1.5K+ followers Mumbai, Maharashtra, India · Director - Banking Product · PayU Banking Products at PayU · Experience: PayU · Education: L S Raheja College of Arts and Commerce · Location: 400030 · 500+ connections on LinkedIn.",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Shaili Sharma",
+      "Designation": "Banking Alliance",
+      "Company": "PayU",
+      "LinkedIn URL": "https://www.linkedin.com/in/shaili-sharma-05ab01138/",
+      "Source": "google_browser",
+      "Evidence": "Shaili Sharma - Director - Banking Alliance @ PayU LinkedIn · Shaili Sharma 1.9K+ followers Shaili Sharma - Director - Banking Alliance @ PayU LinkedIn · Shaili Sharma 1.9K+ followers LinkedIn · Shaili Sharma 1.9K+ followers Greater Delhi Area · Director - Banking Alliance · PayU Director - Banking Alliance @ PayU · Results-driven FinTech leader with an extensive track record of driving multi-crore revenue growth and scaling ...",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Shubhra Saxena Ved",
+      "Designation": "Designing trusted, convenient and",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/shubhrasaxena1/",
+      "Source": "google_browser",
+      "Evidence": "Shubhra Saxena Ved - Designing trusted, convenient and Shubhra Saxena Ved - Designing trusted, convenient and ... LinkedIn · Shubhra Saxena Ved 4.9K+ followers LinkedIn · Shubhra Saxena Ved 4.9K+ followers Lead and grow core payments at PayU - enhance cards experience, Netbanking and wallets as payment options. Lead innovations and strategy to make digital ... Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ankush Gorav",
+      "Designation": "Chief Technology Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankush-gorav-a4b21812/",
+      "Source": "google_browser",
+      "Evidence": "Ankush Gorav - Chief Technology Officer LinkedIn · Ankush Gorav 8.8K+ followers Ankush Gorav - Chief Technology Officer LinkedIn · Ankush Gorav 8.8K+ followers LinkedIn · Ankush Gorav 8.8K+ followers Greater Delhi Area · Chief Technology Officer · LoanTube Ankush Gorav. Chief Technology Officer | Ex VP Engineering BharatPe | Ex Engineering Head PayU | FinTech, AI & Distributed Systems Leader | Payments, Lending, ... Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Nikhil Vaidya",
+      "Designation": "PayU Finance",
+      "Company": "PayU Finance",
+      "LinkedIn URL": "https://www.linkedin.com/in/nvaidya/",
+      "Source": "google_browser",
+      "Evidence": "Nikhil Vaidya - PayU Finance LinkedIn · Nikhil Vaidya 4K+ followers Nikhil Vaidya - PayU Finance LinkedIn · Nikhil Vaidya 4K+ followers LinkedIn · Nikhil Vaidya 4K+ followers Bengaluru, Karnataka, India · PayU Finance EXECUTIVE SUMMARY Team: With over 16 years of experience driving technology… · Experience: PayU Finance · Education: Oriental Institute of Science ...",
+      "Requested Company": "PayU",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Anirban Mukherjee",
+      "Designation": "Mumbai, Maharashtra, India",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/anirban-mukherjee-5779611/",
+      "Source": "google_browser",
+      "Evidence": "Anirban Mukherjee - Mumbai, Maharashtra, India LinkedIn · Anirban Mukherjee 3.2K+ followers Anirban Mukherjee - Mumbai, Maharashtra, India LinkedIn · Anirban Mukherjee 3.2K+ followers LinkedIn · Anirban Mukherjee 3.2K+ followers Anirban Mukherjee - Mumbai, Maharashtra, India | Professional Profile … 3K followers 500+ connections. Contact Anirban directly",
+      "Requested Company": "PayU",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Anuradha Kumari",
+      "Designation": "Chief Operating Officer",
+      "Company": "PayU",
+      "LinkedIn URL": "https://www.linkedin.com/in/kumarianuradha/",
+      "Source": "google_browser",
+      "Evidence": "Anuradha Kumari - Chief Operating Officer @ PayU Anuradha Kumari - Chief Operating Officer @ PayU ... LinkedIn · Anuradha Kumari 3.8K+ followers LinkedIn · Anuradha Kumari 3.8K+ followers Mumbai, Maharashtra, India · Chief Operating Officer at PayU Finance · PayU Currently as COO at PayU Finance, I lead a 200+ member team focused on scaling our credit business, driving operational excellence, and unlocking organizational ... Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ramesh Mantripragada",
+      "Designation": "Engineering Leader",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/rameshma19/",
+      "Source": "google_browser",
+      "Evidence": "Ramesh Mantripragada - Engineering Leader LinkedIn · Ramesh Mantripragada 2.7K+ followers Ramesh Mantripragada - Engineering Leader LinkedIn · Ramesh Mantripragada 2.7K+ followers LinkedIn · Ramesh Mantripragada 2.7K+ followers Bengaluru, Karnataka, India · VP Technology · Mashreq As VP/ CTO of PayU Finance (Consumer lending & BNPL), I managed a technology budget over 70Cr and has unified multiple acquired products under common platforms, ... Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sagar Kumar",
+      "Designation": "Vice president , Engineering",
+      "Company": "Payments",
+      "LinkedIn URL": "https://www.linkedin.com/in/vsagarkumar/",
+      "Source": "google_browser",
+      "Evidence": "Sagar Kumar - Vice president , Engineering - Payments LinkedIn · Sagar Kumar 1.2K+ followers Sagar Kumar - Vice president , Engineering - Payments LinkedIn · Sagar Kumar 1.2K+ followers LinkedIn · Sagar Kumar 1.2K+ followers Bengaluru, Karnataka, India · Vice President of Engineering · PayU PayU . 5 years 8 months · PayU Graphic. Vice President of Engineering. PayU . Jun ... Co-Founder , Chief Technology Officer ( CTO ). DigiLend Analytics and ... Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ashish Sharma",
+      "Designation": "Building Consumer Credit",
+      "Company": "PayU Finance",
+      "LinkedIn URL": "https://www.linkedin.com/in/ashishsandaliya/",
+      "Source": "google_browser",
+      "Evidence": "Ashish Sharma - Building Consumer Credit at PayU Finance LinkedIn · Ashish Sharma 6.5K+ followers Ashish Sharma - Building Consumer Credit at PayU Finance LinkedIn · Ashish Sharma 6.5K+ followers LinkedIn · Ashish Sharma 6.5K+ followers Today, I lead Consumer Credit at PayU Finance, focused on building scalable, responsible, and technology-led credit products for the next generation of Indian ... Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sudeep Nayak",
+      "Designation": "Engineering leader",
+      "Company": "Rippling",
+      "LinkedIn URL": "https://www.linkedin.com/in/sudeepnayak/",
+      "Source": "google_browser",
+      "Evidence": "Sudeep Nayak - Engineering leader - Rippling LinkedIn · Sudeep Nayak 10K+ followers Sudeep Nayak - Engineering leader - Rippling LinkedIn · Sudeep Nayak 10K+ followers LinkedIn · Sudeep Nayak 10K+ followers ... PayU , Head of engineering for India's largest payment service provider for ... CTO |Tech Head - Fintech. Tata Digital. May 2022 - May 2025 3 years 1 month. Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "CHANDRAPRATAP SINGH",
+      "Designation": "Regional Head",
+      "Company": "PayU",
+      "LinkedIn URL": "https://www.linkedin.com/in/chandrapratap-singh-a0646519/",
+      "Source": "google_browser",
+      "Evidence": "CHANDRAPRATAP SINGH - Regional Head at PayU LinkedIn · CHANDRAPRATAP SINGH 2.3K+ followers CHANDRAPRATAP SINGH - Regional Head at PayU LinkedIn · CHANDRAPRATAP SINGH 2.3K+ followers LinkedIn · CHANDRAPRATAP SINGH 2.3K+ followers CHANDRAPRATAP SINGH · Regional Head at PayU | Payment Professional | Payment Gateway | Digital Payments | E-Commerce | Fintech at Ex: MSwipe, Worldline and HDFC ... Read more",
+      "Requested Company": "PayU",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sumit G.",
+      "Designation": "Chief Technology Officer",
+      "Company": "NABSAMRUDDHI",
+      "LinkedIn URL": "https://www.linkedin.com/in/sumit-g-a2296769/",
+      "Source": "google_browser",
+      "Evidence": "Sumit G. - Chief Technology Officer at NABSAMRUDDHI Web results Sumit G. - Chief Technology Officer at NABSAMRUDDHI ... LinkedIn · Sumit G. 2.4K+ followers LinkedIn · Sumit G. 2.4K+ followers Chief Technology Officer at NABSAMRUDDHI FINANCE LIMITED (A Subsidiary of NABARD ) · Assistant manager at Nabard . Associate Software Engineer :Accenture ...",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Mahendra Joshi",
+      "Designation": "CISO Chief Information Security Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/mahendra-joshi-3b776233/",
+      "Source": "google_browser",
+      "Evidence": "Mahendra Joshi - CISO Chief Information Security Officer LinkedIn · Mahendra Joshi 740+ followers Mahendra Joshi - CISO Chief Information Security Officer LinkedIn · Mahendra Joshi 740+ followers LinkedIn · Mahendra Joshi 740+ followers Mumbai, Maharashtra, India · Chief Information Security Officer · SIDBI(Small Industries Development Bank of India) Information Security and Cyber Security Specialist On Contract · NABARD - National Bank for Agriculture and Rural Development · ReBIT | Reserve Bank Information ... Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Adeeshaya D",
+      "Designation": "",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/adeeshaya-d-8aa927273/",
+      "Source": "google_browser",
+      "Evidence": "Adeeshaya D LinkedIn · Adeeshaya D 70+ followers Adeeshaya D LinkedIn · Adeeshaya D 70+ followers LinkedIn · Adeeshaya D 70+ followers ... NABARD - National Bank for Agriculture and Rural Development · Education ... Chief Information Officer . NABFINS LTD. May 2022 - Present 4 years 3 months. Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Vibin Bence",
+      "Designation": "Chief Information Security Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/vibin-bence-60bb1917b/",
+      "Source": "google_browser",
+      "Evidence": "Vibin Bence - Chief Information Security Officer LinkedIn · Vibin Bence 870+ followers Vibin Bence - Chief Information Security Officer LinkedIn · Vibin Bence 870+ followers LinkedIn · Vibin Bence 870+ followers Experience ; Chief Information Security Officer. NABFINS (Subsidiary of NABARD ). Aug 2024 - Present 2 years ; Data Center Engineer. DXC Technology. May 2019 - Jan ... Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ashutosh Mishra",
+      "Designation": "Mumbai, Maharashtra, India",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/ashutosh-mishra-2732395/",
+      "Source": "google_browser",
+      "Evidence": "Ashutosh Mishra - Mumbai, Maharashtra, India LinkedIn · Ashutosh Mishra 1.9K+ followers Ashutosh Mishra - Mumbai, Maharashtra, India LinkedIn · Ashutosh Mishra 1.9K+ followers LinkedIn · Ashutosh Mishra 1.9K+ followers Ashutosh Mishra , CRM NABARD speaks on… 8. Speaking in Credit Risk Asia Summit on… Sep 20, 2016. Speaking in Credit Risk Asia Summit on… Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Parth Anand",
+      "Designation": "IIM J | NABVENTURES",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/parth-anand-iimj/",
+      "Source": "google_browser",
+      "Evidence": "Parth Anand - IIM J | NABVENTURES LinkedIn · Parth Anand 1.1K+ followers Parth Anand - IIM J | NABVENTURES LinkedIn · Parth Anand 1.1K+ followers LinkedIn · Parth Anand 1.1K+ followers Experience ; Assistant Manager. NABARD - National Bank for Agriculture and Rural Development. Apr 2024 ; Assistant Manager. NABVENTURES Limited. Apr 2024 ... Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Srinivasa Rao Muppaneni",
+      "Designation": "Strategic Board Advisor",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/muppaneni/",
+      "Source": "google_browser",
+      "Evidence": "Srinivasa Rao Muppaneni - Strategic Board Advisor LinkedIn · Srinivasa Rao Muppaneni 5.6K+ followers Srinivasa Rao Muppaneni - Strategic Board Advisor LinkedIn · Srinivasa Rao Muppaneni 5.6K+ followers LinkedIn · Srinivasa Rao Muppaneni 5.6K+ followers He currently serves as Cybersecurity Advisor to NABARD , one of India's most critical development finance institutions, where he guides enterprise-wide cyber ... Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sivakumar Krishnan",
+      "Designation": "CISA, ITIL, CSXF : Agri focussed",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/sivakumar-krishnan-1285437/",
+      "Source": "google_browser",
+      "Evidence": "Sivakumar Krishnan - CISA, ITIL, CSXF : Agri focussed Sivakumar Krishnan - CISA, ITIL, CSXF : Agri focussed ... LinkedIn · Sivakumar Krishnan 2.5K+ followers LinkedIn · Sivakumar Krishnan 2.5K+ followers Mumbai, Maharashtra, India · Chief Information Technology Officer · Rural Mandi Fintech Private Limited A techno-functional Banker with 35+ years of domain expertise in Banking, e-Governance, Financial Inclusion space, Microfinance & Micro Insurance, ... Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Goverdhan Rawat",
+      "Designation": "Deputy Managing Director",
+      "Company": "NABARD",
+      "LinkedIn URL": "https://www.linkedin.com/in/goverdhan-rawat-48281b31/",
+      "Source": "google_browser",
+      "Evidence": "Goverdhan Rawat - Deputy Managing Director at NABARD LinkedIn · Goverdhan Rawat 100+ followers Goverdhan Rawat - Deputy Managing Director at NABARD LinkedIn · Goverdhan Rawat 100+ followers LinkedIn · Goverdhan Rawat 100+ followers Mumbai, Maharashtra, India · Deputy Managing Director · NABARD - National Bank for Agriculture and Rural Development Deputy Managing Director at NABARD · Experience: NABARD - National Bank for Agriculture and Rural Development · Location: Mumbai · 7 connections on LinkedIn ...",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "M G Ajayan",
+      "Designation": "1) General Manager & CIO ( Retd ) , Canara",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/m-g-ajayan-28b271210/",
+      "Source": "google_browser",
+      "Evidence": "M G Ajayan - 1) General Manager & CIO ( Retd ) , Canara M G Ajayan - 1) General Manager & CIO ( Retd ) , Canara ... LinkedIn · M G Ajayan 50+ followers LinkedIn · M G Ajayan 50+ followers M G Ajayan · 1) General Manager & CIO ( Retd ) , Canara Bank . 2)Member , ITSCB , Nabard 3) Director Esaf Financial Holdings pvt Ltd · View mutual connections ... Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sameer Kumar Prayaga",
+      "Designation": "CTO",
+      "Company": "NABKISAN",
+      "LinkedIn URL": "https://www.linkedin.com/in/sameerprayaga/",
+      "Source": "google_browser",
+      "Evidence": "Sameer Kumar Prayaga - CTO at NABKISAN LinkedIn · Sameer Kumar Prayaga 500+ followers Sameer Kumar Prayaga - CTO at NABKISAN LinkedIn · Sameer Kumar Prayaga 500+ followers LinkedIn · Sameer Kumar Prayaga 500+ followers CTO at NABKISAN · Experience: NABARD - National Bank for Agriculture and Rural Development · Location: Hyderabad · 378 connections on LinkedIn.",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ipsa Akankshya Mohanty",
+      "Designation": "Dy.General Manager & Chief",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/ipsa-akankshya-mohanty-3a0518227/",
+      "Source": "google_browser",
+      "Evidence": "Ipsa Akankshya Mohanty - Dy.General Manager & Chief Ipsa Akankshya Mohanty - Dy.General Manager & Chief ... LinkedIn · Ipsa Akankshya Mohanty 490+ followers LinkedIn · Ipsa Akankshya Mohanty 490+ followers Bengaluru, Karnataka, India · Chief Technology Officer · NABFINS LTD Ipsa Akankshya Mohanty · Dy.General Manager & Chief Technology Officer @ NABFINS | Asst. General Manager @ NABARD · View mutual connections with Ipsa · Experience. Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Nandakumar Palani",
+      "Designation": "Mumbai, Maharashtra, India",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/nandakumar-palani-a751023/",
+      "Source": "google_browser",
+      "Evidence": "Nandakumar Palani - Mumbai, Maharashtra, India LinkedIn · Nandakumar Palani 1.5K+ followers Nandakumar Palani - Mumbai, Maharashtra, India LinkedIn · Nandakumar Palani 1.5K+ followers LinkedIn · Nandakumar Palani 1.5K+ followers Licenses & Certifications · COBIT 2019 Foundation · IBM z/OS Mainframe Practitioner · IT Information Library Foundations Certification (ITIL) · Professional Scrum ... Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sonny George",
+      "Designation": "Digital Transformation | Innovation",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/sonnygeorge-sbi/",
+      "Source": "google_browser",
+      "Evidence": "Sonny George - Digital Transformation | Innovation LinkedIn · Sonny George 2K+ followers Sonny George - Digital Transformation | Innovation LinkedIn · Sonny George 2K+ followers LinkedIn · Sonny George 2K+ followers NABARD - National Bank for Agriculture and Rural Development Graphic. Chief Technology Officer . NABARD - National Bank for Agriculture and Rural Development. Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Bhuvarahan S",
+      "Designation": "GM(Retired) from NABARD & Consultant",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/bhuvarahan-s-03428535/",
+      "Source": "google_browser",
+      "Evidence": "Bhuvarahan S - GM(Retired) from NABARD & Consultant Bhuvarahan S - GM(Retired) from NABARD & Consultant ... LinkedIn · Bhuvarahan S 750+ followers LinkedIn · Bhuvarahan S 750+ followers Mumbai, Maharashtra, India · Expert Consultant · NABARD - National Bank for Agriculture and Rural Development Proven track record as CTO / CPTO / COO-equivalents at NABARD and Sahakar Sarathi Pvt. Ltd., shaping digital ecosystems for 385+ Rural Cooperative Banks. Expert ... Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Spondan Joshi",
+      "Designation": "Deputy General Manager",
+      "Company": "NABARD",
+      "LinkedIn URL": "https://www.linkedin.com/in/spondan/",
+      "Source": "google_browser",
+      "Evidence": "Spondan Joshi - Deputy General Manager at NABARD LinkedIn · Spondan Joshi 390+ followers Spondan Joshi - Deputy General Manager at NABARD LinkedIn · Spondan Joshi 390+ followers LinkedIn · Spondan Joshi 390+ followers Deputy General Manager · NABARD - National Bank for Agriculture and Rural Development I continued as CTO , NABFINS till April 2024 at Bangalore. ... From May 2023, I was on deputation as CTO to NABFINS, a NBFC-MFI and subsidiary of NABARD . Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "M R Ujwal Kanth",
+      "Designation": "Manager",
+      "Company": "National Bank",
+      "LinkedIn URL": "https://www.linkedin.com/in/mrujwalkanth/",
+      "Source": "google_browser",
+      "Evidence": "M R Ujwal Kanth - Manager at National Bank M R Ujwal Kanth - Manager at National Bank ... LinkedIn · M R Ujwal Kanth 150+ followers LinkedIn · M R Ujwal Kanth 150+ followers Delhi, India · District Development Manager, Narsinghpur and Seoni, Bhopal Regional Office · NABARD - National Bank for Agriculture and Rural Development Experience · NABARD - National Bank for Agriculture and Rural Development Graphic. District Development Manager, Narsinghpur and Seoni, Bhopal Regional Office. Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Lakshmi Narayanan",
+      "Designation": "Co-Founder & CTO",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/lakshmi-narayanan-83a747212/",
+      "Source": "google_browser",
+      "Evidence": "Lakshmi Narayanan - Co-Founder & CTO LinkedIn · Lakshmi Narayanan 1.5K+ followers Lakshmi Narayanan - Co-Founder & CTO LinkedIn · Lakshmi Narayanan 1.5K+ followers LinkedIn · Lakshmi Narayanan 1.5K+ followers Chennai, Tamil Nadu, India · Co-Founder and CTO · Grow Your Farms Private Limited Lakshmi Narayanan. Co-Founder & CTO - Grow Your Farms Pvt Ltd (Incubated at MANAGE CIA & NABARD MABIF) Masters in Vegetable Science | Plant Doctor | ... Read more",
+      "Requested Company": "NABARD",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ambuj Bhalla",
+      "Designation": "CISO | Enterprise Cyber Risk Leader",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/ambuj-bhalla-ciso/",
+      "Source": "google_browser",
+      "Evidence": "Ambuj Bhalla - CISO | Enterprise Cyber Risk Leader LinkedIn · Ambuj Bhalla 2.6K+ followers Web results Ambuj Bhalla - CISO | Enterprise Cyber Risk Leader LinkedIn · Ambuj Bhalla 2.6K+ followers LinkedIn · Ambuj Bhalla 2.6K+ followers Greater Delhi Area · Chief Information Security Officer · BharatPe BharatPe Graphic. Chief Information Security Officer. BharatPe . Nov 2022 - Present 3 years 10 months. Gurugram. IndiGo (InterGlobe Aviation Ltd) Graphic. Chief ... Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ajit Kumar",
+      "Designation": "BharatPe",
+      "Company": "BharatPe",
+      "LinkedIn URL": "https://www.linkedin.com/in/ajit-kumar-447a5b4/",
+      "Source": "google_browser",
+      "Evidence": "Ajit Kumar - BharatPe LinkedIn · Ajit Kumar 3.9K+ followers Ajit Kumar - BharatPe LinkedIn · Ajit Kumar 3.9K+ followers LinkedIn · Ajit Kumar 3.9K+ followers Gurgaon, Haryana, India · BharatPe Technology Leader with ~20 years of experience in building multiple successful online… · Experience: BharatPe · Education: Indian Institute of Management ... Missing: (CIO ‎| Show results with: (CIO",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Gaurav Sharma",
+      "Designation": "Director",
+      "Company": "CyberSecurity and",
+      "LinkedIn URL": "https://www.linkedin.com/in/igvsharma/",
+      "Source": "google_browser",
+      "Evidence": "Gaurav Sharma - Director - CyberSecurity and Gaurav Sharma - Director - CyberSecurity and ... LinkedIn · Gaurav Sharma 4.6K+ followers LinkedIn · Gaurav Sharma 4.6K+ followers Delhi, India · Director - CyberSecurity and Infrastructure · BharatPe Experience ; Director - CyberSecurity and Infrastructure. BharatPe . May 2026 - Present 3 months ; Vice President. SBI Card. Jul 2023 - May 2026 2 years 11 months. Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Jayanta Guha",
+      "Designation": "BharatPe",
+      "Company": "BharatPe",
+      "LinkedIn URL": "https://www.linkedin.com/in/guhajayanta/",
+      "Source": "google_browser",
+      "Evidence": "Jayanta Guha - BharatPe LinkedIn · Jayanta Guha 2.9K+ followers Jayanta Guha - BharatPe LinkedIn · Jayanta Guha 2.9K+ followers LinkedIn · Jayanta Guha 2.9K+ followers Bengaluru, Karnataka, India · BharatPe I help BFSI, FinTech, Payments, Loyalty, and regulated financial services organizations… · Experience: BharatPe · Education: Indian Institute of Technology, ...",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Mohit Sharma",
+      "Designation": "BharatPe | Paytm | DMI | TU CIBIL | Fractal",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/mohit-sharma-02225a8/",
+      "Source": "google_browser",
+      "Evidence": "Mohit Sharma - BharatPe | Paytm | DMI | TU CIBIL | Fractal LinkedIn · Mohit Sharma 7.1K+ followers Mohit Sharma - BharatPe | Paytm | DMI | TU CIBIL | Fractal LinkedIn · Mohit Sharma 7.1K+ followers LinkedIn · Mohit Sharma 7.1K+ followers Delhi, India · HOD - DataOrg · BharatPe BharatPe | Paytm | DMI | TU CIBIL | Fractal | IGIDR · Two-decades of Analytics-experience in designing, developing and implementing a range of Risk and ...",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ashish Jain",
+      "Designation": "Fintech Partnerships",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/helloashish/",
+      "Source": "google_browser",
+      "Evidence": "Ashish Jain - Fintech Partnerships LinkedIn · Ashish Jain 5.4K+ followers Ashish Jain - Fintech Partnerships LinkedIn · Ashish Jain 5.4K+ followers LinkedIn · Ashish Jain 5.4K+ followers Mumbai, Maharashtra, India · Head - Banking Alliances and Partnerships · BharatPe BharatPe Graphic. Head - Banking Alliances and Partnerships. BharatPe . Aug 2025 - Present 1 year. Mumbai, Maharashtra, India. Razorpay. 1 year 11 months. Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Jai Khurana",
+      "Designation": "Building PropelGo| Ex- Vegapay| Ex- BharatPe",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/jai-khurana-09174b102/",
+      "Source": "google_browser",
+      "Evidence": "Jai Khurana - Building PropelGo| Ex- Vegapay| Ex- BharatPe LinkedIn · Jai Khurana 2.6K+ followers Jai Khurana - Building PropelGo| Ex- Vegapay| Ex- BharatPe LinkedIn · Jai Khurana 2.6K+ followers LinkedIn · Jai Khurana 2.6K+ followers Mumbai, Maharashtra, India · Building PropelGo · PropelGo Experience ; Building PropelGo. PropelGo. Mar 2026 ; Sr.PMO. Vegapay. Jun 2024 ; Program Manager. BharatPe . Feb 2023 ; Lead Analyst. American Express. Aug 2016 ... Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Pradeep Kumar",
+      "Designation": "Lendingkart",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/pradeep-kumar-5130a22/",
+      "Source": "google_browser",
+      "Evidence": "Pradeep Kumar - Lendingkart LinkedIn · Pradeep Kumar 1.7K+ followers Pradeep Kumar - Lendingkart LinkedIn · Pradeep Kumar 1.7K+ followers LinkedIn · Pradeep Kumar 1.7K+ followers Bengaluru, Karnataka, India · Chief Information Officer · Lendingkart Experience. Lendingkart Graphic. Chief Information Officer . Lendingkart. Mar 2025 - Present 1 year 6 months. Education. Indian Institute of Management Bangalore ... Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ankul Singh",
+      "Designation": "Senior Software",
+      "Company": "Wio Bank PJSC",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankul-singh/",
+      "Source": "google_browser",
+      "Evidence": "Ankul Singh - Senior Software at Wio Bank PJSC | Bharatpe LinkedIn · Ankul Singh 1K+ followers Ankul Singh - Senior Software at Wio Bank PJSC | Bharatpe LinkedIn · Ankul Singh 1K+ followers LinkedIn · Ankul Singh 1K+ followers Bengaluru, Karnataka, India · Mid BE engineer · Wio Bank Senior Software at Wio Bank PJSC | Bharatpe | Morgan Stanley · Experience: Wio Bank · Education: Chitkara University · Location: Bengaluru · 500+ ...",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Rishabh S Mehta",
+      "Designation": "South Delhi, Delhi, India",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/rishabh-s-mehta-3a9a88/",
+      "Source": "google_browser",
+      "Evidence": "Rishabh S Mehta - South Delhi, Delhi, India LinkedIn · Rishabh S Mehta 6.5K+ followers Rishabh S Mehta - South Delhi, Delhi, India LinkedIn · Rishabh S Mehta 6.5K+ followers LinkedIn · Rishabh S Mehta 6.5K+ followers CIO Review 2018 - 20 Most Promising Media & Entertainment Technology Providers. CIO Review. Feb 2018. https://media-entertainment.cioreviewindia.com/vendor ... Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Pankaj Goel",
+      "Designation": "Chief Technology Officer",
+      "Company": "LeadSquared",
+      "LinkedIn URL": "https://www.linkedin.com/in/pankajkgoel/",
+      "Source": "google_browser",
+      "Evidence": "Pankaj Goel - Chief Technology Officer @LeadSquared, Ex Pankaj Goel - Chief Technology Officer @LeadSquared, Ex ... LinkedIn · Pankaj Goel 11.2K+ followers LinkedIn · Pankaj Goel 11.2K+ followers Bengaluru, Karnataka, India · Chief Technology Officer · LeadSquared BharatPe Graphic. Chief Technology Officer . BharatPe . Jul 2023 - Jun 2025 2 years. Gurugram, Haryana, India. Leading technology for BharatPe group companies ... Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Rohan Khara",
+      "Designation": "Product",
+      "Company": "BharatPe",
+      "LinkedIn URL": "https://www.linkedin.com/in/rohankhara/",
+      "Source": "google_browser",
+      "Evidence": "Rohan Khara - Product @ BharatPe LinkedIn · Rohan Khara 5.9K+ followers Rohan Khara - Product @ BharatPe LinkedIn · Rohan Khara 5.9K+ followers LinkedIn · Rohan Khara 5.9K+ followers Gurugram, Haryana, India · Chief Product Officer · BharatPe Experience · BharatPe Graphic. Chief Product Officer. BharatPe · FairMoney. 2 years 9 months · Gojek Graphic. Head of Product - Financial Services. Gojek · MobiKwik. Read more Missing: (CTO ‎| Show results with: (CTO",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Vijay Aggarwal",
+      "Designation": "CubeAPM",
+      "Company": "CubeAPM",
+      "LinkedIn URL": "https://www.linkedin.com/in/aggarwalvijay/",
+      "Source": "google_browser",
+      "Evidence": "Vijay Aggarwal - CubeAPM LinkedIn · Vijay Aggarwal 7.2K+ followers Vijay Aggarwal - CubeAPM LinkedIn · Vijay Aggarwal 7.2K+ followers LinkedIn · Vijay Aggarwal 7.2K+ followers Delhi, India · CubeAPM Technology leader with 16+ years experience in the internet industry, all with… · Experience: CubeAPM · Education: Indian Institute of Technology, ...",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Pankaj Kumar Katiyar",
+      "Designation": "BharatPe",
+      "Company": "BharatPe",
+      "LinkedIn URL": "https://www.linkedin.com/in/pankaj-kumar-katiyar-9351a221/",
+      "Source": "google_browser",
+      "Evidence": "Pankaj Kumar Katiyar - BharatPe LinkedIn · Pankaj Kumar Katiyar 4.9K+ followers Pankaj Kumar Katiyar - BharatPe LinkedIn · Pankaj Kumar Katiyar 4.9K+ followers LinkedIn · Pankaj Kumar Katiyar 4.9K+ followers Gurgaon, Haryana, India · BharatPe I am a technology leader with 18+ years of experience building and scaling engineering… · Experience: BharatPe · Education: Dr. A.P.J. Abdul Kalam Technical ...",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Shashvat Nakrani",
+      "Designation": "BharatPe",
+      "Company": "BharatPe",
+      "LinkedIn URL": "https://www.linkedin.com/in/shashvat-nakrani/",
+      "Source": "google_browser",
+      "Evidence": "Shashvat Nakrani - BharatPe LinkedIn · Shashvat Nakrani 86.3K+ followers Shashvat Nakrani - BharatPe LinkedIn · Shashvat Nakrani 86.3K+ followers LinkedIn · Shashvat Nakrani 86.3K+ followers Gurugram, Haryana, India · BharatPe Experience: BharatPe · Education: Indian Institute of Technology, Delhi · Location: Gurugram · 500+ connections on LinkedIn. View Shashvat Nakrani's profile ... Missing: (CTO ‎| Show results with: (CTO",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ada₹sh Mohan",
+      "Designation": "Director of Product Management",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/ada10rsh/",
+      "Source": "google_browser",
+      "Evidence": "Ada₹sh Mohan - Director of Product Management Ada₹sh Mohan - Director of Product Management ... LinkedIn · Ada₹sh Mohan 11.9K+ followers LinkedIn · Ada₹sh Mohan 11.9K+ followers Gurugram, Haryana, India · Director of Product Management · BharatPe Currently Director of Product Management at BharatPe , leading some of India's most widely used fintech platforms - across UPI payments, credit cards, lending, ... Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Anubhav Mathur",
+      "Designation": "Engineering Leader | Scaling AI",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/anubhav-mathur-9980b164/",
+      "Source": "google_browser",
+      "Evidence": "Anubhav Mathur - Engineering Leader | Scaling AI Anubhav Mathur - Engineering Leader | Scaling AI ... LinkedIn · Anubhav Mathur 11.2K+ followers LinkedIn · Anubhav Mathur 11.2K+ followers Fractional CTO ... Director Of Engineering. BharatPe . Apr 2022 - Apr 2023 1 year 1 month. Heading engineering for mobile platforms BharatPe | postpe | 12% Club | ... Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Geetanshu Singla",
+      "Designation": "Co-Founder & CTO",
+      "Company": "GenWise",
+      "LinkedIn URL": "https://www.linkedin.com/in/geetanshu-singla/",
+      "Source": "google_browser",
+      "Evidence": "Geetanshu Singla - Co-Founder & CTO at GenWise LinkedIn · Geetanshu Singla 4.6K+ followers Geetanshu Singla - Co-Founder & CTO at GenWise LinkedIn · Geetanshu Singla 4.6K+ followers LinkedIn · Geetanshu Singla 4.6K+ followers Geetanshu Singla. Engineering Leader at Syfe| Co-Founder & CTO at GenWise | ex-VP Engineering at BharatPe | ex-Engineering Lead at Paytm ... Read more",
+      "Requested Company": "BharatPe",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Kaushal Shah",
+      "Designation": "Chief Information Officer, Citi India",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/kaushalshah100/",
+      "Source": "google_browser",
+      "Evidence": "Kaushal Shah - Chief Information Officer, Citi India LinkedIn · Kaushal Shah 2K+ followers Web results Kaushal Shah - Chief Information Officer, Citi India LinkedIn · Kaushal Shah 2K+ followers LinkedIn · Kaushal Shah 2K+ followers Mumbai Metropolitan Region · India CIO and South Asia Head of Payments & Trade Technology · Citi Chief Information Officer , Citi India · • 25+ years of experience in fintech with strong understanding of all asset classes – Banking, Payments & Trade, ...",
+      "Requested Company": "Citi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Michael Naggar",
+      "Designation": "Managing Director",
+      "Company": "CIO and CDO",
+      "LinkedIn URL": "https://www.linkedin.com/in/michael-naggar-64411126/",
+      "Source": "google_browser",
+      "Evidence": "Michael Naggar - Managing Director – CIO and CDO LinkedIn · Michael Naggar 2.5K+ followers Michael Naggar - Managing Director – CIO and CDO LinkedIn · Michael Naggar 2.5K+ followers LinkedIn · Michael Naggar 2.5K+ followers As Citi's Chief Information Officer and Chief Digital Officer for the U.S. Personal Banking division, Michael focuses on driving frictionless end-to-end ... Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Brian Saluzzo",
+      "Designation": "Managing Director, Chief Information",
+      "Company": "Citi",
+      "LinkedIn URL": "https://www.linkedin.com/in/bsaluzzo/",
+      "Source": "google_browser",
+      "Evidence": "Brian Saluzzo - Managing Director, Chief Information Brian Saluzzo - Managing Director, Chief Information ... LinkedIn · Brian Saluzzo 4.2K+ followers LinkedIn · Brian Saluzzo 4.2K+ followers Montclair, New Jersey, United States · Chief Information Officer · Citi Managing Director, Chief Information Officer , Citi · Experience: Citi · Education: State University of New York College at Geneseo · Location: Montclair ...",
+      "Requested Company": "Citi",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Gerard Pento",
+      "Designation": "Chief Information Officer and Technology",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/gerard-pento-0a4428/",
+      "Source": "google_browser",
+      "Evidence": "Gerard Pento - Chief Information Officer and Technology Gerard Pento - Chief Information Officer and Technology ... LinkedIn · Gerard Pento 2.6K+ followers LinkedIn · Gerard Pento 2.6K+ followers New York City Metropolitan Area · Chief Information Officer - Arch Reinsurance · Arch Capital Group Ltd. Experience ; Chief Information Officer - Arch Reinsurance. Arch Capital Group Ltd. ; Global Head of Issuer Services & Transformation Technology. Citi ; Chief ... Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Jaideep Kumbhare",
+      "Designation": "Chief Information Officer, Citi Hong",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/jaideepkumbhare/",
+      "Source": "google_browser",
+      "Evidence": "Jaideep Kumbhare - Chief Information Officer, Citi Hong Jaideep Kumbhare - Chief Information Officer, Citi Hong ... LinkedIn · Jaideep Kumbhare 1.3K+ followers LinkedIn · Jaideep Kumbhare 1.3K+ followers Jaideep Kumbhare. Chief Information Officer , Citi Hong Kong. Hong Kong, Hong Kong SAR. 1K followers 500+ connections. Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Vinod Rajaram",
+      "Designation": "Managing Director, CIO",
+      "Company": "Banking",
+      "LinkedIn URL": "https://www.linkedin.com/in/vinodrajaram/",
+      "Source": "google_browser",
+      "Evidence": "Vinod Rajaram - Managing Director, CIO - Banking Vinod Rajaram - Managing Director, CIO - Banking ... LinkedIn · Vinod Rajaram 3.4K+ followers LinkedIn · Vinod Rajaram 3.4K+ followers Global Head of Banking, Capital Markets and Advisory Tech. Citi . Jun 2019 - Present 7 years 3 months. Greater New York City Area. Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ashutosh Sureka",
+      "Designation": "CIO, Head of Digital",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/ashutoshsureka/",
+      "Source": "google_browser",
+      "Evidence": "Ashutosh Sureka - CIO, Head of Digital LinkedIn · Ashutosh Sureka 2.7K+ followers Ashutosh Sureka - CIO, Head of Digital LinkedIn · Ashutosh Sureka 2.7K+ followers LinkedIn · Ashutosh Sureka 2.7K+ followers Irving, Texas, United States · Head Of Digital and Payments · Citi As the Head of the Global Digital Payments at Citi , innovating and building the next generation of technology platforms for global digital commerce and global ... Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Jonathan Lofthouse",
+      "Designation": "Citi",
+      "Company": "Citi",
+      "LinkedIn URL": "https://www.linkedin.com/in/jonlofthouse/",
+      "Source": "google_browser",
+      "Evidence": "Jonathan Lofthouse - Citi LinkedIn · Jonathan Lofthouse 9.7K+ followers Jonathan Lofthouse - Citi LinkedIn · Jonathan Lofthouse 9.7K+ followers LinkedIn · Jonathan Lofthouse 9.7K+ followers New York, New York, United States · Citi Experience: Citi · Education: University of Warwick · Location: New York · 500+ connections on LinkedIn. View Jonathan Lofthouse's profile on LinkedIn, ...",
+      "Requested Company": "Citi",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Mahantesh Mukartihal",
+      "Designation": "CIO, Managing Director, Global",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/mahantesh-mukartihal-68a6162/",
+      "Source": "google_browser",
+      "Evidence": "Mahantesh Mukartihal - CIO, Managing Director, Global Mahantesh Mukartihal - CIO, Managing Director, Global ... LinkedIn · Mahantesh Mukartihal 2.8K+ followers LinkedIn · Mahantesh Mukartihal 2.8K+ followers Greater London, England, United Kingdom · CIO / Global Head of Payments and Liquidity Technology · Wells Fargo Experience · CIO / Global Head of Payments and Liquidity Technology · Managing Director, Global Head of Securities Services Technology @ Citi · Managing Director, ... Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Danny Fernandes",
+      "Designation": "SVP Technology Infrastructure",
+      "Company": "Citibank",
+      "LinkedIn URL": "https://www.linkedin.com/in/danny-fernandes-b2a509141/",
+      "Source": "google_browser",
+      "Evidence": "Danny Fernandes - SVP Technology Infrastructure - Citibank LinkedIn · Danny Fernandes 160+ followers Web results Danny Fernandes - SVP Technology Infrastructure - Citibank LinkedIn · Danny Fernandes 160+ followers LinkedIn · Danny Fernandes 160+ followers Mumbai, Maharashtra, India · Senior Vice President · Citi Experience ; Senior Vice President. Citi . Jan 2026 - Present 8 months ; Vice President Information Technology Infrastructure - Chief Technology Officer - CGMIPL. Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Jim Adams",
+      "Designation": "CTO, CIO, Board Advisor",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/james-adams-the-creative-cto/",
+      "Source": "google_browser",
+      "Evidence": "Jim Adams - CTO, CIO, Board Advisor LinkedIn · Jim Adams 3.3K+ followers Jim Adams - CTO, CIO, Board Advisor LinkedIn · Jim Adams 3.3K+ followers LinkedIn · Jim Adams 3.3K+ followers Singapore · Managing Director, Global Leadership Group · GIC Managing Director, Global Leadership Group. GIC. Feb 2026 ; Chief Technology Officer . Citi . Aug 2019 ; Managing Director, Engineering and Architecture Services. Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "David Griffiths",
+      "Designation": "Group Head of Artificial Intelligence",
+      "Company": "Citi",
+      "LinkedIn URL": "https://www.linkedin.com/in/david-griffiths-17106b59/",
+      "Source": "google_browser",
+      "Evidence": "David Griffiths - Group Head of Artificial Intelligence at Citi LinkedIn · David Griffiths 4.7K+ followers David Griffiths - Group Head of Artificial Intelligence at Citi LinkedIn · David Griffiths 4.7K+ followers LinkedIn · David Griffiths 4.7K+ followers I lead Citi's firm-wide AI strategy. My focus is on ensuring AI drives business growth, operational efficiency, and client value across Markets, Services, ... Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Murali Narasimman",
+      "Designation": "Global Technology Executive",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/muralinarasimman/",
+      "Source": "google_browser",
+      "Evidence": "Murali Narasimman - Global Technology Executive LinkedIn · Murali Narasimman 3.3K+ followers Murali Narasimman - Global Technology Executive LinkedIn · Murali Narasimman 3.3K+ followers LinkedIn · Murali Narasimman 3.3K+ followers New York City Metropolitan Area · Global Head of Engineering - Digital, Data Analytics and AI · Citi Global Head of Engineering - Digital, Data Analytics and AI. Citi . 2022 - Present 4 years ; Chief Technology Officer . Rocean. 2019 - 2019 less than a year ; Head ... Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Andres Wolberg-Stok",
+      "Designation": "Managing Director, Office of the",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/andreswolbergstok/",
+      "Source": "google_browser",
+      "Evidence": "Andres Wolberg-Stok - Managing Director, Office of the Andres Wolberg-Stok - Managing Director, Office of the ... LinkedIn · Andres Wolberg-Stok 6.8K+ followers LinkedIn · Andres Wolberg-Stok 6.8K+ followers Miami-Fort Lauderdale Area · Managing Director, Head of the Office of the CTO · Citi As Head of the Office of the CTO , Andres has led a full update of Citi's Technology Strategy and now sets the direction for modernization of the bank's entire ... Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "John D'Onofrio",
+      "Designation": "Retired Citigroup Chief Technology Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/johndonofrio/",
+      "Source": "google_browser",
+      "Evidence": "John D'Onofrio - Retired Citigroup Chief Technology Officer LinkedIn · John D'Onofrio 1.1K+ followers John D'Onofrio - Retired Citigroup Chief Technology Officer LinkedIn · John D'Onofrio 1.1K+ followers LinkedIn · John D'Onofrio 1.1K+ followers After 43 years in IT, including 34 years at Citi , I have completed my transition from Chief Technology Officer to Retired Chief Technology Officer . Thank you to ... Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Rama Cherukuri",
+      "Designation": "Managing Director | CIO | CDO | CTO",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/ramacherukuri/",
+      "Source": "google_browser",
+      "Evidence": "Rama Cherukuri - Managing Director | CIO | CDO | CTO LinkedIn · Rama Cherukuri 1.8K+ followers Rama Cherukuri - Managing Director | CIO | CDO | CTO LinkedIn · Rama Cherukuri 1.8K+ followers LinkedIn · Rama Cherukuri 1.8K+ followers Dallas-Fort Worth Metroplex · Managing Director, Enterprise Data Product Executive | Group Chief Data Office · Citi Rama Cherukuri. Managing Director | CIO | CDO | CTO | Chief Architect | Transformation Executive. Citi Kansas State University. Dallas-Fort Worth Metroplex. Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Patricia Harrilal",
+      "Designation": "Director, Technology",
+      "Company": "Citi",
+      "LinkedIn URL": "https://www.linkedin.com/in/patriciaharrilal/",
+      "Source": "google_browser",
+      "Evidence": "Patricia Harrilal - Director, Technology at Citi LinkedIn · Patricia Harrilal 880+ followers Patricia Harrilal - Director, Technology at Citi LinkedIn · Patricia Harrilal 880+ followers LinkedIn · Patricia Harrilal 880+ followers Jacksonville, Florida, United States · Business Execution Lead - Chief Technology Office, Director · Citi Citi's Chief Technology Office ( CTO ). I manage a team dedicated to supporting the CTO organization by driving critical business operations including ...",
+      "Requested Company": "Citi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Subbarao Chalavadi",
+      "Designation": "Cloud Native Digital Transformation",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/subbaraochalavadi/",
+      "Source": "google_browser",
+      "Evidence": "Subbarao Chalavadi - Cloud Native Digital Transformation LinkedIn · Subbarao Chalavadi 2.3K+ followers Subbarao Chalavadi - Cloud Native Digital Transformation LinkedIn · Subbarao Chalavadi 2.3K+ followers LinkedIn · Subbarao Chalavadi 2.3K+ followers Harrisburg, North Carolina, United States · Managing Director, Global Head of Cloud Native Core Banking Integration and Data;, Finance · Citi Subbarao Chalavadi. Sr. Technology Executive: CTO /CIO | Cloud Native Digital Transformation | Technology Adoption | Banking & Financial Services Industry. Citi ... Read more",
+      "Requested Company": "Citi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Abhaynoor Singh Puri",
+      "Designation": "Business",
+      "Company": "Digio",
+      "LinkedIn URL": "https://www.linkedin.com/in/abspuri/",
+      "Source": "google_browser",
+      "Evidence": "Abhaynoor Singh Puri - Business at Digio | RegTech SaaS LinkedIn · Abhaynoor Singh Puri 7K+ followers Web results Abhaynoor Singh Puri - Business at Digio | RegTech SaaS LinkedIn · Abhaynoor Singh Puri 7K+ followers LinkedIn · Abhaynoor Singh Puri 7K+ followers Bengaluru, Karnataka, India · Senior Manager, Business Partnerships · Digio.in Abhaynoor Singh Puri . I'm passionate about technology adoption, sales strategy and enablement, and simplifying complex solutions for real-world usage.",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Hiren Doshi",
+      "Designation": "Enterprise GTM Leader | Fintech & SaaS",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/hirend/",
+      "Source": "google_browser",
+      "Evidence": "Hiren Doshi - Enterprise GTM Leader | Fintech & SaaS Hiren Doshi - Enterprise GTM Leader | Fintech & SaaS ... LinkedIn · Hiren Doshi 17.1K+ followers LinkedIn · Hiren Doshi 17.1K+ followers Spearheaded sales initiatives at Digio .in, focusing on empowering Indian citizens through digital solutions. • Developed strategies to drive financial inclusion ... Read more",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Vikrant Sharma",
+      "Designation": "Helping Enterprises Navigate DPDPA",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/vikrant-sharma-34079478/",
+      "Source": "google_browser",
+      "Evidence": "Vikrant Sharma - Helping Enterprises Navigate DPDPA Vikrant Sharma - Helping Enterprises Navigate DPDPA ... LinkedIn · Vikrant Sharma 5.4K+ followers LinkedIn · Vikrant Sharma 5.4K+ followers Gurugram, Haryana, India · Business and Partnerships · Digio.in Vikrant Sharma. Helping Enterprises Navigate DPDPA Compliance & Data Privacy | BFSI B2B SaaS | Fintech Partnerships | Revenue & Growth. Digio .in ... Read more",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Saurav Tyagi",
+      "Designation": "Strategy, business development & growth",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/saurav-tyagi-24867629/",
+      "Source": "google_browser",
+      "Evidence": "Saurav Tyagi - Strategy, business development & growth LinkedIn · Saurav Tyagi 2.8K+ followers Saurav Tyagi - Strategy, business development & growth LinkedIn · Saurav Tyagi 2.8K+ followers LinkedIn · Saurav Tyagi 2.8K+ followers Bengaluru, Karnataka, India · Key Account Management & Growth · Digio.in Saurav Tyagi . Strategy, business development & growth | Fintech | Digital Platforms. Digio.in Indian Institute of Management Ahmedabad ... Read more",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sukhman Singh",
+      "Designation": "Software Engineer",
+      "Company": "Digio",
+      "LinkedIn URL": "https://www.linkedin.com/in/sukhman-singh-901b131b6/",
+      "Source": "google_browser",
+      "Evidence": "Sukhman Singh - Software Engineer @Digio LinkedIn · Sukhman Singh 1.2K+ followers Sukhman Singh - Software Engineer @Digio LinkedIn · Sukhman Singh 1.2K+ followers LinkedIn · Sukhman Singh 1.2K+ followers Bengaluru, Karnataka, India · Software Engineer · Digio.in I'm a passionate Full Stack Software Engineer at Digio , working on solutions to real world problems with a knack for tackling complex challenges.",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Yogesh Sharma",
+      "Designation": "Sr. Software Engineer",
+      "Company": "Amazon",
+      "LinkedIn URL": "https://www.linkedin.com/in/yogesh-sharma-ba049333/",
+      "Source": "google_browser",
+      "Evidence": "Yogesh Sharma - Sr. Software Engineer at Amazon LinkedIn · Yogesh Sharma 1.8K+ followers Yogesh Sharma - Sr. Software Engineer at Amazon LinkedIn · Yogesh Sharma 1.8K+ followers LinkedIn · Yogesh Sharma 1.8K+ followers Gurugram, Haryana, India · Software Development Engineer II · Amazon Experienced Software Engineer with a demonstrated history of working for the big products like Samsung DeX and Amazon Academy. After making my hands dirty ... Read more",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Biraj Kumar Sahu",
+      "Designation": "Leadership|SDET Architect/Manager",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/birajksahu/",
+      "Source": "google_browser",
+      "Evidence": "Biraj Kumar Sahu - Leadership|SDET Architect/Manager LinkedIn · Biraj Kumar Sahu 820+ followers Biraj Kumar Sahu - Leadership|SDET Architect/Manager LinkedIn · Biraj Kumar Sahu 820+ followers LinkedIn · Biraj Kumar Sahu 820+ followers Bangalore Urban, Karnataka, India · Senior Test Architect · Kyndryl I am a Lead Test Architect with 19+ years of experience building, architecting and delivering highly reliable and scalable software testing ecosystem. ...",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Kaushal Ganeriwal",
+      "Designation": "Ascertis Credit",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/kaushalganeriwal040812/",
+      "Source": "google_browser",
+      "Evidence": "Kaushal Ganeriwal - Ascertis Credit LinkedIn · Kaushal Ganeriwal 1.9K+ followers Kaushal Ganeriwal - Ascertis Credit LinkedIn · Kaushal Ganeriwal 1.9K+ followers LinkedIn · Kaushal Ganeriwal 1.9K+ followers Mumbai, Maharashtra, India · Managing Partner · Ascertis Credit In depth experience of distress debt management, including restructuring of onshore and offshore debt instruments and active asset management of distress ... Read more",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Akshay Paigude",
+      "Designation": "Quantitative risk analyst",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/akshay-paigude-020994/",
+      "Source": "google_browser",
+      "Evidence": "Akshay Paigude - Quantitative risk analyst LinkedIn · Akshay Paigude 3.1K+ followers Akshay Paigude - Quantitative risk analyst LinkedIn · Akshay Paigude 3.1K+ followers LinkedIn · Akshay Paigude 3.1K+ followers Pune Division, Maharashtra, India · Senior Data Scientist – Credit Risk Modelling · Fedbank Financial Services Ltd - Fedfina I am a Credit Risk Modelling Specialist with over 8 years of experience building the statistical engines that power resilient lending portfolios. Read more",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "sho tsuchiya",
+      "Designation": "CEO",
+      "Company": "SPEEDA Edge",
+      "LinkedIn URL": "https://www.linkedin.com/in/sho-tsuchiya-27b41a58/",
+      "Source": "google_browser",
+      "Evidence": "sho tsuchiya - CEO @SPEEDA Edge | Strategic Innovation sho tsuchiya - CEO @SPEEDA Edge | Strategic Innovation ... LinkedIn · sho tsuchiya 3.5K+ followers LinkedIn · sho tsuchiya 3.5K+ followers Experience · CEO @SPEEDA Edge · Head of SPEEDA Edge · Chief Business Development Officer · Chief Business Development Officer · Inside Sales Manager · Chief Customer ... Read more",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sanket Nayak",
+      "Designation": "Co-Founder",
+      "Company": "Digio",
+      "LinkedIn URL": "https://www.linkedin.com/in/sanketnayak/",
+      "Source": "google_browser",
+      "Evidence": "Sanket Nayak - Co-Founder @Digio LinkedIn · Sanket Nayak 7.3K+ followers Web results Sanket Nayak - Co-Founder @Digio LinkedIn · Sanket Nayak 7.3K+ followers LinkedIn · Sanket Nayak 7.3K+ followers Bengaluru, Karnataka, Inde · Co Founder · Digio.in Co-Founder @ Digio . Prior to founding Digio , Sanket. Responsible for roadmap, defining product requirements, backlog & sprint management. Senior Technical ...",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Nitin G. Joshi",
+      "Designation": "AVP Tech",
+      "Company": "InCred Capital",
+      "LinkedIn URL": "https://www.linkedin.com/in/nitin-g-joshi/",
+      "Source": "google_browser",
+      "Evidence": "Nitin G. Joshi - AVP Tech @ InCred Capital LinkedIn · Nitin G. Joshi 1.1K+ followers Nitin G. Joshi - AVP Tech @ InCred Capital LinkedIn · Nitin G. Joshi 1.1K+ followers LinkedIn · Nitin G. Joshi 1.1K+ followers Thane, Maharashtra, India · AVP Tech · InCred Capital A strategic, multi-disciplinary Digital Transformation and Product Management Leader with 14+ years of success in shaping the digital backbone",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Dexter John Genterone",
+      "Designation": "Chief Technology Officer",
+      "Company": "Talino",
+      "LinkedIn URL": "https://www.linkedin.com/in/dexter-genterone/",
+      "Source": "google_browser",
+      "Evidence": "Dexter John Genterone - Chief Technology Officer at Talino Dexter John Genterone - Chief Technology Officer at Talino ... LinkedIn · Dexter John Genterone 1K+ followers LinkedIn · Dexter John Genterone 1K+ followers I bring over three years of experience directing the company's technical strategy and serving as the de facto CTO for its incubating startups,",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Hiroyuki MATSUBARA",
+      "Designation": "Sustainability Specialist, Analyst",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/hiroyuki-matsubara-175b47a/",
+      "Source": "google_browser",
+      "Evidence": "Hiroyuki MATSUBARA - Sustainability Specialist, Analyst Hiroyuki MATSUBARA - Sustainability Specialist, Analyst ... LinkedIn · Hiroyuki MATSUBARA 1.1K+ followers LinkedIn · Hiroyuki MATSUBARA 1.1K+ followers 職務経験 · Executive Professional · Assistant Director · GM, Global Research Team · Chief Analyst, Marubeni Research Institute. Read more",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Pedro Enrique Vidal Peñas",
+      "Designation": "Senior PHP Developer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/pedro-enrique-vidal-pe%c3%b1as-074072157/",
+      "Source": "google_browser",
+      "Evidence": "Pedro Enrique Vidal Peñas - Senior PHP Developer LinkedIn · Pedro Enrique Vidal Peñas 170+ followers Pedro Enrique Vidal Peñas - Senior PHP Developer LinkedIn · Pedro Enrique Vidal Peñas 170+ followers LinkedIn · Pedro Enrique Vidal Peñas 170+ followers Chief Technology Officer . Intelia. sept 2020 - ene 2023 2 años 5 meses. Gráfico ... Gráfico DIGIO Soluciones Digitales. Desarrollador de back-end. DIGIO ... Read more",
+      "Requested Company": "Digio / CoTrust",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Unknown",
+      "Designation": "",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/vishalsingh2777/",
+      "Source": "google_browser",
+      "Evidence": "Images Vishal Singh - Chief Information Officer & Head Digital ...",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name",
+      "Reviewable": true
+    },
+    {
+      "Name": "Unknown",
+      "Designation": "",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/manisha-dixit-b03200103/",
+      "Source": "google_browser",
+      "Evidence": "Images Vishal Singh - Chief Information Officer & Head Digital ...",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name",
+      "Reviewable": true
+    },
+    {
+      "Name": "Unknown",
+      "Designation": "",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/nitin-parashar-628a7b44/",
+      "Source": "google_browser",
+      "Evidence": "Images Vishal Singh - Chief Information Officer & Head Digital ...",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name",
+      "Reviewable": true
+    },
+    {
+      "Name": "Navi Viswanathan",
+      "Designation": "Deputy CIO, Accruent",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/naviviswanathan/",
+      "Source": "google_browser",
+      "Evidence": "Navi Viswanathan - Deputy CIO, Accruent LinkedIn · Navi Viswanathan 1.5K+ followers Web results Navi Viswanathan - Deputy CIO, Accruent LinkedIn · Navi Viswanathan 1.5K+ followers LinkedIn · Navi Viswanathan 1.5K+ followers San Diego, California, United States · Deputy Chief Information Officer · Fortive Skilled in Process Analysis, Design and Implementation and Strategic technology design solutions. Experience. Fortive Graphic. Deputy Chief Information Officer . Read more",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Navi Grewal",
+      "Designation": "MasterBrand Cabinets, Inc",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/navi-grewal-0732664/",
+      "Source": "google_browser",
+      "Evidence": "Navi Grewal - MasterBrand Cabinets, Inc LinkedIn · Navi Grewal 4.5K+ followers Navi Grewal - MasterBrand Cabinets, Inc LinkedIn · Navi Grewal 4.5K+ followers LinkedIn · Navi Grewal 4.5K+ followers Greater Philadelphia · MasterBrand Cabinets, Inc Navi Grewal. MasterBrand Cabinets, Inc Columbia University in the City of New York. Greater Philadelphia. 4K followers 500+ connections. See your ... Read more",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Naseem .",
+      "Designation": "Group Chief Information Security Officer (CISO",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/6naseem/",
+      "Source": "google_browser",
+      "Evidence": "Naseem . - Group Chief Information Security Officer (CISO Naseem . - Group Chief Information Security Officer (CISO ... LinkedIn · Naseem . 18K+ followers LinkedIn · Naseem . 18K+ followers Bengaluru, Karnataka, India · Group Chief Information Security Officer · Navi Currently Group CISO at Navi , building secure, scalable security solutions and leading high-performing security teams. CORE COMPETENCIES: Chief Information ... Read more",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "invalid_name",
+      "Reviewable": true
+    },
+    {
+      "Name": "Pushkar Chandra",
+      "Designation": "IT Enthusiast",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/pushkar-chandra-1234258/",
+      "Source": "google_browser",
+      "Evidence": "Pushkar Chandra - IT Enthusiast LinkedIn · Pushkar Chandra 7.4K+ followers Pushkar Chandra - IT Enthusiast LinkedIn · Pushkar Chandra 7.4K+ followers LinkedIn · Pushkar Chandra 7.4K+ followers Experience ; Group IT Head. Navi . Apr 2024 ; Head Of Information Technology. Blinkit. Feb 2021 ; Group IT head. Directi Group. Aug 2019 ; DGM IT. Paytm. Feb 2017 ... Read more",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "PM Ramdas",
+      "Designation": "Group CTO | CIO | CAIO | CISO",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/pmramdas/",
+      "Source": "google_browser",
+      "Evidence": "PM Ramdas - Group CTO | CIO | CAIO | CISO LinkedIn · PM Ramdas 5.5K+ followers PM Ramdas - Group CTO | CIO | CAIO | CISO LinkedIn · PM Ramdas 5.5K+ followers LinkedIn · PM Ramdas 5.5K+ followers Mumbai Metropolitan Region · CTO & Head - Cyber Security · Reliance Group 15 years in the Indian Navy - cybersecurity and signals intelligence officer, architect of India's first VoIP-secure naval communications framework, defender of ... Read more",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Pankaj Sharma",
+      "Designation": "CIO-Track IT Leader",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/pankajitevangelist/",
+      "Source": "google_browser",
+      "Evidence": "Pankaj Sharma - CIO-Track IT Leader LinkedIn · Pankaj Sharma 32K+ followers Pankaj Sharma - CIO-Track IT Leader LinkedIn · Pankaj Sharma 32K+ followers LinkedIn · Pankaj Sharma 32K+ followers Mumbai, Maharashtra, India · Head of Information Technology · Hikal Ltd Recognised as India Future CIO Next 100 (2015) and recipient of the 8th Cyber Security Conclave Award (2025). Based in Navi Mumbai. Open to connecting with CIOs ... Read more",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sanjeev Jain",
+      "Designation": "Chief Information Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/sanjeev-jain-2abb859/",
+      "Source": "google_browser",
+      "Evidence": "Sanjeev Jain - Chief Information Officer LinkedIn · Sanjeev Jain 4.1K+ followers Sanjeev Jain - Chief Information Officer LinkedIn · Sanjeev Jain 4.1K+ followers LinkedIn · Sanjeev Jain 4.1K+ followers Mumbai, Maharashtra, India · Chief Information Officer · Integreon Managed Solutions India Pvt. Ltd. Chief Information Officer · As an IT infrastructure leader with over ... Market Research. May 2012 - Apr 2013 1 year. Navi Mumbai. Integreon. 3 ... Read more",
+      "Requested Company": "Navi",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Apoorva Gupta",
+      "Designation": "Engineering",
+      "Company": "Navi Technologies",
+      "LinkedIn URL": "https://www.linkedin.com/in/apoorva-gupta-bba8641b/",
+      "Source": "google_browser",
+      "Evidence": "Apoorva Gupta - Engineering at Navi Technologies LinkedIn · Apoorva Gupta 1.8K+ followers Web results Apoorva Gupta - Engineering at Navi Technologies LinkedIn · Apoorva Gupta 1.8K+ followers LinkedIn · Apoorva Gupta 1.8K+ followers Bengaluru, Karnataka, India · Senior Engineering Manager · Navi Engineering at Navi Technologies · Experience: Navi · Education: Bangalore Institute Of Technology · Location: Bengaluru · 500+ connections on LinkedIn.",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Gaurav Lahoti",
+      "Designation": "Co-founder & ex-CTO, Khatabook",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/gauravlahoti/",
+      "Source": "google_browser",
+      "Evidence": "Gaurav Lahoti - Co-founder & ex-CTO, Khatabook LinkedIn · Gaurav Lahoti 4.8K+ followers Gaurav Lahoti - Co-founder & ex-CTO, Khatabook LinkedIn · Gaurav Lahoti 4.8K+ followers LinkedIn · Gaurav Lahoti 4.8K+ followers Experience · Navi Graphic. Head of Engineering. Navi · Khatabook. 6 years · Genius Learning Labs Graphic. Co-founder, Chief Technology Officer ( CTO ). Genius ... Read more",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ankit Agarwal",
+      "Designation": "CFO",
+      "Company": "Navi",
+      "LinkedIn URL": "https://www.linkedin.com/in/ankit-agarwal-a1904930/",
+      "Source": "google_browser",
+      "Evidence": "Ankit Agarwal - CFO at Navi LinkedIn · Ankit Agarwal 1.6K+ followers Ankit Agarwal - CFO at Navi LinkedIn · Ankit Agarwal 1.6K+ followers LinkedIn · Ankit Agarwal 1.6K+ followers Karnataka, India · CFO · Navi CFO at Navi · Experience: Navi · Location: Karnataka · 315 connections on LinkedIn. View Ankit Agarwal's profile on LinkedIn, a professional community of 1 ...",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Amit Jambotkar",
+      "Designation": "Tech Leader",
+      "Company": "Navi",
+      "LinkedIn URL": "https://www.linkedin.com/in/amit-jambotkar/",
+      "Source": "google_browser",
+      "Evidence": "Amit Jambotkar - Tech Leader at Navi LinkedIn · Amit Jambotkar 5.8K+ followers Amit Jambotkar - Tech Leader at Navi LinkedIn · Amit Jambotkar 5.8K+ followers LinkedIn · Amit Jambotkar 5.8K+ followers Bengaluru, Karnataka, India · Senior Director of Engineering · Navi Tech Leader at Navi · Experienced Software Engineer with a demonstrated history of working in the internet industry for 9 years.",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Abhishek Dwivedi",
+      "Designation": "MD & CEO",
+      "Company": "Navi Finserv",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhishekd4u/",
+      "Source": "google_browser",
+      "Evidence": "Abhishek Dwivedi - MD & CEO at Navi Finserv LinkedIn · Abhishek Dwivedi 15.7K+ followers Abhishek Dwivedi - MD & CEO at Navi Finserv LinkedIn · Abhishek Dwivedi 15.7K+ followers LinkedIn · Abhishek Dwivedi 15.7K+ followers Abhishek Dwivedi · MD & CEO at Navi Finserv | Building one of India's leading financial services companies | Leadership • Execution • Clear Thinking · View mutual ... Read more",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Prashant Kumar",
+      "Designation": "Chief Technology Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/prashant-kumar-6b9bb622/",
+      "Source": "google_browser",
+      "Evidence": "Prashant Kumar - Chief Technology Officer LinkedIn · Prashant Kumar 21.6K+ followers Prashant Kumar - Chief Technology Officer LinkedIn · Prashant Kumar 21.6K+ followers LinkedIn · Prashant Kumar 21.6K+ followers Chief Technology Officer | Technology Strategist | Leading Innovation in Enterprise Solutions · I am an IT professional with over 15 years of experience in ...",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Aby Eapen",
+      "Designation": "CRO Navi",
+      "Company": "Navi",
+      "LinkedIn URL": "https://www.linkedin.com/in/abygeorgeeapen/",
+      "Source": "google_browser",
+      "Evidence": "Aby Eapen - CRO Navi LinkedIn · Aby Eapen 4.5K+ followers Aby Eapen - CRO Navi LinkedIn · Aby Eapen 4.5K+ followers LinkedIn · Aby Eapen 4.5K+ followers Bengaluru, Karnataka, India · Head of Group Risk · Navi CRO Navi · Experience: Navi · Education: St. Stephen's College · Location: Bengaluru · 500+ connections on LinkedIn. View Aby Eapen's profile on LinkedIn, ...",
+      "Requested Company": "Navi",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Dipesh Thakar",
+      "Designation": "CIO | CDO | CISO | Digital Transformation",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/dipesh-thakar-9820606991/",
+      "Source": "google_browser",
+      "Evidence": "Dipesh Thakar - CIO | CDO | CISO | Digital Transformation LinkedIn · Dipesh Thakar 1.5K+ followers Web results Dipesh Thakar - CIO | CDO | CISO | Digital Transformation LinkedIn · Dipesh Thakar 1.5K+ followers LinkedIn · Dipesh Thakar 1.5K+ followers Dipesh Thakar. CIO | CDO | CISO | Digital Transformation | Cyber Security | Business Transformation | IoT | Business Process Analytics | Tech Advisory | ZOHO - ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ananthkumar K S",
+      "Designation": "Leadership",
+      "Company": "Zoho Corporation",
+      "LinkedIn URL": "https://www.linkedin.com/in/ananthkumarks/",
+      "Source": "google_browser",
+      "Evidence": "Ananthkumar K S - Leadership - Zoho Corporation LinkedIn · Ananthkumar K S 7.8K+ followers Ananthkumar K S - Leadership - Zoho Corporation LinkedIn · Ananthkumar K S 7.8K+ followers LinkedIn · Ananthkumar K S 7.8K+ followers Ananthkumar K S. Leadership - Zoho Corporation. Zoho Corporation Anna University Chennai Main Campus. Chennai, Tamil Nadu, ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Swaminathan Rajagopalan",
+      "Designation": "Works",
+      "Company": "Zoho",
+      "LinkedIn URL": "https://www.linkedin.com/in/swaminathan-rajagopalan-a069b520/",
+      "Source": "google_browser",
+      "Evidence": "Swaminathan Rajagopalan - Works at Zoho LinkedIn · Swaminathan Rajagopalan 430+ followers Swaminathan Rajagopalan - Works at Zoho LinkedIn · Swaminathan Rajagopalan 430+ followers LinkedIn · Swaminathan Rajagopalan 430+ followers Chennai, Tamil Nadu, India · Senior Solutions Consultant · Zoho ... Zoho · Location: Chennai · 430 connections on LinkedIn. View ... Joint Secretary of CIO Klub Association-Chennai Chapter (www.cioklub.com) To ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sunil Lalvani",
+      "Designation": "Business Leader",
+      "Company": "Enterprise Software",
+      "LinkedIn URL": "https://www.linkedin.com/in/slalvani/",
+      "Source": "google_browser",
+      "Evidence": "Sunil Lalvani - Business Leader - Enterprise Software Sunil Lalvani - Business Leader - Enterprise Software ... LinkedIn · Sunil Lalvani 5.9K+ followers LinkedIn · Sunil Lalvani 5.9K+ followers Zoho Corporation Graphic.",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Kuppulakshmi Krishnamoorthy",
+      "Designation": "Senior Evangelist",
+      "Company": "Zoho",
+      "LinkedIn URL": "https://www.linkedin.com/in/kuppukrish/",
+      "Source": "google_browser",
+      "Evidence": "Kuppulakshmi Krishnamoorthy - Senior Evangelist @Zoho LinkedIn · Kuppulakshmi Krishnamoorthy 30K+ followers Kuppulakshmi Krishnamoorthy - Senior Evangelist @Zoho LinkedIn · Kuppulakshmi Krishnamoorthy 30K+ followers LinkedIn · Kuppulakshmi Krishnamoorthy 30K+ followers Chengalpattu, Tamil Nadu, India · Senior Evangelist · Zoho At present, I head the startups initiative at Zoho , and I lead the strategic alliances between Zoho and various startup-ecosystem-builders, enablers, policy ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Afzal Khan",
+      "Designation": "Enterprise Business Leader",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/afzal-khan-03758047/",
+      "Source": "google_browser",
+      "Evidence": "Afzal Khan - Enterprise Business Leader LinkedIn · Afzal Khan 3.6K+ followers Afzal Khan - Enterprise Business Leader LinkedIn · Afzal Khan 3.6K+ followers LinkedIn · Afzal Khan 3.6K+ followers Chennai, Tamil Nadu, India · Associate Director - Enterprise Sales · Zoho At Zoho , I lead strategic engagements, including driving Global Capability Center (GCC) initiatives, helping enterprises build, scale, and optimize their global ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sujatha S Iyer",
+      "Designation": "Zoho",
+      "Company": "Zoho",
+      "LinkedIn URL": "https://www.linkedin.com/in/sujathasiyer/",
+      "Source": "google_browser",
+      "Evidence": "Sujatha S Iyer - Zoho LinkedIn · Sujatha S Iyer 2.5K+ followers Sujatha S Iyer - Zoho LinkedIn · Sujatha S Iyer 2.5K+ followers LinkedIn · Sujatha S Iyer 2.5K+ followers Chennai, Tamil Nadu, India · Zoho Leading AI efforts in the cybersecurity domain at ZOHO Corporation. · Experience: Zoho · Education: Sastra University · Location: Chennai · 500+ connections ...",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Karthik Ravichandran",
+      "Designation": "Zoho Enterprise Implementation",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/karthikravichandran-digital/",
+      "Source": "google_browser",
+      "Evidence": "Karthik Ravichandran - Zoho Enterprise Implementation LinkedIn · Karthik Ravichandran 7.4K+ followers Karthik Ravichandran - Zoho Enterprise Implementation LinkedIn · Karthik Ravichandran 7.4K+ followers LinkedIn · Karthik Ravichandran 7.4K+ followers Chennai, Tamil Nadu, India · Director- Implementation at Zoho Enterprise Business Solutions · Zoho Karthik Ravichandran. Enterprise Transformation Leader | CRM & SaaS Transformation | Zoho Enterprise Implementation | Global Delivery (US/EU/India) | Driving ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sreedharan K S",
+      "Designation": "Zoho Corporation Pvt. Ltd.",
+      "Company": "Zoho Corporation Pvt. Ltd.",
+      "LinkedIn URL": "https://www.linkedin.com/in/kssreedharan/",
+      "Source": "google_browser",
+      "Evidence": "Sreedharan K S - Zoho Corporation Pvt. Ltd. LinkedIn · Sreedharan K S 300+ followers Sreedharan K S - Zoho Corporation Pvt. Ltd. LinkedIn · Sreedharan K S 300+ followers LinkedIn · Sreedharan K S 300+ followers Chennai, Tamil Nadu, India · Zoho Corporation Pvt. Ltd. Technology leader with 25 years of work experience in IT Infrastructure Management, Cloud… · Experience: Zoho Corporation Pvt. Ltd. · Education: Birla ...",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Priya Raja",
+      "Designation": "IT",
+      "Company": "Zoho",
+      "LinkedIn URL": "https://www.linkedin.com/in/priya-raja-402878367/",
+      "Source": "google_browser",
+      "Evidence": "Priya Raja - IT at Zoho LinkedIn India https://in.linkedin.com › priya-raja-402878367 Priya Raja - IT at Zoho LinkedIn India https://in.linkedin.com › priya-raja-402878367 LinkedIn India https://in.linkedin.com › priya-raja-402878367 IT at Zoho · Experience: Zoho · Location: Chennai. View Priya Raja's profile on LinkedIn, a professional community of 1 billion members.",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Adithya Rajagopalan",
+      "Designation": "CTO/COO | Building Scalable",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/adithya-rajagopalan-7b7b77208/",
+      "Source": "google_browser",
+      "Evidence": "Adithya Rajagopalan - CTO/COO | Building Scalable Web results Adithya Rajagopalan - CTO/COO | Building Scalable ... LinkedIn · Adithya Rajagopalan 950+ followers LinkedIn · Adithya Rajagopalan 950+ followers Pune District, Maharashtra, India · CTO/COO · the desk - Zoho Partner I help businesses turn operational chaos into competitive advantage. As CTO /COO at 'the desk' and spent 5+ years in building Zoho solutions for 100+ ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Jatin Kumar kakrey",
+      "Designation": "Chief Technology Officer || Zoho Expert",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/jatin-kumar-kakrey-766b19190/",
+      "Source": "google_browser",
+      "Evidence": "Jatin Kumar kakrey - Chief Technology Officer || Zoho Expert LinkedIn · Jatin Kumar kakrey 4.2K+ followers Jatin Kumar kakrey - Chief Technology Officer || Zoho Expert LinkedIn · Jatin Kumar kakrey 4.2K+ followers LinkedIn · Jatin Kumar kakrey 4.2K+ followers Shimla, Himachal Pradesh, India · Chief Technology Officer · Amazing Business Results Jatin Kumar kakrey. Chief Technology Officer || Zoho Expert. Amazing Business Results CHANDIGARH UNIVERSITY. Shimla, Himachal Pradesh, ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Janani Panchapakesan",
+      "Designation": "CTO, Rays and Reach",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/janani-panchapakesan/",
+      "Source": "google_browser",
+      "Evidence": "Janani Panchapakesan - CTO, Rays and Reach LinkedIn · Janani Panchapakesan 2.5K+ followers Janani Panchapakesan - CTO, Rays and Reach LinkedIn · Janani Panchapakesan 2.5K+ followers LinkedIn · Janani Panchapakesan 2.5K+ followers Chennai, Tamil Nadu, India · Chief Technology Officer · Rays and Reach Janani Panchapakesan. CTO , Rays and Reach | Zoho One Implementation Expert, Zoho Products Consultant, Seasoned Information Technology Professional. Rays and ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Muhammad Emad Shabana‏",
+      "Designation": "Chief Technology Officer and Head of Zoho",
+      "Company": "IBIS Consultancy ... Read more",
+      "LinkedIn URL": "https://www.linkedin.com/in/imuhammademadshabana/",
+      "Source": "google_browser",
+      "Evidence": "Muhammad Emad Shabana‏ - ‏Chief Technology Officer Muhammad Emad Shabana‏ - ‏Chief Technology Officer ... LinkedIn · Muhammad Emad Shabana 2K+ followers LinkedIn · Muhammad Emad Shabana 2K+ followers A technology leader with extensive expertise in SaaS and automation, currently serving as Chief Technology Officer and Head of Zoho at IBIS Consultancy ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Gajendra Singh",
+      "Designation": "CTO",
+      "Company": "Infomaze",
+      "LinkedIn URL": "https://www.linkedin.com/in/gajendra-singh-797441a/",
+      "Source": "google_browser",
+      "Evidence": "Gajendra Singh - CTO at Infomaze | AI Systems · Zoho LinkedIn · Gajendra Singh 560+ followers Gajendra Singh - CTO at Infomaze | AI Systems · Zoho LinkedIn · Gajendra Singh 560+ followers LinkedIn · Gajendra Singh 560+ followers Mysore, Karnataka, India · Chief Technology Officer · INFOMAZE CTO at Infomaze | AI Systems · Zoho · Azure · 17+ years engineering · I'm the Chief Technology Officer at Infomaze Elite Pvt. Ltd., an enterprise software ...",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Gajanan S.",
+      "Designation": "AI-Powered CRM & ERP Expert",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/gajanansalve/",
+      "Source": "google_browser",
+      "Evidence": "Gajanan S. - AI-Powered CRM & ERP Expert LinkedIn · Gajanan S. 810+ followers Gajanan S. - AI-Powered CRM & ERP Expert LinkedIn · Gajanan S. 810+ followers LinkedIn · Gajanan S. 810+ followers Mumbai, Maharashtra, India · Chief Technology Officer & Certified Zoho Consultant · Ecrm Solutions Gajanan S. · Chief Technology Officer & Certified Zoho Consultant @ Ecrm Solutions | AI-Powered CRM & ERP Expert · View mutual connections with Gajanan · Services. Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Mohit Prajapati",
+      "Designation": "Zoho Solutions Consultant &",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/mp-zoho/",
+      "Source": "google_browser",
+      "Evidence": "Mohit Prajapati - Zoho Solutions Consultant & Mohit Prajapati - Zoho Solutions Consultant & ... LinkedIn · Mohit Prajapati 2K+ followers LinkedIn · Mohit Prajapati 2K+ followers Spearheading RCCRM Digital Solutions as the CTO and Chief Solutions Architect, my focus is on optimizing Zoho CRM to drive business efficiency and ... Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Kashif Ahmed",
+      "Designation": "🚀 CTO | Zoho Guru | Personal Injury Law",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/prodigenius-kahmed/",
+      "Source": "google_browser",
+      "Evidence": "Kashif Ahmed - 🚀 CTO | Zoho Guru | Personal Injury Law Kashif Ahmed - 🚀 CTO | Zoho Guru | Personal Injury Law ... LinkedIn · Kashif Ahmed 200+ followers LinkedIn · Kashif Ahmed 200+ followers Mumbai, Maharashtra, India · Chief Technology Officer · Mutrux Firm Injury Lawyers Experience · Chief Technology Officer · Zoho Specialist · Technical Operations Contractor · Zoho Specialist · Assistant Manager - Strategy · Game Advisor. Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Rajendran Dandapani",
+      "Designation": "Zoho Corporation",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/rajendran/",
+      "Source": "google_browser",
+      "Evidence": "Rajendran Dandapani - Zoho Corporation LinkedIn · Rajendran Dandapani 24.2K+ followers Rajendran Dandapani - Zoho Corporation LinkedIn · Rajendran Dandapani 24.2K+ followers LinkedIn · Rajendran Dandapani 24.2K+ followers Experience · Zoho Schools of Learning Graphic. President · Professional Speakers Association India Graphic. President · Chief Technology Officer . 3rd Agenda. Read more",
+      "Requested Company": "Zoho",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Trip Mitchell",
+      "Designation": "Chief Information Officer (CIO) | IT Strategy",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/trip-mitchell-4952b210/",
+      "Source": "google_browser",
+      "Evidence": "Trip Mitchell - Chief Information Officer (CIO) | IT Strategy LinkedIn · Trip Mitchell 510+ followers Web results Trip Mitchell - Chief Information Officer (CIO) | IT Strategy LinkedIn · Trip Mitchell 510+ followers LinkedIn · Trip Mitchell 510+ followers Experience. Chief Information Officer . United Collection Bureau . Jan 2020 - Jul 2026 6 years 7 months. United States. DCI Graphic. Chief Information Officer . Read more",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ganesh Narayanan",
+      "Designation": "CIO",
+      "Company": "Marine & Offshore Division",
+      "LinkedIn URL": "https://www.linkedin.com/in/gkn23/",
+      "Source": "google_browser",
+      "Evidence": "Ganesh Narayanan - CIO - Marine & Offshore Division, Ganesh Narayanan - CIO - Marine & Offshore Division, ... LinkedIn · Ganesh Narayanan 1.2K+ followers LinkedIn · Ganesh Narayanan 1.2K+ followers Mumbai, Maharashtra, India · CIO - Marine & Offshore Division · Bureau Veritas Group CIO - Marine & Offshore Division, Bureau Veritas · Experience in IT Industry delivering solutions for diverse global businesses across Pharmaceutical, CPG, ...",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sam Hinojosa",
+      "Designation": "Chief Information Officer (CIO) & Bureau",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/sam-hinojosa-3ab62028/",
+      "Source": "google_browser",
+      "Evidence": "Sam Hinojosa - Chief Information Officer (CIO) & Bureau Sam Hinojosa - Chief Information Officer (CIO) & Bureau ... LinkedIn · Sam Hinojosa 1.9K+ followers LinkedIn · Sam Hinojosa 1.9K+ followers Los Angeles, California, United States · Chief Information Officer - Los Angeles Fire Department · City of Los Angeles As Chief Information Officer and Bureau Commander for the Los Angeles Fire Department, I lead the Information Technology Bureau and am responsible for the ... Read more",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Swathi Gupta",
+      "Designation": "Chief Information Officer (CIO)",
+      "Company": "ARM",
+      "LinkedIn URL": "https://www.linkedin.com/in/swathi-gupta-827b96346/",
+      "Source": "google_browser",
+      "Evidence": "Swathi Gupta - Chief Information Officer (CIO) at ARM Swathi Gupta - Chief Information Officer (CIO) at ARM ... LinkedIn · Swathi Gupta 2 followers LinkedIn · Swathi Gupta 2 followers Bengaluru, Karnataka, India · Chief Information Officer (CIO) · ARM Holdings Chief Information Officer ( CIO ) at ARM Holdings · Experience: ARM Holdings · Location: 562130. View Swathi Gupta's profile on LinkedIn, a professional ...",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Rajneesh Kushwaha Singh",
+      "Designation": "PMP| CIO | CISO | CTO",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/rajneesh-kushwaha-singh-44875a37/",
+      "Source": "google_browser",
+      "Evidence": "Rajneesh Kushwaha Singh - PMP| CIO | CISO | CTO LinkedIn · Rajneesh Kushwaha Singh 10.2K+ followers Rajneesh Kushwaha Singh - PMP| CIO | CISO | CTO LinkedIn · Rajneesh Kushwaha Singh 10.2K+ followers LinkedIn · Rajneesh Kushwaha Singh 10.2K+ followers Education ; Bureau Veritas (Professional Certification). IMS lead Auditor ISO , OHSAS and EMS ; National Institute of Construction Management & Research (NICMAR). Read more",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Kenneth McNeill",
+      "Designation": "Director, Chief Information Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/kenneth-mcneill-98131323a/",
+      "Source": "google_browser",
+      "Evidence": "Kenneth McNeill - Director, Chief Information Officer Kenneth McNeill - Director, Chief Information Officer ... LinkedIn · Kenneth McNeill 380+ followers LinkedIn · Kenneth McNeill 380+ followers McNeill, a member of the Senior Executive Service, serves as the National Guard Bureau (NGB) Chief Information Officer ( CIO ) and Director of the Command, ... Read more",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Christopher Cox",
+      "Designation": "IT Executive",
+      "Company": "CIO, VP",
+      "LinkedIn URL": "https://www.linkedin.com/in/christopher-cox-20615711/",
+      "Source": "google_browser",
+      "Evidence": "Christopher Cox - IT Executive - CIO, VP LinkedIn · Christopher Cox 890+ followers Christopher Cox - IT Executive - CIO, VP LinkedIn · Christopher Cox 890+ followers LinkedIn · Christopher Cox 890+ followers Houston, Texas, United States · Vice President Information Technology · American Bureau of Shipping (ABS) IT Executive - CIO , VP. American Bureau of Shipping (ABS) Our Lady of the Lake University. Houston, Texas, United States. 897 followers 500+ connections. See ... Read more",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Yoganand Tadepalli",
+      "Designation": "Chief Technology Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/yoganandt/",
+      "Source": "google_browser",
+      "Evidence": "Yoganand Tadepalli - Chief Technology Officer LinkedIn · Yoganand Tadepalli 1.1K+ followers Yoganand Tadepalli - Chief Technology Officer LinkedIn · Yoganand Tadepalli 1.1K+ followers LinkedIn · Yoganand Tadepalli 1.1K+ followers Hyderabad, Telangana, India · Chief Technology Officer · Insurance Information Bureau of India Experience ; Chief Technology Officer . Insurance Information Bureau of India. Sep 2023 ; Global Chief Digital and Information Officer. PGP Glass Pvt. Ltd. Aug ... Read more",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Abhijit Das",
+      "Designation": "Technology Visionary | Advisor",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/abhijitiitg/",
+      "Source": "google_browser",
+      "Evidence": "Abhijit Das - Technology Visionary | Advisor LinkedIn · Abhijit Das 1.6K+ followers Abhijit Das - Technology Visionary | Advisor LinkedIn · Abhijit Das 1.6K+ followers LinkedIn · Abhijit Das 1.6K+ followers Experience ; Chief Technology Officer . The Coupon Bureau . Jan 2019 ; Advisor. Nester Labs. Jan 2025 ; Advisor. ZlipR. Jan 2026 ; Co-Founder. Qples. Jan 2011 ; Co- ... Read more",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ken Flowers Jr",
+      "Designation": "National Guard Bureau",
+      "Company": "National Guard Bureau",
+      "LinkedIn URL": "https://www.linkedin.com/in/ken-flowers-jr-3a130719/",
+      "Source": "google_browser",
+      "Evidence": "Ken Flowers Jr - National Guard Bureau LinkedIn · Ken Flowers Jr 1.1K+ followers Ken Flowers Jr - National Guard Bureau LinkedIn · Ken Flowers Jr 1.1K+ followers LinkedIn · Ken Flowers Jr 1.1K+ followers Dumfries, Virginia, United States · Chief Technology Officer · National Guard Bureau Chief Technology Officer , National Guard Bureau · Experience: National Guard Bureau · Education: National Defense University · Location: Dumfries · 500+ ...",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Daniel Hoffmann",
+      "Designation": "Chief Technology Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/daniel-hoffmann-95304b79/",
+      "Source": "google_browser",
+      "Evidence": "Daniel Hoffmann - Chief Technology Officer LinkedIn · Daniel Hoffmann 630+ followers Daniel Hoffmann - Chief Technology Officer LinkedIn · Daniel Hoffmann 630+ followers LinkedIn · Daniel Hoffmann 630+ followers Magnolia, Texas, United States · Chief Technology Officer · Safer Chief Technology Officer · Proven ability to improve overall office ... Bureau Veritas North America, Inc. Extensive knowledge of the Microsoft ...",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sudesh Puthran",
+      "Designation": "Chief Technology Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/sudesh-puthran-459ba03/",
+      "Source": "google_browser",
+      "Evidence": "Sudesh Puthran - Chief Technology Officer LinkedIn · Sudesh Puthran 1.9K+ followers Sudesh Puthran - Chief Technology Officer LinkedIn · Sudesh Puthran 1.9K+ followers LinkedIn · Sudesh Puthran 1.9K+ followers Mumbai Metropolitan Region · Chief Technology Officer · CreditAccess Grameen Limited Chief Technology Officer · Senior IT and Management professional ( CTO ) ... Bureau Technology, Digital Lending platforms, Cloud Computing and Digital ...",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Shashank Singh",
+      "Designation": "Research And Development Group",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/shashank-singh-119959169/",
+      "Source": "google_browser",
+      "Evidence": "Shashank Singh - Research And Development Group Shashank Singh - Research And Development Group ... LinkedIn · Shashank Singh 500+ followers LinkedIn · Shashank Singh 500+ followers Bangalore Urban, Karnataka, India · Research and Development Group Lead · Bureau Experience ; Research and Development Group Lead. Bureau . May 2026 ; Co-founder & CTO (Acquired By Bureau Inc). IdentX Labs. Jan 2025 ; Security Software Engineer. Read more",
+      "Requested Company": "Bureau",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Prasanna Lohar",
+      "Designation": "Investor | Board Member",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/prasannalohar/",
+      "Source": "google_browser",
+      "Evidence": "Prasanna Lohar - Investor | Board Member LinkedIn · Prasanna Lohar 91.3K+ followers Web results Prasanna Lohar - Investor | Board Member LinkedIn · Prasanna Lohar 91.3K+ followers LinkedIn · Prasanna Lohar 91.3K+ followers Member of the Advisory Board. Modefin ; Independent Director. Paramotor Digital Technology Limited ; Innovation and Transformation Advisor. Read more",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sachin Seth",
+      "Designation": "Regional M.D., South Asia",
+      "Company": "CRIF Group",
+      "LinkedIn URL": "https://www.linkedin.com/in/sachinseth2023/",
+      "Source": "google_browser",
+      "Evidence": "Sachin Seth - Regional M.D., South Asia @ CRIF Group Sachin Seth - Regional M.D., South Asia @ CRIF Group ... LinkedIn · Sachin Seth 13.4K+ followers LinkedIn · Sachin Seth 13.4K+ followers Fintech & Technology transformation thought leader with experience in managing Consulting, Data and Enterprise SaaS technology businesses globally I CEO",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Vinay Gupta",
+      "Designation": "Gemini Software Solutions Pvt. Ltd.",
+      "Company": "Gemini Software Solutions Pvt. Ltd.",
+      "LinkedIn URL": "https://www.linkedin.com/in/vinay-gupta-0611101/",
+      "Source": "google_browser",
+      "Evidence": "Vinay Gupta - Gemini Software Solutions Pvt. Ltd. LinkedIn · Vinay Gupta 2.7K+ followers Vinay Gupta - Gemini Software Solutions Pvt. Ltd. LinkedIn · Vinay Gupta 2.7K+ followers LinkedIn · Vinay Gupta 2.7K+ followers Thane, Maharashtra, India · Gemini Software Solutions Pvt. Ltd. | K-Soft UAE | K-Soft Baharain Vinay is dynamic and accomplished IT executive 29+ years of global leadership experience... · Experience: Gemini Software Solutions Pvt. Ltd.",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ahmad Raza Abidi",
+      "Designation": "Consultant (program Manager)",
+      "Company": "NTT DATA Services",
+      "LinkedIn URL": "https://www.linkedin.com/in/ahmad-raza-abidi-680b52124/",
+      "Source": "google_browser",
+      "Evidence": "Ahmad Raza Abidi - Consultant (program Manager) LinkedIn · Ahmad Raza Abidi 610+ followers Ahmad Raza Abidi - Consultant (program Manager) LinkedIn · Ahmad Raza Abidi 610+ followers LinkedIn · Ahmad Raza Abidi 610+ followers Mumbai, Maharashtra, India · Program Manager · NTT DATA Services Consultant (program Manager) · Experience: NTT DATA Services · Education: Lucknow University, Lucknow · Location: Mumbai · 500+ connections on LinkedIn.",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sushant Bhandari",
+      "Designation": "Solution Sales | Cash Management",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/sushant-bhandari-47474712a/",
+      "Source": "google_browser",
+      "Evidence": "Sushant Bhandari - Solution Sales | Cash Management LinkedIn · Sushant Bhandari 4.6K+ followers Sushant Bhandari - Solution Sales | Cash Management LinkedIn · Sushant Bhandari 4.6K+ followers LinkedIn · Sushant Bhandari 4.6K+ followers Mumbai, Maharashtra, India · Vice President · Citi Experience ; Vice President · Jan 2026 - Present ; Assistant Vice President - Institutional Client Group · Jan 2024 - Jan 2026 ; Solution Sales Manager - ... Read more",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Mudit Batra",
+      "Designation": "Director Sales",
+      "Company": "CARD91",
+      "LinkedIn URL": "https://www.linkedin.com/in/mudit-batra-9b909734/",
+      "Source": "google_browser",
+      "Evidence": "Mudit Batra - Director Sales @ CARD91 | Fintech, Solution Mudit Batra - Director Sales @ CARD91 | Fintech, Solution ... LinkedIn · Mudit Batra 3.4K+ followers LinkedIn · Mudit Batra 3.4K+ followers Noida, Uttar Pradesh, India · Director Sales · CARD91 With extensive experience spanning over 15 years in sales and marketing across the fintech and payments industry, I focus on solution implementation, ... Read more",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Vivek Sharma",
+      "Designation": "Sr. Manager",
+      "Company": "Spectra Computech Pvt Ltd",
+      "LinkedIn URL": "https://www.linkedin.com/in/vivek-sharma-852621a/",
+      "Source": "google_browser",
+      "Evidence": "Vivek Sharma - Sr. Manager at Spectra Computech Pvt Ltd LinkedIn · Vivek Sharma 150+ followers Vivek Sharma - Sr. Manager at Spectra Computech Pvt Ltd LinkedIn · Vivek Sharma 150+ followers LinkedIn · Vivek Sharma 150+ followers Chandigarh, Chandigarh, India · Manager · Spectra Computech Pvt Ltd Sr. Manager at Spectra Computech Pvt Ltd · Experience: Spectra Computech Pvt Ltd · Education: Faculty of Management Studies - University of Delhi ...",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Veejay Salvi",
+      "Designation": "Partner",
+      "Company": "Financeify",
+      "LinkedIn URL": "https://www.linkedin.com/in/veejay-salvi-09b42013/",
+      "Source": "google_browser",
+      "Evidence": "Veejay Salvi - Partner LinkedIn India https://in.linkedin.com › Veejay Salvi - Partner LinkedIn India https://in.linkedin.com › ... LinkedIn India https://in.linkedin.com › ... Partner · Experience: Financeify · Education: UNITED BUSINESS INSTITUTES, BELGIUM · Location: Panvel Taluka · 500+ connections on LinkedIn.",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Kat Orta",
+      "Designation": "AI, Agentic AI & XR",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/katorta/",
+      "Source": "google_browser",
+      "Evidence": "Kat Orta - AI, Agentic AI & XR LinkedIn · Kat Orta 1.2K+ followers Kat Orta - AI, Agentic AI & XR LinkedIn · Kat Orta 1.2K+ followers LinkedIn · Kat Orta 1.2K+ followers Breaking Barriers: CEO, FAA-Certified, First Female Scout Paramotor Pilot in the United States. Wind 2 Sky LLC. Nov 2020 - Present 5 years 9 months. Cypress ... Read more",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Peter Beckman",
+      "Designation": "Managing Director, Telusion, Inc.",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/beckman/",
+      "Source": "google_browser",
+      "Evidence": "Peter Beckman - Managing Director, Telusion, Inc. LinkedIn · Peter Beckman 890+ followers Peter Beckman - Managing Director, Telusion, Inc. LinkedIn · Peter Beckman 890+ followers LinkedIn · Peter Beckman 890+ followers ... Paramotor Pilot (FAA Part 103), General Amateur Radio FCC License, Krav Maga ... CIO . North American Management. Dec 2003 - Apr 2004 5 months. Responsible ... Read more",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Mohit Juneja",
+      "Designation": "Chief Technology Officer | Building Scalable",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/juneja-mohit/",
+      "Source": "google_browser",
+      "Evidence": "Mohit Juneja - Chief Technology Officer | Building Scalable Web results Mohit Juneja - Chief Technology Officer | Building Scalable ... LinkedIn · Mohit Juneja 1.3K+ followers LinkedIn · Mohit Juneja 1.3K+ followers Greater Bengaluru Area · Chief Technology Officer · Paramotor Digital Technology Limited As Chief Technology Officer at Paramotor Digital Technology, I focus on shaping the company's technology direction and building intelligent, resilient, and ... Read more",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Dipti Kataria",
+      "Designation": "Mumbai, Maharashtra, India",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/dipti-kataria-21bb051/",
+      "Source": "google_browser",
+      "Evidence": "Dipti Kataria - Mumbai, Maharashtra, India LinkedIn · Dipti Kataria 2.1K+ followers Dipti Kataria - Mumbai, Maharashtra, India LinkedIn · Dipti Kataria 2.1K+ followers LinkedIn · Dipti Kataria 2.1K+ followers Location: Mumbai · 500+ connections on LinkedIn. View Dipti Kataria's profile on LinkedIn, a professional community of 1 billion members.",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Syed Shazli Hussain",
+      "Designation": "Senior Engineering Manager",
+      "Company": "Jio",
+      "LinkedIn URL": "https://www.linkedin.com/in/syed-shazli-hussain-a7b98981/",
+      "Source": "google_browser",
+      "Evidence": "Syed Shazli Hussain - Senior Engineering Manager LinkedIn · Syed Shazli Hussain 570+ followers Syed Shazli Hussain - Senior Engineering Manager LinkedIn · Syed Shazli Hussain 570+ followers LinkedIn · Syed Shazli Hussain 570+ followers Bengaluru, Karnataka, India · Senior Engineering Manager · Jio Senior Engineering Manager · Experience: Jio · Education: Motilal Nehru National Institute Of Technology · Location: Bengaluru · 500+ connections on ...",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Naman Arora",
+      "Designation": "Intuit",
+      "Company": "Intuit",
+      "LinkedIn URL": "https://www.linkedin.com/in/namaaror/",
+      "Source": "google_browser",
+      "Evidence": "Naman Arora - Intuit LinkedIn · Naman Arora 1.2K+ followers Naman Arora - Intuit LinkedIn · Naman Arora 1.2K+ followers LinkedIn · Naman Arora 1.2K+ followers Bengaluru, Karnataka, India · Intuit Experienced Frontend Engineer with 9+ years of expertise in developing robust and… · Experience: Intuit · Education: International Institute of Information ...",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Athul K Menon",
+      "Designation": "Java Developer | Spring Boot | Hibernate",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/athul-k-menon/",
+      "Source": "google_browser",
+      "Evidence": "Athul K Menon - Java Developer | Spring Boot | Hibernate LinkedIn · Athul K Menon 180+ followers Athul K Menon - Java Developer | Spring Boot | Hibernate LinkedIn · Athul K Menon 180+ followers LinkedIn · Athul K Menon 180+ followers India · Senior Software Engineer · People10 Technologies Inc. Engineer with experience in developing and maintaining enterprise applications, specializing in Spring Boot, Hibernate, Microservices, REST APIs, and MySQL.",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Vaidehi Panchal",
+      "Designation": "Director of Aerospace Engineering at",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/vaidehi-panchal/",
+      "Source": "google_browser",
+      "Evidence": "Vaidehi Panchal - Director of Aerospace Engineering at Vaidehi Panchal - Director of Aerospace Engineering at ... LinkedIn · Vaidehi Panchal 620+ followers LinkedIn · Vaidehi Panchal 620+ followers Old Bridge, New Jersey, United States · Director of Aerospace Engineering · Apex Heli Support Collaborate with the CTO , executive team, and ... • Assembly and detailed inspection of Microlight Aircarfts Powered Hand Gliders, Paramotor Aircrafts ... Read more",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Kevin Fenn",
+      "Designation": "BAE Systems",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/kevin-fenn/",
+      "Source": "google_browser",
+      "Evidence": "Kevin Fenn - BAE Systems LinkedIn · Kevin Fenn 2.4K+ followers Kevin Fenn - BAE Systems LinkedIn · Kevin Fenn 2.4K+ followers LinkedIn · Kevin Fenn 2.4K+ followers Peterborough, England, United Kingdom · BAE Systems Kepler Tregoe. -. Palo Alto Firewall. -. Languages. English. -. Organizations. BHPA. -. Aug 2022 - Present. Paramotor Pilot. PADI. -. Sep 2002 - Present. Master ... Read more",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Zaheer Ahmed Ustad",
+      "Designation": "Data Integration Specialist",
+      "Company": "NatWest Group",
+      "LinkedIn URL": "https://www.linkedin.com/in/zaheer-ahmed-ustad-4b453a74/",
+      "Source": "google_browser",
+      "Evidence": "Zaheer Ahmed Ustad - Data Integration Specialist LinkedIn · Zaheer Ahmed Ustad 590+ followers Zaheer Ahmed Ustad - Data Integration Specialist LinkedIn · Zaheer Ahmed Ustad 590+ followers LinkedIn · Zaheer Ahmed Ustad 590+ followers Bengaluru, Karnataka, India · Associate Vice President · NatWest Group Data Integration Specialist · Experience: NatWest Group · Education: P.G.Halkatti Engineering College · Location: Bengaluru · 500+ connections on LinkedIn. ...",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Agaram Pranay",
+      "Designation": "AWS Certified Solutions Architect",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/agarampranay/",
+      "Source": "google_browser",
+      "Evidence": "Agaram Pranay - AWS Certified Solutions Architect LinkedIn · Agaram Pranay 460+ followers Agaram Pranay - AWS Certified Solutions Architect LinkedIn · Agaram Pranay 460+ followers LinkedIn · Agaram Pranay 460+ followers Bangalore Rural, Karnataka, India · DevOps Architect · ProjectsForce 9 years experience AWS Solution Architect with a proven track record in Solution Design for Cloud technologies in IT Infrastructure functions. Read more",
+      "Requested Company": "Paramotor",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Ramkumar Venkatesan",
+      "Designation": "Cashfree Payments",
+      "Company": "Cashfree Payments",
+      "LinkedIn URL": "https://www.linkedin.com/in/ramkumar-venkatesan/",
+      "Source": "google_browser",
+      "Evidence": "Ramkumar Venkatesan - Cashfree Payments LinkedIn · Ramkumar Venkatesan 7.9K+ followers Web results Ramkumar Venkatesan - Cashfree Payments LinkedIn · Ramkumar Venkatesan 7.9K+ followers LinkedIn · Ramkumar Venkatesan 7.9K+ followers Experience: Cashfree Payments · Education: IIM Bangalore · Location: Bengaluru · 500+ connections on LinkedIn. View Ramkumar Venkatesan's profile on ...",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Manish Daswani",
+      "Designation": "Cashfree Payments",
+      "Company": "Cashfree Payments",
+      "LinkedIn URL": "https://www.linkedin.com/in/manishdaswani/",
+      "Source": "google_browser",
+      "Evidence": "Manish Daswani - Cashfree Payments LinkedIn · Manish Daswani 9.8K+ followers Manish Daswani - Cashfree Payments LinkedIn · Manish Daswani 9.8K+ followers LinkedIn · Manish Daswani 9.8K+ followers Mumbai, Maharashtra, India · Cashfree Payments Over 23 years of experience in payments &amp; banking, specialising in corporate payments… · Experience: Cashfree Payments · Education: Sydenham Institute ...",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Dharmendra Y.",
+      "Designation": "Head of QA | CISO@ Cashfree Payments",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/dharmendra-ciso/",
+      "Source": "google_browser",
+      "Evidence": "Dharmendra Y. - Head of QA | CISO@ Cashfree Payments LinkedIn · Dharmendra Y. 6.6K+ followers Dharmendra Y. - Head of QA | CISO@ Cashfree Payments LinkedIn · Dharmendra Y. 6.6K+ followers LinkedIn · Dharmendra Y. 6.6K+ followers Bengaluru, Karnataka, India · Senior Manager, Security & SDET (CISO) · Cashfree Payments I lead security, risk, and compliance at Cashfree Payments , alongside Quality and SDET across the platform. My work covers governance, regulatory and ... Read more Missing: (CIO ‎| Show results with: (CIO",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Kiran Kumar B S",
+      "Designation": "Cashfree Payments NITK Surathkal",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/kirankumarbs/",
+      "Source": "google_browser",
+      "Evidence": "Kiran Kumar B S - Cashfree Payments NITK Surathkal LinkedIn · Kiran Kumar B S 1.3K+ followers Kiran Kumar B S - Cashfree Payments NITK Surathkal LinkedIn · Kiran Kumar B S 1.3K+ followers LinkedIn · Kiran Kumar B S 1.3K+ followers Bengaluru, Karnataka, India · Senior Software Development Engineer · Cashfree Payments Senior Software Development Engineer. Cashfree Payments . Oct 2022 - Present 3 years 10 months. Bengaluru, Karnataka, India. Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Akash S.",
+      "Designation": "Cashfree Payments 🇮🇳",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/sinhaakash/",
+      "Source": "google_browser",
+      "Evidence": "Akash S. - Cashfree Payments 🇮🇳 LinkedIn · Akash S. 27.7K+ followers Akash S. - Cashfree Payments 🇮🇳 LinkedIn · Akash S. 27.7K+ followers LinkedIn · Akash S. 27.7K+ followers Experience · Cashfree Payments Graphic. Co-founder and CEO. Cashfree Payments . Sep 2015 - Present 11 years. Bengaluru · Amazon Graphic. Software Development ... Read more Missing: (CIO ‎| Show results with: (CIO",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Rohit Katyal",
+      "Designation": "Business Leader | Chief Business Officer",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/rohit-katyal-8565404/",
+      "Source": "google_browser",
+      "Evidence": "Rohit Katyal - Business Leader | Chief Business Officer LinkedIn · Rohit Katyal 17.5K+ followers Rohit Katyal - Business Leader | Chief Business Officer LinkedIn · Rohit Katyal 17.5K+ followers LinkedIn · Rohit Katyal 17.5K+ followers Mumbai, Maharashtra, India · Head of Enterprise Business · Cashfree Payments Currently, Rohit serves as VP & Head of Enterprise Business at Cashfree Payments , with full responsibility for the India enterprise P&L spanning BFSI, ... Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Praveen Kumar Kalwagadda",
+      "Designation": "Engineering Leader",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/kalwagaddap/",
+      "Source": "google_browser",
+      "Evidence": "Praveen Kumar Kalwagadda - Engineering Leader LinkedIn · Praveen Kumar Kalwagadda 3.7K+ followers Praveen Kumar Kalwagadda - Engineering Leader LinkedIn · Praveen Kumar Kalwagadda 3.7K+ followers LinkedIn · Praveen Kumar Kalwagadda 3.7K+ followers Bengaluru, Karnataka, India · Chief Information Officer · ToneTag Experience · ToneTag Graphic. Chief Information Officer · Cashfree Payments Graphic. Vice President of Engineering · LeadSquared Graphic. Senior Vice President. Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Anshuman Roy",
+      "Designation": "Manager",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/anshuman-roy/",
+      "Source": "google_browser",
+      "Evidence": "Anshuman Roy - Manager LinkedIn · Anshuman Roy 2.5K+ followers Anshuman Roy - Manager LinkedIn · Anshuman Roy 2.5K+ followers LinkedIn · Anshuman Roy 2.5K+ followers Bengaluru, Karnataka, India · Manager - Farming · Cashfree Payments Currently, I manage an Account Management (Farming) team at Cashfree Payments , managing a merchant portfolio exceeding ₹4000 crore in yearly payment volume. My ... Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Vaibhav Mehrotra",
+      "Designation": "Senior Director Marketing",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/vaibhavmehrotra/",
+      "Source": "google_browser",
+      "Evidence": "Vaibhav Mehrotra - Senior Director Marketing LinkedIn · Vaibhav Mehrotra 16.6K+ followers Vaibhav Mehrotra - Senior Director Marketing LinkedIn · Vaibhav Mehrotra 16.6K+ followers LinkedIn · Vaibhav Mehrotra 16.6K+ followers Cashfree Payments Graphic. Senior Director of Marketing. Cashfree Payments . Apr 2021 - Sep 2024 3 years 6 months. Bengaluru, Karnataka, India. Head, Sr. Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Siddanth Dhar",
+      "Designation": "Global Payments Specialist",
+      "Company": "Cashfree",
+      "LinkedIn URL": "https://www.linkedin.com/in/siddanth-dhar-1a6a753a/",
+      "Source": "google_browser",
+      "Evidence": "Siddanth Dhar - Global Payments Specialist at Cashfree Siddanth Dhar - Global Payments Specialist at Cashfree ... LinkedIn · Siddanth Dhar 4.2K+ followers LinkedIn · Siddanth Dhar 4.2K+ followers Gurgaon, Haryana, India · Associate Director - CrossBorder Payments · Cashfree Payments Siddanth Dhar. Global Payments Specialist at Cashfree Payments | ex Razorpay | ex NPCI | Digital Payments Enthusiast | B2B SaaS. Cashfree Payments Savitribai ... Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CIO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sujith Surendran",
+      "Designation": "CTO",
+      "Company": "Tazapay",
+      "LinkedIn URL": "https://www.linkedin.com/in/sujithsurendran/",
+      "Source": "google_browser",
+      "Evidence": "Sujith Surendran - CTO at Tazapay | Ex Cashfree Sujith Surendran - CTO at Tazapay | Ex Cashfree ... LinkedIn · Sujith Surendran 6K+ followers LinkedIn · Sujith Surendran 6K+ followers Bengaluru, Karnataka, India · Chief Technology Officer · Tazapay Experience · Tazapay Graphic. Chief Technology Officer . Tazapay. Aug 2025 - Present 1 year 1 month · Cashfree Payments . 3 years 2 months · Cashfree Payments ... Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Pragalathan M",
+      "Designation": "Startup Advisor & Technology Leader",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/pragalathanm/",
+      "Source": "google_browser",
+      "Evidence": "Pragalathan M - Startup Advisor & Technology Leader LinkedIn · Pragalathan M 1.2K+ followers Pragalathan M - Startup Advisor & Technology Leader LinkedIn · Pragalathan M 1.2K+ followers LinkedIn · Pragalathan M 1.2K+ followers Chennai, Tamil Nadu, India · Consulting Engagements · Startups Director of Engineering (Platform) & CISO. Cashfree Payments . Apr 2024 ; Director Of Engineering. Cashfree Payments . Apr 2022 ; Senior Principal Software Engineer. Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Nitin Pulyani",
+      "Designation": "SVP and Head of Product@Cashfree",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/nitinpulyani/",
+      "Source": "google_browser",
+      "Evidence": "Nitin Pulyani - SVP and Head of Product@Cashfree Nitin Pulyani - SVP and Head of Product@Cashfree ... LinkedIn · Nitin Pulyani 15.7K+ followers LinkedIn · Nitin Pulyani 15.7K+ followers Bengaluru, Karnataka, India · Senior Vice President Product Management · Cashfree Payments Nitin Pulyani. SVP and Head of Product@ Cashfree Payments | Fintech | B2B | B2C | Helping people and companies build and scale beautiful products ... Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Anand Singh",
+      "Designation": "Cashfree Payments",
+      "Company": "Cashfree Payments",
+      "LinkedIn URL": "https://www.linkedin.com/in/anand-singh-033045b/",
+      "Source": "google_browser",
+      "Evidence": "Anand Singh - Cashfree Payments LinkedIn · Anand Singh 8.8K+ followers Anand Singh - Cashfree Payments LinkedIn · Anand Singh 8.8K+ followers LinkedIn · Anand Singh 8.8K+ followers I build businesses. Not just manage them build them. Over 22 years across Payments… · Experience: Cashfree Payments · Education: ICFAI Business School ...",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CTO",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Sachin Kumar",
+      "Designation": "Building neesac.ai | AI & Data Science",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/sachin-kumar-64109617/",
+      "Source": "google_browser",
+      "Evidence": "Sachin Kumar - Building neesac.ai | AI & Data Science LinkedIn · Sachin Kumar 4.2K+ followers Sachin Kumar - Building neesac.ai | AI & Data Science LinkedIn · Sachin Kumar 4.2K+ followers LinkedIn · Sachin Kumar 4.2K+ followers Bengaluru, Karnataka, India · Co-Founder & CTO · neesac.ai Building neesac.ai | AI & Data Science | Ex Cashfree Payments ... Co-Founder & CTO . neesac.ai. May 2025 - Present 1 year 3 months. Bengaluru, Karnataka, India. Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Harsh Gupta",
+      "Designation": "CBO, Cashfree | SVP, Razorpay | PayU | E&Y",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/harsh-gupta-47985327/",
+      "Source": "google_browser",
+      "Evidence": "Harsh Gupta - CBO, Cashfree | SVP, Razorpay | PayU | E&Y LinkedIn · Harsh Gupta 10.5K+ followers Harsh Gupta - CBO, Cashfree | SVP, Razorpay | PayU | E&Y LinkedIn · Harsh Gupta 10.5K+ followers LinkedIn · Harsh Gupta 10.5K+ followers Gurgaon, Haryana, India · Chief Business Officer · Cashfree Payments Cashfree Payments Graphic. Chief Business Officer. Cashfree Payments . May 2024 - Present 2 years 4 months. - Driving organization growth across Banking Tech ... Read more",
+      "Requested Company": "Cashfree Payments",
+      "Requested Designation": "CTO",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    }
+  ],
+  "errors": [
+    "ddgs: DDGS failed for query: No results found.",
+    "google_browser: google_browser challenge detected; this source is disabled for the current job"
+  ],
+  "source_errors": [
+    "ddgs: DDGS failed for query: No results found.",
+    "google_browser: google_browser challenge detected; this source is disabled for the current job"
+  ],
+  "retry_queue": [
+    {
+      "task_index": 0,
+      "company": "PayU",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"PayU\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 1,
+      "company": "PayU",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"PayU\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 2,
+      "company": "NABARD",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"NABARD\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 3,
+      "company": "NABARD",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"NABARD\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 4,
+      "company": "BharatPe",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"BharatPe\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 5,
+      "company": "BharatPe",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"BharatPe\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 6,
+      "company": "Citi",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Citi\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 7,
+      "company": "Citi",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Citi\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 8,
+      "company": "Digio / CoTrust",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Digio / CoTrust\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 9,
+      "company": "Digio / CoTrust",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Digio / CoTrust\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 10,
+      "company": "Navi",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Navi\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 11,
+      "company": "Navi",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Navi\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 12,
+      "company": "Zoho",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Zoho\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 13,
+      "company": "Zoho",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Zoho\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 14,
+      "company": "Bureau",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Bureau\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 15,
+      "company": "Bureau",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Bureau\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 16,
+      "company": "Paramotor",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Paramotor\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 17,
+      "company": "Paramotor",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Paramotor\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 18,
+      "company": "Cashfree Payments",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Cashfree Payments\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 19,
+      "company": "Cashfree Payments",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Cashfree Payments\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 20,
+      "company": "DCB Bank",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"DCB Bank\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 20,
+      "company": "DCB Bank",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"DCB Bank\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 21,
+      "company": "DCB Bank",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"DCB Bank\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 21,
+      "company": "DCB Bank",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"DCB Bank\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 22,
+      "company": "CRIF",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"CRIF\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 22,
+      "company": "CRIF",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"CRIF\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 23,
+      "company": "CRIF",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"CRIF\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 23,
+      "company": "CRIF",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"CRIF\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 24,
+      "company": "Union Bank of India",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Union Bank of India\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 24,
+      "company": "Union Bank of India",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Union Bank of India\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 25,
+      "company": "Union Bank of India",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Union Bank of India\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 25,
+      "company": "Union Bank of India",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Union Bank of India\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 26,
+      "company": "Juspay",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Juspay\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 26,
+      "company": "Juspay",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Juspay\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 27,
+      "company": "Juspay",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Juspay\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 27,
+      "company": "Juspay",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Juspay\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 28,
+      "company": "Data Sutram",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Data Sutram\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 28,
+      "company": "Data Sutram",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Data Sutram\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 29,
+      "company": "Data Sutram",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Data Sutram\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 29,
+      "company": "Data Sutram",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Data Sutram\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 30,
+      "company": "LEI Now",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"LEI Now\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 30,
+      "company": "LEI Now",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"LEI Now\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 31,
+      "company": "LEI Now",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"LEI Now\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 31,
+      "company": "LEI Now",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"LEI Now\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 32,
+      "company": "Pinnacle Teleservices",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Pinnacle Teleservices\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 32,
+      "company": "Pinnacle Teleservices",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Pinnacle Teleservices\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 33,
+      "company": "Pinnacle Teleservices",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Pinnacle Teleservices\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 33,
+      "company": "Pinnacle Teleservices",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Pinnacle Teleservices\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 34,
+      "company": "Jio Finance",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Jio Finance\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 34,
+      "company": "Jio Finance",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Jio Finance\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 35,
+      "company": "Jio Finance",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Jio Finance\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 35,
+      "company": "Jio Finance",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Jio Finance\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 36,
+      "company": "Indian Bank",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Indian Bank\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 36,
+      "company": "Indian Bank",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Indian Bank\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 37,
+      "company": "Indian Bank",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Indian Bank\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 37,
+      "company": "Indian Bank",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Indian Bank\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 38,
+      "company": "Unlimit",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Unlimit\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 38,
+      "company": "Unlimit",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Unlimit\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 39,
+      "company": "Unlimit",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Unlimit\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 39,
+      "company": "Unlimit",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"Unlimit\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 40,
+      "company": "DreamFolks",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"DreamFolks\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 40,
+      "company": "DreamFolks",
+      "designation": "CIO",
+      "location": "",
+      "query": "site:linkedin.com/in \"DreamFolks\" (CIO OR \"Chief Information Officer\" OR \"Chief Information & Digital Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    },
+    {
+      "task_index": 41,
+      "company": "DreamFolks",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"DreamFolks\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "google_browser",
+      "attempted_sources": [
+        "google_browser",
+        "ddgs"
+      ],
+      "attempts": 1,
+      "reason": "DDGS failed for query: No results found.",
+      "challenge": true
+    },
+    {
+      "task_index": 41,
+      "company": "DreamFolks",
+      "designation": "CTO",
+      "location": "",
+      "query": "site:linkedin.com/in \"DreamFolks\" (CTO OR \"Chief Technology Officer\" OR \"Chief Technical Officer\")",
+      "failed_source": "ddgs",
+      "attempted_sources": [
+        "ddgs",
+        "google_browser"
+      ],
+      "attempts": 1,
+      "reason": "google_browser challenge detected; this source is disabled for the current job",
+      "challenge": true
+    }
+  ],
+  "provider_outcomes": {
+    "google_browser": {
+      "attempts": 84,
+      "successful_searches": 20,
+      "empty_searches": 0,
+      "errors": 64,
+      "challenges": 64,
+      "results": 200
+    },
+    "ddgs": {
+      "attempts": 64,
+      "successful_searches": 0,
+      "empty_searches": 0,
+      "errors": 64,
+      "challenges": 0,
+      "results": 0
+    }
+  },
+  "captcha_required": true,
+  "warning_state": "completed_with_warnings"
+}
