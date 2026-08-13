@@ -33,6 +33,20 @@ def test_ddgs_provider_block_is_classified_as_challenge(monkeypatch):
     assert caught.value.disable_source is True
 
 
+def test_ddgs_no_results_are_not_recorded_as_provider_errors(monkeypatch):
+    class EmptyDDGS:
+        def __init__(self, **_options):
+            pass
+
+        def text(self, _query, **_options):
+            raise RuntimeError("No results found.")
+
+    monkeypatch.setitem(sys.modules, "ddgs", SimpleNamespace(DDGS=EmptyDDGS))
+    source = DdgsSource(backends=("brave", "yahoo"))
+
+    assert source.search("site:linkedin.com/in \"Example Bank\" CTO", max_results=10) == []
+
+
 def test_browser_html_parser_extracts_linkedin_cards():
     html = """
     <html><body>

@@ -377,7 +377,11 @@ def job_monitor() -> None:
     c1, c2, c3 = st.columns(3)
     c1.metric("Matched POCs", len(pocs))
     c2.metric("Searches complete", searches_completed or processed)
-    c3.metric("Searches remaining", max((searches_total or total) - (searches_completed or processed), 0))
+    recovery_queue = int(
+        status.get("failed_searches")
+        or len(checkpoint.get("retry_queue") or [])
+    )
+    c3.metric("Recovery queue", recovery_queue)
 
     verified_tab, review_tab, health_tab = st.tabs(
         ["Verified POCs", "Review queue", "Provider health"]

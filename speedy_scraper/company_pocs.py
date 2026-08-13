@@ -38,6 +38,7 @@ from speedy_scraper.validator import (
 COMPLETED_WITH_WARNINGS = "completed_with_warnings"
 DEFAULT_RETRY_ATTEMPTS = 2
 REVIEWABLE_REASONS = {"company_mismatch", "designation_mismatch", "invalid_name"}
+DEFAULT_QUERY_EXCLUDES = ("jobs", "hiring", "recruiter", "recruitment", "careers")
 
 
 @dataclass(frozen=True)
@@ -83,13 +84,17 @@ def build_company_poc_tasks(
                 role_clause = or_group(_role_aliases(designation))
                 loc_clause = f' "{_safe_quote(loc)}"' if loc else ""
                 include_clause = " ".join(f'"{_safe_quote(term)}"' for term in unique_terms(include_terms or []))
-                exclude_clause = " ".join(f'-"{_safe_quote(term)}"' for term in unique_terms(exclude_terms or []))
+                excludes = unique_terms([*DEFAULT_QUERY_EXCLUDES, *(exclude_terms or [])])
+                exclude_clause = " ".join(f'-"{_safe_quote(term)}"' for term in excludes)
                 base_tasks.append(
                     {
                         "company": company,
                         "designation": designation,
                         "location": loc,
-                        "query": f'site:linkedin.com/in "{_safe_quote(company)}" {role_clause}{loc_clause} {include_clause} {exclude_clause}'.strip(),
+                        "query": (
+                            f'site:linkedin.com/in "{_safe_quote(company)}" '
+                            f'{role_clause}{loc_clause} {include_clause} {exclude_clause}'
+                        ).strip(),
                     }
                 )
     passes = max(1, min(int(query_passes or 1), 8))
@@ -182,6 +187,7 @@ def run_company_poc_job(
         dict(item) for item in checkpoint.get("retry_queue", [])
         if isinstance(item, dict)
     ] if checkpoint else []
+    retry_queue = _coalesce_retry_queue(retry_queue)
     if config.get("retry_failed_searches") and not retry_queue and source_errors:
         # Migrate pre-v2 completed jobs that only stored provider errors. Their
         # exact failed cursor was not persisted, so replay each task once through
@@ -217,6 +223,8 @@ def run_company_poc_job(
     seen_people = {f"{normalize_text(poc.name)}|{normalize_text(poc.company)}" for poc in pocs}
     seen_people |= existing_people
     captcha_required = bool(checkpoint.get("captcha_required")) if checkpoint else False
+    disabled_sources: set[str] = set()
+    successful_task_keys: set[tuple[int, str]] = set()
     try:
         _write_poc_status(
             path,
@@ -280,6 +288,37 @@ def run_company_poc_job(
                 retry_count=sum(int(item.get("attempts") or 0) for item in retry_queue),
                 failed_searches=len(retry_queue),
             )
+            task_key = _retry_key(task_index, task)
+            if source.name in disabled_sources:
+                # A challenged browser provider is disabled for the rest of this
+                # run. Do not repeatedly hit the same blocked session for every
+                # company/role pair; retain one company-scoped recovery item.
+                if task_key not in successful_task_keys:
+                    retry_queue = _upsert_retry(
+                        retry_queue,
+                        task_index=task_index,
+                        task=task,
+                        failed_source=source.name,
+                        reason=f"{source.name} was disabled after a provider challenge",
+                        challenge=True,
+                    )
+                source_index += 1
+                if source_index >= len(sources):
+                    source_index = 0
+                    task_index += 1
+                _save_poc_checkpoint(
+                    checkpoint_path,
+                    pocs,
+                    rejections,
+                    errors,
+                    task_index,
+                    source_index,
+                    retry_queue=retry_queue,
+                    provider_outcomes=provider_outcomes,
+                    source_errors=source_errors,
+                    captcha_required=captcha_required,
+                )
+                continue
             try:
                 results = []
                 with JobHeartbeat(
@@ -298,6 +337,9 @@ def run_company_poc_job(
                     result_count=len(results),
                     empty=not results,
                 )
+                if results:
+                    successful_task_keys.add(task_key)
+                    retry_queue = _remove_retry_for_task(retry_queue, task_key)
             except SourceError as exc:
                 message = f"{source.name}: {exc}"
                 if message not in errors:
@@ -306,6 +348,8 @@ def run_company_poc_job(
                     source_errors.append(message)
                 results = []
                 captcha_required = captcha_required or exc.challenge
+                if exc.disable_source:
+                    disabled_sources.add(source.name)
                 _record_provider_outcome(
                     provider_outcomes,
                     source.name,
@@ -313,14 +357,15 @@ def run_company_poc_job(
                     error=True,
                     challenge=exc.challenge,
                 )
-                retry_queue = _upsert_retry(
-                    retry_queue,
-                    task_index=task_index,
-                    task=task,
-                    failed_source=source.name,
-                    reason=str(exc),
-                    challenge=exc.challenge,
-                )
+                if task_key not in successful_task_keys:
+                    retry_queue = _upsert_retry(
+                        retry_queue,
+                        task_index=task_index,
+                        task=task,
+                        failed_source=source.name,
+                        reason=str(exc),
+                        challenge=exc.challenge,
+                    )
                 update_status(
                     path,
                     source_errors=source_errors,
@@ -515,13 +560,9 @@ def _upsert_retry(
     reason: str,
     challenge: bool,
 ) -> list[dict[str, Any]]:
-    key = (int(task_index), str(failed_source), str(task.get("query") or ""))
+    key = _retry_key(task_index, task)
     for item in queue:
-        item_key = (
-            int(item.get("task_index") or 0),
-            str(item.get("failed_source") or ""),
-            str(item.get("query") or ""),
-        )
+        item_key = _retry_key(int(item.get("task_index") or 0), item)
         if item_key == key:
             item["reason"] = reason
             item["challenge"] = bool(item.get("challenge") or challenge)
@@ -529,6 +570,11 @@ def _upsert_retry(
             if failed_source not in attempted:
                 attempted.append(failed_source)
             item["attempted_sources"] = attempted
+            failed_sources = [str(value) for value in item.get("failed_sources") or []]
+            if failed_source not in failed_sources:
+                failed_sources.append(failed_source)
+            item["failed_sources"] = failed_sources
+            item["failed_source"] = failed_source
             return queue
     queue.append(
         {
@@ -538,6 +584,7 @@ def _upsert_retry(
             "location": str(task.get("location") or ""),
             "query": str(task.get("query") or ""),
             "failed_source": failed_source,
+            "failed_sources": [failed_source],
             "attempted_sources": [failed_source],
             "attempts": 0,
             "reason": reason,
@@ -545,6 +592,57 @@ def _upsert_retry(
         }
     )
     return queue
+
+
+def _retry_key(task_index: int, task: dict[str, Any]) -> tuple[int, str]:
+    return int(task_index), str(task.get("query") or "")
+
+
+def _coalesce_retry_queue(queue: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Merge legacy provider-scoped entries into one company-scoped retry item."""
+    merged: dict[tuple[int, str], dict[str, Any]] = {}
+    order: list[tuple[int, str]] = []
+    for raw in queue:
+        item = dict(raw)
+        key = _retry_key(int(item.get("task_index") or 0), item)
+        current = merged.get(key)
+        if current is None:
+            item["attempted_sources"] = [
+                str(value) for value in item.get("attempted_sources") or [] if str(value)
+            ]
+            failed_sources = [
+                str(value) for value in item.get("failed_sources") or [] if str(value)
+            ]
+            if item.get("failed_source") and str(item["failed_source"]) not in failed_sources:
+                failed_sources.append(str(item["failed_source"]))
+            item["failed_sources"] = failed_sources
+            merged[key] = item
+            order.append(key)
+            continue
+        attempted = [str(value) for value in current.get("attempted_sources") or []]
+        for value in item.get("attempted_sources") or []:
+            if str(value) and str(value) not in attempted:
+                attempted.append(str(value))
+        failed_sources = [str(value) for value in current.get("failed_sources") or []]
+        for value in [*(item.get("failed_sources") or []), item.get("failed_source")]:
+            if str(value) and str(value) not in failed_sources:
+                failed_sources.append(str(value))
+        current["attempted_sources"] = attempted
+        current["failed_sources"] = failed_sources
+        current["failed_source"] = str(item.get("failed_source") or current.get("failed_source") or "")
+        current["reason"] = str(item.get("reason") or current.get("reason") or "")
+        current["challenge"] = bool(current.get("challenge") or item.get("challenge"))
+        current["attempts"] = max(int(current.get("attempts") or 0), int(item.get("attempts") or 0))
+    return [merged[key] for key in order]
+
+
+def _remove_retry_for_task(
+    queue: list[dict[str, Any]], key: tuple[int, str]
+) -> list[dict[str, Any]]:
+    return [
+        item for item in queue
+        if _retry_key(int(item.get("task_index") or 0), item) != key
+    ]
 
 
 def _consume_results(

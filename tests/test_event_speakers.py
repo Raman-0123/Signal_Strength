@@ -8,6 +8,7 @@ from speedy_scraper.event_speakers import (
     choose_speaker_match,
     extract_event_speakers,
     extract_people_records,
+    speaker_queries,
     speakers_frame,
     validate_public_source_url,
 )
@@ -114,6 +115,28 @@ def test_extracts_visible_linkedin_profile_links_from_generic_html():
     assert speakers[0].name == "Nisha Menon"
     assert speakers[0].designation == "VP Customer Success"
     assert speakers[0].company == "Razorpay"
+
+
+def test_speaker_queries_start_with_company_and_designation_scoped_profile_search():
+    speaker = EventSpeaker(
+        speaker_id="1",
+        name="Asha Rao",
+        designation="Chief Technology Officer",
+        company="Razorpay",
+        country="India",
+        linkedin_url="",
+        match_status="not_found",
+        confidence=0.0,
+        match_evidence="",
+        source_url="https://example.com/speakers",
+    )
+
+    queries = speaker_queries(speaker)
+
+    assert queries[0].startswith('site:linkedin.com/in "Asha Rao" "Razorpay"')
+    assert '"Chief Technology Officer"' in queries[0]
+    assert '-"jobs"' in queries[0]
+    assert '-"recruiter"' in queries[0]
 
 
 def test_chooses_confident_public_search_match():

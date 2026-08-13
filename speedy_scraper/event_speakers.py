@@ -311,19 +311,41 @@ def speaker_queries(
 ) -> list[str]:
     name_unquoted = clean_spaces(speaker.name)
     name_quoted = _quote(speaker.name)
-    queries = []
-    
-    include_clause = " ".join(_quote(term) for term in (include_terms or []) if clean_spaces(term))
-    exclude_clause = " ".join(f'-{_quote(term)}' for term in (exclude_terms or []) if clean_spaces(term))
-    
-    # Try unquoted name first for max recall (Google handles names well), then fallback to quoted
-    for name in [name_unquoted, name_quoted]:
-        if speaker.company:
-            queries.append(f"site:linkedin.com/in {name} {_quote(speaker.company)}")
-        if speaker.designation:
-            queries.append(f"site:linkedin.com/in {name} {_quote(speaker.designation)}")
-        queries.append(f"site:linkedin.com/in {name} {include_clause} {exclude_clause}".strip())
-    return list(dict.fromkeys(queries))
+    queries: list[str] = []
+    include_clause = " ".join(
+        _quote(term) for term in (include_terms or []) if clean_spaces(term)
+    )
+    default_excludes = ("jobs", "hiring", "recruiter", "recruitment", "careers")
+    excludes = list(dict.fromkeys([*default_excludes, *(exclude_terms or [])]))
+    exclude_clause = " ".join(
+        f'-{_quote(term)}' for term in excludes if clean_spaces(term)
+    )
+    company_clause = _quote(speaker.company) if speaker.company else ""
+    designation_clause = _quote(speaker.designation) if speaker.designation else ""
+
+    # Keep the first browser searches highly selective: the speaker name,
+    # company and designation together identify the intended person page. The
+    # later variants recover profiles whose Google snippet omits one field.
+    for name in [name_quoted, name_unquoted]:
+        if company_clause and designation_clause:
+            queries.append(
+                f"site:linkedin.com/in {name} {company_clause} {designation_clause} "
+                f"{include_clause} {exclude_clause}"
+            )
+        if company_clause:
+            queries.append(
+                f"site:linkedin.com/in {name} {company_clause} "
+                f"{include_clause} {exclude_clause}"
+            )
+        if designation_clause:
+            queries.append(
+                f"site:linkedin.com/in {name} {designation_clause} "
+                f"{include_clause} {exclude_clause}"
+            )
+        queries.append(
+            f"site:linkedin.com/in {name} {include_clause} {exclude_clause}"
+        )
+    return list(dict.fromkeys(" ".join(query.split()) for query in queries if query.strip()))
 
 
 def choose_speaker_match(speaker: EventSpeaker, results: Iterable[SearchResult]) -> EventSpeaker:

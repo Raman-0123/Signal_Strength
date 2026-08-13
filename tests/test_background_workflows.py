@@ -160,6 +160,19 @@ def test_company_poc_query_passes_expand_search_plan_for_user_selected_depth():
     assert len({task["query"] for task in tasks}) == 3
 
 
+def test_company_poc_query_is_company_scoped_and_excludes_directory_noise():
+    task = build_company_poc_tasks(
+        ["Example Bank"], ["VP Marketing"], ["Singapore"], include_terms=["payments"]
+    )[0]
+
+    assert '"Example Bank"' in task["query"]
+    assert '("VP Marketing" OR "Vice President Marketing"' in task["query"]
+    assert '"Singapore"' in task["query"]
+    assert '"payments"' in task["query"]
+    assert '-"jobs"' in task["query"]
+    assert '-"recruiter"' in task["query"]
+
+
 class WrongRoleSource:
     name = "fake"
 
@@ -277,6 +290,59 @@ def test_company_poc_retries_ddg_failure_with_google_and_keeps_warning_telemetry
     assert status["provider_outcomes"]["ddgs"]["challenges"] >= 1
     assert status["provider_outcomes"]["google_browser"]["results"] >= 1
     assert status["failed_searches"] == 0
+
+
+class CountingDisabledGoogle:
+    name = "google_browser"
+
+    def __init__(self):
+        self.calls = 0
+
+    def search(self, query, *, max_results, headless=True):
+        self.calls += 1
+        raise SourceError("Google challenge", disable_source=True, challenge=True)
+
+
+class CompanyScopedSuccess:
+    name = "ddgs"
+
+    def __init__(self):
+        self.calls = 0
+
+    def search(self, query, *, max_results, headless=True):
+        self.calls += 1
+        company = "Razorpay" if "Razorpay" in query else "PhonePe"
+        slug = company.lower()
+        return [
+            SearchResult(
+                title=f"Asha Rao - CTO - {company} | LinkedIn",
+                body=f"Asha Rao is Chief Technology Officer at {company}.",
+                href=f"https://www.linkedin.com/in/{slug}/",
+                source="ddgs",
+                query=query,
+            )
+        ]
+
+
+def test_disabled_browser_provider_is_not_retried_for_every_company(tmp_path: Path):
+    job_dir = create_job(
+        "company_pocs",
+        {
+            "companies": ["Razorpay", "PhonePe"],
+            "designations": ["CTO"],
+            "sources": ["google_browser", "ddgs"],
+            "target_count": 10,
+        },
+        jobs_root=tmp_path,
+    )
+    google = CountingDisabledGoogle()
+    ddgs = CompanyScopedSuccess()
+
+    run_company_poc_job(job_dir, source_builder=lambda _names: [google, ddgs])
+
+    assert google.calls == 1
+    assert ddgs.calls == 2
+    assert read_status(job_dir)["failed_searches"] == 0
 
 
 class AlwaysFailSource:

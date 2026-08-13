@@ -201,6 +201,11 @@ class DdgsSource(SearchSource):
                 last_error = exc
         if last_error is None:
             return []
+        # DDGS uses an exception for a normal zero-hit response on some
+        # backends. Treat that as an empty company/role page, not provider
+        # failure, otherwise every no-hit query becomes a recovery item.
+        if _looks_like_no_results(last_error):
+            return []
         raise SourceError(
             f"DDGS failed for query: {last_error}",
             disable_source=_looks_like_provider_challenge(last_error),
@@ -674,6 +679,19 @@ def _looks_like_provider_challenge(error: object) -> bool:
             "403",
             "blocked",
             "forbidden",
+        )
+    )
+
+
+def _looks_like_no_results(error: object) -> bool:
+    text = str(error or "").lower()
+    return any(
+        marker in text
+        for marker in (
+            "no results found",
+            "no results",
+            "no search results",
+            "nothing found",
         )
     )
 
