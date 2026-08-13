@@ -13,5 +13,6 @@ data/*.db-shm
 data/*.db-wal
 data/logs/
 data/browser_profiles/
+config/ui_preferences.json
 dist/
 build/

@@ -1,0 +1,50 @@
+{
+  "state": "completed_with_warnings",
+  "workflow": "company_pocs",
+  "job_id": "20260813T075404Z_7a2a9ede",
+  "message": "Completed with warnings: 0 matched POCs; 29 searches still need recovery",
+  "processed": 96,
+  "total": 96,
+  "updated_at": "2026-08-13T07:57:38.039950+00:00",
+  "pid": 30968,
+  "matched": 0,
+  "searches_completed": 192,
+  "searches_total": 192,
+  "provider_outcomes": {
+    "google_browser": {
+      "attempts": 13,
+      "successful_searches": 0,
+      "empty_searches": 12,
+      "errors": 1,
+      "challenges": 1,
+      "results": 0
+    },
+    "ddgs": {
+      "attempts": 125,
+      "successful_searches": 67,
+      "empty_searches": 58,
+      "errors": 0,
+      "challenges": 0,
+      "results": 470
+    }
+  },
+  "retry_count": 29,
+  "failed_searches": 29,
+  "current_company": "Trust Bank",
+  "current_designation": "Director of Marketing",
+  "current_source": "ddgs",
+  "current_query": "site:linkedin.com/in \"Trust Bank\" (\"Director of Marketing\" OR \"Marketing Director\" OR \"Director Marketing\" OR \"Senior Director Marketing\" OR \"Senior Director of Marketing\") \"Singapore\" -\"jobs\" -\"hiring\" -\"recruiter\" -\"recruitment\" -\"careers\" intitle:\"Director of Marketing\"",
+  "heartbeat_at": "2026-08-13T07:57:36.995776+00:00",
+  "heartbeat_tick": 0,
+  "activity": "Retrying a failed public search",
+  "captcha_required": true,
+  "captcha_source": "ddgs",
+  "source_errors": [
+    "google_browser: google_browser challenge detected; this source is disabled for the current job"
+  ],
+  "fallback_recommended": true,
+  "csv_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260813T075404Z_7a2a9ede/Company_Designation_POCs.csv",
+  "xlsx_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260813T075404Z_7a2a9ede/Company_Designation_POCs.xlsx",
+  "manual_recovery_available": true,
+  "cloud_manual_recovery": false
+}

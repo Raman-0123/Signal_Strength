@@ -25,6 +25,11 @@ from speedy_scraper.company_pocs import (
     load_company_poc_checkpoint,
 )
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES
+from speedy_scraper.preferences import (
+    POC_RESULT_COLUMNS,
+    load_poc_result_columns,
+    save_poc_result_columns,
+)
 from speedy_scraper.ui import (
     action_button_css,
     captcha_recovery_panel,
@@ -153,6 +158,26 @@ with st.form("company_poc_form"):
 
 if "company_poc_job_dir" not in st.session_state:
     st.session_state.company_poc_job_dir = ""
+
+POC_COLUMNS_SESSION_KEY = "company_poc_visible_columns"
+POC_COLUMNS_SAVED_SESSION_KEY = "company_poc_saved_columns"
+
+
+def _saved_poc_result_columns() -> list[str]:
+    if POC_COLUMNS_SAVED_SESSION_KEY not in st.session_state:
+        st.session_state[POC_COLUMNS_SAVED_SESSION_KEY] = load_poc_result_columns()
+    if POC_COLUMNS_SESSION_KEY not in st.session_state:
+        st.session_state[POC_COLUMNS_SESSION_KEY] = list(
+            st.session_state[POC_COLUMNS_SAVED_SESSION_KEY]
+        )
+    return list(st.session_state[POC_COLUMNS_SAVED_SESSION_KEY])
+
+
+def _persist_poc_result_columns(columns: list[str]) -> None:
+    if not columns:
+        return
+    normalized = save_poc_result_columns(columns)
+    st.session_state[POC_COLUMNS_SAVED_SESSION_KEY] = normalized
 
 
 def _lines(value: str) -> list[str]:
@@ -388,7 +413,35 @@ def job_monitor() -> None:
     )
     with verified_tab:
         if pocs:
-            st.dataframe(company_pocs_frame(pocs), width="stretch", hide_index=True)
+            visible_columns = _saved_poc_result_columns()
+            selected_columns = st.multiselect(
+                "Visible POC columns",
+                options=list(POC_RESULT_COLUMNS),
+                key=POC_COLUMNS_SESSION_KEY,
+                help=(
+                    "This view is saved automatically and reused the next time you generate "
+                    "or open POCs. Downloads still include every export column."
+                ),
+            )
+            if selected_columns:
+                normalized_columns = [
+                    column for column in POC_RESULT_COLUMNS if column in selected_columns
+                ]
+                if normalized_columns != visible_columns:
+                    _persist_poc_result_columns(normalized_columns)
+                st.caption(
+                    f"Saved automatically · showing {len(normalized_columns)} of "
+                    f"{len(POC_RESULT_COLUMNS)} columns"
+                )
+            else:
+                normalized_columns = visible_columns
+                st.warning("Keep at least one column selected to display your POCs.")
+            frame = company_pocs_frame(pocs)
+            st.dataframe(
+                frame.loc[:, normalized_columns],
+                width="stretch",
+                hide_index=True,
+            )
         else:
             st.caption("No verified POCs have cleared the company and designation gates yet.")
     with review_tab:
