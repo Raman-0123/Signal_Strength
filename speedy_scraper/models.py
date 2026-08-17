@@ -75,7 +75,7 @@ class ScrapeConfig:
     max_pages_per_query: int = 2
     candidate_pool_multiplier: int = 4
     browser_headless: bool = True
-    google_manual_challenge_seconds: int = 180
+    google_manual_challenge_seconds: int = 60
     require_target_company: bool = False
     minimum_confidence: int = 85
     minimum_sources: int = 1

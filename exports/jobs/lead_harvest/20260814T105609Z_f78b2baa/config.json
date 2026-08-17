@@ -1,0 +1,43 @@
+{
+  "ui_version": "google_only_v1",
+  "target_count": 400,
+  "business_model": "Any",
+  "roles": [
+    "VP Marketing",
+    "Head of Marketing",
+    "Director of Marketing",
+    "Customer Success Leader"
+  ],
+  "locations": [
+    "Bengaluru"
+  ],
+  "industries": [
+    "it",
+    "SaaS",
+    "real estate",
+    "B2B Software",
+    "FinTech",
+    "InsurTech"
+  ],
+  "company_names": [],
+  "sources": [
+    "google_browser"
+  ],
+  "max_queries": 23,
+  "max_results_per_query": 50,
+  "max_pages_per_query": 5,
+  "source_failure_limit": 1,
+  "candidate_pool_multiplier": 2,
+  "browser_headless": false,
+  "google_manual_challenge_seconds": 60,
+  "require_target_company": false,
+  "minimum_confidence": 70,
+  "minimum_sources": 1,
+  "query_mode": "Balanced",
+  "include_terms": [],
+  "exclude_terms": [],
+  "existing_files": [
+    "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/lead_harvest/20260814T105609Z_f78b2baa/dedupe_inputs/gsheet_1YvORzUOOeB3tGMIVrwKxN2z_AKcaOhMhbCK6tQxvGlQ_0.csv"
+  ],
+  "existing_url_count": 33
+}

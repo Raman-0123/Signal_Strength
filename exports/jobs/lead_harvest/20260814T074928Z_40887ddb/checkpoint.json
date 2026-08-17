@@ -1,0 +1,25 @@
+{
+  "version": 3,
+  "phase": "search",
+  "query_index": 0,
+  "source_index": 0,
+  "page_index": 0,
+  "validation_index": 0,
+  "candidates": [],
+  "leads": [],
+  "rejections": [],
+  "source_errors": [],
+  "failed_searches": [],
+  "metrics": {
+    "source_searches": 1,
+    "google_browser_results": 0,
+    "candidates_found": 0,
+    "rejected": 0
+  },
+  "company_evidence_cache": {},
+  "disabled_sources": [],
+  "exhausted_sources": [],
+  "source_failures": {
+    "google_browser": 0
+  }
+}

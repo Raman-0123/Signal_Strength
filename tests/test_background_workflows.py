@@ -512,11 +512,7 @@ class LeadRecoverySource:
         ]
 
 
-class LeadBingFallbackSource(LeadRecoverySource):
-    name = "bing_browser"
-
-
-def test_lead_google_challenge_adds_bing_fallback_and_continues(tmp_path: Path):
+def test_lead_google_challenge_stops_without_adding_a_fallback(tmp_path: Path):
     job_dir = create_job(
         "lead_harvest",
         {
@@ -531,17 +527,15 @@ def test_lead_google_challenge_adds_bing_fallback_and_continues(tmp_path: Path):
         jobs_root=tmp_path,
     )
 
-    def source_builder(names):
-        return [LeadChallengeSource()] if names == ["google_browser"] else [LeadBingFallbackSource()]
-
-    result = run_lead_job(job_dir, source_builder=source_builder)
+    result = run_lead_job(job_dir, source_builder=lambda _names: [LeadChallengeSource()])
 
     status = read_status(job_dir)
     config = json.loads((job_dir / "config.json").read_text())
-    assert [lead.name for lead in result.leads] == ["Asha Rao"]
+    assert result.leads == []
     assert status["state"] == "completed_with_warnings"
-    assert "bing_browser" in config["sources"]
+    assert config["sources"] == ["google_browser"]
     assert status["failed_searches"] == 1
+    assert result.metrics["source_searches"] == 1
 
 
 def test_lead_warning_recovery_replays_completed_checkpoint(tmp_path: Path):
@@ -576,6 +570,7 @@ def test_lead_warning_recovery_replays_completed_checkpoint(tmp_path: Path):
     assert [lead.name for lead in result.leads] == ["Asha Rao"]
     assert final_status["state"] == "completed"
     assert final_status["failed_searches"] == 0
+    assert result.source_errors == []
 
 
 def test_main_lead_job_checkpoints_search_and_resumes_into_verification(tmp_path: Path):
@@ -690,3 +685,55 @@ def test_main_lead_job_resumes_at_exact_result_page(tmp_path: Path):
 
     assert second.pages == [2]
     assert {lead.name for lead in result.leads} == {"Asha Rao", "Bina Shah"}
+
+
+class MixedLeadQualitySource:
+    name = "fake"
+
+    def search(self, query, *, max_results, headless=True):
+        return [
+            SearchResult(
+                title="Asha Rao - Chief Technology Officer - Razorpay | LinkedIn",
+                body="Location: Bengaluru · payments technology leader.",
+                href="https://www.linkedin.com/in/asha-rao/",
+                source=self.name,
+                query=query,
+            ),
+            SearchResult(
+                title="Bina Shah - Product Manager - PhonePe | LinkedIn",
+                body="Location: Bengaluru · payments product manager.",
+                href="https://www.linkedin.com/in/bina-shah/",
+                source=self.name,
+                query=query,
+            ),
+        ]
+
+
+def test_lead_job_classifies_all_collected_candidates_after_target_is_met(tmp_path: Path):
+    job_dir = create_job(
+        "lead_harvest",
+        {
+            "roles": ["CTO"],
+            "locations": ["Bengaluru"],
+            "industries": [],
+            "company_names": [],
+            "require_target_company": False,
+            "minimum_confidence": 0,
+            "sources": ["fake"],
+            "target_count": 1,
+            "max_queries": 1,
+        },
+        jobs_root=tmp_path,
+    )
+
+    result = run_lead_job(
+        job_dir,
+        source_builder=lambda _names: [MixedLeadQualitySource()],
+    )
+    status = read_status(job_dir)
+
+    assert [lead.name for lead in result.leads] == ["Asha Rao"]
+    assert [item.name for item in result.rejections] == ["Bina Shah"]
+    rejected_csv = Path(status["rejected_csv_path"])
+    assert rejected_csv.is_file()
+    assert "Bina Shah" in rejected_csv.read_text(encoding="utf-8")

@@ -4,6 +4,7 @@ import base64
 import random
 import time
 import urllib.parse
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -241,6 +242,7 @@ class BrowserSearchSource(SearchSource):
         self._headless: bool | None = None
         self._disabled_reason: str | None = None
         self._last_request_started_at: float | None = None
+        self.challenge_callback: Callable[[str, str, int, int], None] | None = None
 
     def search(self, query: str, *, max_results: int, headless: bool = True) -> list[SearchResult]:
         return self.search_page(
@@ -293,8 +295,36 @@ class BrowserSearchSource(SearchSource):
             max_results=page_size,
             result_selectors=self.result_selectors,
         )
+        if not results and self.name == GOOGLE_CHALLENGE_SOURCE and _google_ip_mismatch(html):
+            self._disabled_reason = (
+                "Google challenge detected because the public IP changed during the session; "
+                "disable VPN, proxy, or Private Relay and retry after the network is stable"
+            )
+            self.close()
+            raise SourceError(
+                self._disabled_reason,
+                disable_source=True,
+                challenge=True,
+            )
+        waited_for_manual_challenge = False
         if not results and _challenge_page(html) and not headless and self.manual_challenge_seconds:
-            html = _wait_for_manual_challenge(page_obj, self.manual_challenge_seconds)
+            waited_for_manual_challenge = True
+            if self.challenge_callback is not None:
+                try:
+                    self.challenge_callback(
+                        self.name,
+                        query,
+                        page_number,
+                        self.manual_challenge_seconds,
+                    )
+                except Exception:
+                    pass
+            try:
+                html = _wait_for_manual_challenge(page_obj, self.manual_challenge_seconds)
+            except SourceError as exc:
+                self._disabled_reason = str(exc)
+                self.close()
+                raise
             results = _parse_search_html(
                 html,
                 query=query,
@@ -304,7 +334,10 @@ class BrowserSearchSource(SearchSource):
             )
         if not results and _challenge_page(html):
             self._disabled_reason = (
-                f"{self.name} challenge detected; this source is disabled for the current job"
+                f"{self.name} verification was not completed within "
+                f"{self.manual_challenge_seconds} seconds; retry from the saved Google page"
+                if waited_for_manual_challenge
+                else f"{self.name} challenge detected; retry from the saved Google page"
             )
             self.close()
             raise SourceError(
@@ -320,12 +353,15 @@ class BrowserSearchSource(SearchSource):
 
     def _ensure_page(self, headless: bool):
         if self._page is not None and self._headless == headless:
-            return self._page
+            try:
+                if not self._page.is_closed():
+                    return self._page
+            except (AttributeError, TypeError):
+                return self._page
         self.close()
         stealth_args = [
             "--disable-blink-features=AutomationControlled",
             "--disable-infobars",
-            "--disable-extensions",
             "--no-first-run",
             "--no-default-browser-check",
             "--window-size=1440,900",
@@ -333,17 +369,8 @@ class BrowserSearchSource(SearchSource):
         context_options: dict[str, Any] = {
             "viewport": {"width": 1440, "height": 900},
             "locale": "en-US",
-            "user_agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/126.0.0.0 Safari/537.36"
-            ),
             "extra_http_headers": {
                 "Accept-Language": "en-US,en;q=0.9",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-                "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-                "Sec-Ch-Ua-Mobile": "?0",
-                "Sec-Ch-Ua-Platform": '"macOS"',
             },
         }
         if self.profile_dir is not None:
@@ -392,13 +419,20 @@ class BrowserSearchSource(SearchSource):
                 wait_until="domcontentloaded",
                 timeout=45000,
             )
+        self._accept_google_consent(page_obj)
         query_box = page_obj.locator("textarea[name='q'], input[name='q']").first
         try:
             query_box.wait_for(state="visible", timeout=5000)
         except Exception:
             # Preserve the challenge/consent HTML so the caller can classify it accurately.
             return
-        query_box.fill(query)
+        query_box.click()
+        query_box.fill("")
+        type_query = getattr(query_box, "press_sequentially", None)
+        if callable(type_query):
+            type_query(query, delay=20)
+        else:
+            query_box.fill(query)
         pre_nav_url = str(page_obj.url or "")
         query_box.press("Enter")
         try:
@@ -417,6 +451,23 @@ class BrowserSearchSource(SearchSource):
             wait_for_timeout = getattr(page_obj, "wait_for_timeout", None)
             if callable(wait_for_timeout):
                 wait_for_timeout(800)
+
+    @staticmethod
+    def _accept_google_consent(page_obj: Any) -> None:
+        """Dismiss Google's first-run consent sheet when it is present."""
+        for selector in (
+            "button:has-text('Accept all')",
+            "button:has-text('I agree')",
+            "button[aria-label='Accept all']",
+        ):
+            try:
+                button = page_obj.locator(selector).first
+                if button.is_visible(timeout=300):
+                    button.click()
+                    page_obj.wait_for_timeout(500)
+                    return
+            except Exception:
+                continue
 
     def _wait_for_request_slot(self, page_obj: Any) -> None:
         if self._last_request_started_at is not None:
@@ -506,6 +557,7 @@ def close_sources(sources: list[SearchSource]) -> None:
 def configure_google_challenge_wait(
     sources: list[SearchSource],
     timeout_seconds: int,
+    challenge_callback: Callable[[str, str, int, int], None] | None = None,
 ) -> list[SearchSource]:
     """Enable the opt-in manual recovery window without changing source factories."""
     timeout = max(0, min(300, int(timeout_seconds)))
@@ -514,6 +566,7 @@ def configure_google_challenge_wait(
             source, "manual_challenge_seconds"
         ):
             source.manual_challenge_seconds = timeout
+            source.challenge_callback = challenge_callback
     return sources
 
 
@@ -664,6 +717,17 @@ def _challenge_page(html: str) -> bool:
     return any(marker in text for marker in markers)
 
 
+def _google_ip_mismatch(html: str) -> bool:
+    """Detect Google's unsolvable-in-session public-IP mismatch challenge."""
+    text = BeautifulSoup(html, "html.parser").get_text(" ", strip=True).lower()
+    return "ip address:" in text and (
+        "≠" in text
+        or "does not match" in text
+        or "doesn't match" in text
+        or "different ip" in text
+    )
+
+
 def _looks_like_provider_challenge(error: object) -> bool:
     text = str(error or "").lower()
     return any(
@@ -718,12 +782,31 @@ def _has_next_page(html: str) -> bool:
 
 
 def _wait_for_manual_challenge(page_obj: Any, timeout_seconds: int) -> str:
-    deadline = time.monotonic() + max(1, timeout_seconds)
-    html = _safe_page_content(page_obj)
-    while _challenge_page(html) and time.monotonic() < deadline:
-        page_obj.wait_for_timeout(1000)
+    try:
+        deadline = time.monotonic() + max(1, timeout_seconds)
         html = _safe_page_content(page_obj)
-    return html
+        while _challenge_page(html) and time.monotonic() < deadline:
+            is_closed = getattr(page_obj, "is_closed", None)
+            if callable(is_closed) and is_closed():
+                raise SourceError(
+                    "Google verification window was closed; retry from the saved Google page",
+                    disable_source=True,
+                    challenge=True,
+                )
+            page_obj.wait_for_timeout(500)
+            html = _safe_page_content(page_obj)
+        return html
+    except SourceError:
+        raise
+    except Exception as exc:
+        message = str(exc).lower()
+        if "target page" in message or "target closed" in message or "browser has been closed" in message:
+            raise SourceError(
+                "Google verification window was closed; retry from the saved Google page",
+                disable_source=True,
+                challenge=True,
+            ) from exc
+        raise
 
 
 def _safe_page_content(page_obj: Any, *, retries: int = 3, wait_ms: int = 600) -> str:

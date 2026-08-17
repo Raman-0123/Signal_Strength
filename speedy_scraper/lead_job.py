@@ -14,7 +14,7 @@ from speedy_scraper.background_jobs import (
     write_json,
 )
 from speedy_scraper.config import config_from_mapping
-from speedy_scraper.exports import write_result
+from speedy_scraper.exports import rejections_frame, write_result
 from speedy_scraper.models import (
     RawCandidate,
     RejectedCandidate,
@@ -24,10 +24,9 @@ from speedy_scraper.models import (
     VerifiedLead,
 )
 from speedy_scraper.parser import candidates_from_results, merge_candidates
-from speedy_scraper.pipeline import collect_company_evidence, load_existing_urls, rank_candidates
+from speedy_scraper.pipeline import load_existing_urls, rank_candidates
 from speedy_scraper.query import build_queries
 from speedy_scraper.sources import (
-    DdgsSource,
     SourceError,
     build_sources,
     close_sources,
@@ -107,7 +106,16 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
         for item in checkpoint.get("failed_searches", [])
         if isinstance(item, dict)
     ]
-    if raw_config.get("retry_failed_searches") and source_errors:
+    if raw_config.get("retry_failed_searches"):
+        configured_sources = {str(item) for item in config.sources}
+        failed_searches[:] = [
+            item
+            for item in failed_searches
+            if str(item.get("source") or "") in configured_sources
+            and int(item.get("query_index") or 0) < len(queries)
+            and int(item.get("page") or 1) <= config.max_pages_per_query
+        ]
+        source_errors.clear()
         # A pre-recovery checkpoint did not persist the failed query cursor.
         # Replay from the first known failed query when available; otherwise
         # replay the plan from the beginning while retaining existing leads.
@@ -265,7 +273,9 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
             queries=queries,
             source_errors=source_errors,
         )
-        csv_path, xlsx_path = _write_exports(result, path, config, partial=False)
+        csv_path, rejected_csv_path, xlsx_path = _write_exports(
+            result, path, config, partial=False
+        )
         _save_checkpoint(
             checkpoint_path,
             "completed",
@@ -281,7 +291,8 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
             failed_searches=failed_searches,
         )
         unresolved_challenge = bool(failed_searches) and any(
-            "challenge" in str(item.get("reason") or "").lower()
+            bool(item.get("challenge"))
+            or "challenge" in str(item.get("reason") or "").lower()
             for item in failed_searches
         )
         final_state = "completed_with_warnings" if failed_searches else "completed"
@@ -302,6 +313,7 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
             matched=len(leads),
             rejected=len(rejections),
             csv_path=str(csv_path),
+            rejected_csv_path=str(rejected_csv_path),
             xlsx_path=str(xlsx_path),
             failed_searches=len(failed_searches),
             captcha_required=unresolved_challenge,
@@ -380,6 +392,18 @@ def _run_search_phase(
     sources = configure_google_challenge_wait(
         (source_builder or build_sources)(config.sources),
         config.google_manual_challenge_seconds,
+        challenge_callback=lambda source, query, page, timeout: update_status(
+            path,
+            state="running",
+            phase="search",
+            message=f"Google verification required — complete it within {timeout} seconds",
+            activity="Waiting for manual Google verification",
+            current_source=source,
+            current_query=query,
+            current_page=page,
+            captcha_required=True,
+            captcha_source=source,
+        ),
     )
     if not sources:
         raise ValueError("Select at least one search source")
@@ -400,7 +424,6 @@ def _run_search_phase(
     )
     captcha_required = False
     captcha_source = ""
-    fallback_recommended = False
     completed = (query_index * page_budget + page_index) * len(sources) + source_index
     _lead_status(
         path,
@@ -416,7 +439,11 @@ def _run_search_phase(
         searches_total=searches_total,
     )
     try:
-        while query_index < len(queries) and len(candidates_by_url) < pool_target:
+        while (
+            query_index < len(queries)
+            and len(candidates_by_url) < pool_target
+            and len(disabled_sources) < len(sources)
+        ):
             if stop_requested(path):
                 break
             query = queries[query_index]
@@ -479,27 +506,6 @@ def _run_search_phase(
                         if exc.challenge:
                             captcha_required = True
                             captcha_source = source.name
-                            if source.name == "google_browser" and not any(
-                                item.name == "bing_browser" for item in sources
-                            ):
-                                fallback_builder = source_builder or build_sources
-                                fallback_sources = fallback_builder(["bing_browser"])
-                                if fallback_sources:
-                                    sources.extend(fallback_sources)
-                                    config.sources.append("bing_browser")
-                                    persisted_config = read_json(path / "config.json", default={})
-                                    if isinstance(persisted_config, dict):
-                                        configured_sources = [
-                                            str(item) for item in persisted_config.get("sources") or []
-                                        ]
-                                        if "bing_browser" not in configured_sources:
-                                            configured_sources.append("bing_browser")
-                                            persisted_config["sources"] = configured_sources
-                                            write_json(path / "config.json", persisted_config)
-                                    searches_total = len(queries) * len(sources) * page_budget
-                                    fallback_recommended = True
-                        if source.name in {"ddgs", "duckduckgo_browser"}:
-                            fallback_recommended = True
                         if exc.disable_source or source_failures[source.name] >= config.source_failure_limit:
                             disabled_sources.add(source.name)
                             exhausted_sources.add(source.name)
@@ -563,7 +569,6 @@ def _run_search_phase(
                 current_page=page_index + 1,
                 captcha_required=captcha_required,
                 captcha_source=captcha_source,
-                fallback_recommended=fallback_recommended,
                 source_errors=source_errors,
                 failed_searches=len(failed_searches),
             )
@@ -590,7 +595,6 @@ def _run_verification_phase(
 ) -> tuple[ScrapeResult, int]:
     ranked = rank_candidates(candidates_by_url.values(), config)
     validation_index = min(validation_index, len(ranked))
-    evidence_source = DdgsSource(personal_profiles_only=False)
     _lead_status(
         path,
         "running",
@@ -604,7 +608,10 @@ def _run_verification_phase(
         validation_completed=validation_index,
         validation_total=len(ranked),
     )
-    while validation_index < len(ranked) and len(leads) < config.target_count:
+    # Review every collected candidate so the audit contains every verified
+    # and rejected outcome. The requested lead count controls discovery volume,
+    # not whether already-collected candidates disappear from the final audit.
+    while validation_index < len(ranked):
         if stop_requested(path):
             break
         candidate = ranked[validation_index]
@@ -616,20 +623,10 @@ def _run_verification_phase(
             and company_key not in {"", "unknown"}
         )
         if needs_company_evidence and company_key not in company_evidence_cache:
-            with JobHeartbeat(
-                path,
-                activity="Validating company and industry evidence",
-                current_name=candidate.name,
-                current_company=candidate.company,
-            ):
-                company_evidence = collect_company_evidence(
-                    evidence_source,
-                    candidate.company,
-                    config.industries,
-                )
-            company_evidence_cache[company_key] = company_evidence
-            if company_evidence:
-                metrics["company_evidence_queries"] += 1
+            # The lead-harvest app is intentionally Google-result-only. Do not
+            # make a hidden DDGS/company lookup during validation: an industry
+            # match must be present in the candidate's own Google result card.
+            company_evidence_cache[company_key] = ""
 
         lead, rejection = validate_candidate(
             candidate,
@@ -734,7 +731,9 @@ def _pause_job(
         metrics,
         company_evidence_cache,
     )
-    csv_path, xlsx_path = _write_exports(result, path, config, partial=True)
+    csv_path, rejected_csv_path, xlsx_path = _write_exports(
+        result, path, config, partial=True
+    )
     update_status(
         path,
         state="paused",
@@ -744,6 +743,7 @@ def _pause_job(
         matched=len(leads),
         rejected=len(rejections),
         csv_path=str(csv_path),
+        rejected_csv_path=str(rejected_csv_path),
         xlsx_path=str(xlsx_path),
     )
     return result
@@ -755,12 +755,14 @@ def _write_exports(
     config: ScrapeConfig,
     *,
     partial: bool,
-) -> tuple[Path, Path]:
+) -> tuple[Path, Path, Path]:
     suffix = "_partial" if partial else ""
     base = path / f"Verified_Leads{suffix}"
     csv_path = write_result(result, base.with_suffix(".csv"))
+    rejected_csv_path = path / f"Rejected_Candidates{suffix}.csv"
+    rejections_frame(result.rejections).to_csv(rejected_csv_path, index=False)
     xlsx_path = write_result(result, base.with_suffix(".xlsx"), config=config)
-    return csv_path, xlsx_path
+    return csv_path, rejected_csv_path, xlsx_path
 
 
 def _lead_status(

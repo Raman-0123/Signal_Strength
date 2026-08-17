@@ -226,10 +226,10 @@ presets:
 source_defaults:
   sources:
   - google_browser
-  max_queries: 40
-  max_results_per_query: 20
-  max_pages_per_query: 2
-  source_failure_limit: 3
-  candidate_pool_multiplier: 4
-  browser_headless: true
-  google_manual_challenge_seconds: 180
+  max_queries: 20
+  max_results_per_query: 10
+  max_pages_per_query: 1
+  source_failure_limit: 1
+  candidate_pool_multiplier: 2
+  browser_headless: false
+  google_manual_challenge_seconds: 60

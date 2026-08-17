@@ -1,0 +1,45 @@
+{
+  "ui_version": "google_only_v1",
+  "target_count": 25,
+  "business_model": "Any",
+  "roles": [
+    "CIO",
+    "CDO",
+    "Chief Digital Officer",
+    "Director Customer Experience",
+    "VP Customer Experience",
+    "Head of Customer Experience",
+    "Customer Success Leader",
+    "Director Customer Success",
+    "CX Leader",
+    "Head of Customer Success",
+    "VP Customer Success",
+    "Chief Customer Officer"
+  ],
+  "locations": [
+    "Mumbai"
+  ],
+  "industries": [],
+  "company_names": [],
+  "sources": [
+    "google_browser"
+  ],
+  "max_queries": 8,
+  "max_results_per_query": 10,
+  "max_pages_per_query": 1,
+  "source_failure_limit": 1,
+  "candidate_pool_multiplier": 2,
+  "browser_headless": false,
+  "google_manual_challenge_seconds": 300,
+  "require_target_company": false,
+  "minimum_confidence": 70,
+  "minimum_sources": 1,
+  "query_mode": "Balanced",
+  "include_terms": [],
+  "exclude_terms": [
+    "jobs",
+    "hiring",
+    "recruiter"
+  ],
+  "existing_files": []
+}

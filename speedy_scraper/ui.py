@@ -159,15 +159,24 @@ def enable_manual_recovery(job_dir: Path, *, extra_sources: list[str] | None = N
         config = json.loads(config_path.read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError, OSError):
         config = {}
-    sources = [str(item) for item in config.get("sources") or []]
-    for source in [*(extra_sources or []), "google_browser"]:
-        if source not in sources:
-            sources.append(source)
+    if config.get("ui_version") != "google_only_v1":
+        # Migrate old lead jobs away from plans such as 80 queries x 5 pages.
+        # New Google-only jobs keep the explicit 1-3 page choice from the form.
+        config.update(
+            {
+                "max_queries": min(24, max(1, int(config.get("max_queries") or 20))),
+                "max_results_per_query": 10,
+                "max_pages_per_query": 1,
+                "candidate_pool_multiplier": 2,
+                "source_failure_limit": 1,
+            }
+        )
     config.update(
         {
-            "sources": sources,
+            "sources": ["google_browser"],
             "browser_headless": False,
-            "google_manual_challenge_seconds": 180,
+            "google_manual_challenge_seconds": 60,
+            "exclude_terms": [],
         }
     )
     config_path.write_text(json.dumps(config, indent=2), encoding="utf-8")
@@ -189,14 +198,9 @@ def prepare_failed_search_retry(job_dir: Path, *, local_manual: bool) -> dict[st
     """Mark a warning job for a targeted retry without resetting its checkpoint."""
     config = enable_manual_recovery(job_dir) if local_manual else _read_job_config(job_dir)
     if not local_manual:
-        sources = [str(item) for item in config.get("sources") or []]
-        if "google_browser" not in sources:
-            sources.insert(0, "google_browser")
-        if "bing_browser" not in sources:
-            sources.append("bing_browser")
         config.update(
             {
-                "sources": sources,
+                "sources": ["google_browser"],
                 "browser_headless": True,
                 "google_manual_challenge_seconds": 0,
             }
@@ -295,7 +299,7 @@ def captcha_recovery_panel(
     if cloud:
         detail = (
             f"{source or 'A public search source'} failed or was challenged. The hosted worker cannot expose "
-            "its Chrome window to your computer, so the retry below uses hosted fallback providers."
+            "its Chrome window to your computer. Run this job locally to complete Google's verification."
         )
     else:
         if source == "google_browser":
@@ -312,7 +316,7 @@ def captcha_recovery_panel(
     left, right = st.columns([1.25, 1])
     state = str(status.get("state") or "")
     if state in {"running", "starting", "stopping"}:
-        left.info("The worker is still trying fallback sources automatically.")
+        left.info("Google is finishing the current search unit.")
     elif state in {"paused", "failed", "captcha_required", "completed", "completed_with_warnings"} or not status.get("pid"):
         failed_searches = int(status.get("failed_searches") or 0)
         if not failed_searches and state == "completed" and (provider_failed or flagged):
@@ -323,7 +327,7 @@ def captcha_recovery_panel(
             with left.container(key=f"{button_key}_action"):
                 if cloud:
                     if st.button(
-                        "Retry failed searches automatically",
+                        "Retry failed Google searches",
                         key=button_key,
                         type="primary",
                         width="stretch",
@@ -369,7 +373,7 @@ def download_gsheet(url: str, job_dir: Path) -> list[str]:
         return []
     sheet_id = match.group(1)
     
-    gid_match = re.search(r"[#&]gid=([0-9]+)", url)
+    gid_match = re.search(r"[#?&]gid=([0-9]+)", url)
     gid = gid_match.group(1) if gid_match else "0"
     
     export_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid={gid}"

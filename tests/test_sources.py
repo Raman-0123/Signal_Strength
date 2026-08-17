@@ -9,7 +9,9 @@ from speedy_scraper.sources import (
     _blocked_resource_types,
     _BrowserRuntime,
     _challenge_page,
+    _google_ip_mismatch,
     _parse_search_html,
+    _wait_for_manual_challenge,
     build_sources,
     configure_google_challenge_wait,
 )
@@ -142,10 +144,48 @@ def test_manual_google_recovery_keeps_captcha_images_enabled():
     )
 
 
+def test_manual_google_recovery_reports_a_closed_browser_as_recoverable():
+    class ClosedChallengePage:
+        def content(self):
+            return "Our systems have detected unusual traffic from your network"
+
+        def is_closed(self):
+            return True
+
+    with pytest.raises(SourceError, match="verification window was closed") as caught:
+        _wait_for_manual_challenge(ClosedChallengePage(), 60)
+
+    assert caught.value.challenge is True
+    assert caught.value.disable_source is True
+
+
+def test_google_challenge_wait_accepts_a_live_status_callback():
+    events = []
+    source = build_sources(["google_browser"])[0]
+    callback = lambda *values: events.append(values)
+
+    configure_google_challenge_wait([source], 60, challenge_callback=callback)
+    source.challenge_callback("google_browser", "query", 4, 60)
+
+    assert events == [("google_browser", "query", 4, 60)]
+
+
 def test_duckduckgo_challenge_is_detected():
     assert _challenge_page(
         "Unfortunately, bots use DuckDuckGo too. Select all squares containing a duck."
     )
+
+
+def test_google_public_ip_mismatch_is_detected_without_waiting_for_captcha():
+    html = """
+    <html><body>
+      Our systems have detected unusual traffic from your computer network.
+      IP address: 185.177.124.225 ≠ 181.214.131.53
+    </body></html>
+    """
+
+    assert _challenge_page(html)
+    assert _google_ip_mismatch(html)
 
 
 def test_visible_browser_never_blocks_challenge_images():
@@ -204,6 +244,9 @@ def test_google_first_page_submits_query_through_search_box():
 
         def fill(self, value):
             self.value = value
+
+        def click(self):
+            return None
 
         def press(self, key):
             self.keys.append(key)
