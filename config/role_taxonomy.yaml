@@ -331,6 +331,37 @@ roles:
     query_group: hr_executive
     role_family: People & HR
 
+  Head of Talent Acquisition:
+    synonyms:
+      - Talent Acquisition Head
+      - Head Talent Acquisition
+      - Global Head of Talent Acquisition
+      - TA Head
+    function: talent_acquisition
+    seniority: head
+    query_group: talent_acquisition
+    role_family: People & HR
+
+  Director Talent Acquisition:
+    synonyms:
+      - Director of Talent Acquisition
+      - Talent Acquisition Director
+      - TA Director
+    function: talent_acquisition
+    seniority: director
+    query_group: talent_acquisition
+    role_family: People & HR
+
+  Talent Acquisition Leader:
+    synonyms:
+      - Talent Acquisition Lead
+      - TA Leader
+      - Recruiting Leader
+    function: talent_acquisition
+    seniority: head
+    query_group: talent_acquisition
+    role_family: People & HR
+
   # ══════════════════════════════════════════════════════════════════════════════
   # CUSTOMER SUCCESS & EXPERIENCE
   # ══════════════════════════════════════════════════════════════════════════════

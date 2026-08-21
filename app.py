@@ -426,6 +426,16 @@ if submitted:
         errors.append("Add a location or at least one company to keep searches focused.")
     if not search_sources:
         errors.append("Select at least one public search engine.")
+    non_industry_terms = [
+        industry
+        for industry in industries
+        if industry.casefold() in {"hiring", "recruiter", "recruiting", "recruitment"}
+    ]
+    if non_industry_terms:
+        errors.append(
+            f"{', '.join(non_industry_terms)} is not an industry. Remove it from Industry "
+            "keywords; use Required evidence terms only when that wording must appear."
+        )
     if errors:
         for message in errors:
             st.error(message)
@@ -677,7 +687,12 @@ def job_monitor() -> None:
     if stale:
         st.warning("The worker stopped responding. Its last completed provider page is saved.")
 
-    controls_a, controls_b, controls_meta = st.columns([1, 1, 2])
+    collected_count = len(checkpoint.get("candidates") or [])
+    reviewed_count = len(result.leads) + len(result.rejections)
+    can_verify_collected = (
+        not active and phase == "search" and collected_count > reviewed_count
+    )
+    controls_a, controls_b, controls_c, controls_meta = st.columns([1, 1, 1, 2])
     if active and not stale:
         with controls_a.container(key="lead-stop-action"):
             if st.button("Stop safely", disabled=state == "stopping", width="stretch"):
@@ -688,7 +703,19 @@ def job_monitor() -> None:
             if st.button("Resume selected engines", width="stretch"):
                 launch_job(job_dir, "speedy_scraper.lead_job")
                 st.rerun(scope="fragment")
-    with controls_b.container(key="lead-refresh-action"):
+    if can_verify_collected:
+        with controls_b.container(key="lead-verify-collected-action"):
+            if st.button(
+                f"Verify {collected_count - reviewed_count} collected",
+                width="stretch",
+            ):
+                verify_config = read_json(job_dir / "config.json", default={})
+                verify_config = verify_config if isinstance(verify_config, dict) else {}
+                verify_config["verify_collected_only"] = True
+                write_json(job_dir / "config.json", verify_config)
+                launch_job(job_dir, "speedy_scraper.lead_job")
+                st.rerun(scope="fragment")
+    with controls_c.container(key="lead-refresh-action"):
         st.button("Refresh", width="stretch")
     controls_meta.caption(
         f"Run {job_dir.name} · {datetime.now().strftime('%H:%M:%S')} · "

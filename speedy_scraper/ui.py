@@ -72,6 +72,7 @@ def action_button_css() -> str:
     .st-key-lead-resume-action button,
     .st-key-lead-network-retry-action button,
     .st-key-lead-challenge-retry-action button,
+    .st-key-lead-verify-collected-action button,
     .st-key-url-resume-action button,
     .st-key-company-resume-action button,
     [class*="st-key-"][class*="captcha_recovery"] button {
@@ -81,6 +82,7 @@ def action_button_css() -> str:
     .st-key-lead-resume-action button:hover,
     .st-key-lead-network-retry-action button:hover,
     .st-key-lead-challenge-retry-action button:hover,
+    .st-key-lead-verify-collected-action button:hover,
     .st-key-url-resume-action button:hover,
     .st-key-company-resume-action button:hover,
     [class*="st-key-"][class*="captcha_recovery"] button:hover {

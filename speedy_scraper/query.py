@@ -7,16 +7,21 @@ from speedy_scraper.taxonomy import location_query_groups, resolve_role, role_qu
 from speedy_scraper.text import normalize_text, or_group, quote_term, unique_terms
 
 LINKEDIN_SITE = "site:linkedin.com/in"
-DEFAULT_EXCLUDE_TERMS = ("jobs", "hiring", "recruiter", "recruitment", "careers")
+
+_INDUSTRY_QUERY_TERMS = {
+    "bfsi": ["BFSI", "banking", "financial services"],
+    "gcc": ["GCC", "global capability center", "global capability centre"],
+    "hr tech": ["HR Tech", "HR technology", "HR software"],
+    "it": ["information technology", "IT services", "software technology"],
+    "saas": ["SaaS", "software as a service"],
+}
 
 
 def build_queries(config: ScrapeConfig) -> list[str]:
-    """Build focused queries in which every selected filter class is represented.
+    """Build a bounded mix of broad discovery and industry-focused queries.
 
-    Search engines routinely relax long queries. Keeping each industry chunk small and
-    repeating the role/location context produces a wider but still relevant plan. The
-    previous planner emitted coverage queries without industries and only used the first
-    few industry chunks, which allowed an early candidate pool to be filled with noise.
+    Role and location remain present throughout the plan. Short core queries improve
+    recall, while alternating industry queries gather stronger evidence for validation.
     """
     specific_roles = [
         role
@@ -25,27 +30,46 @@ def build_queries(config: ScrapeConfig) -> list[str]:
     ]
     role_groups = role_query_groups(specific_roles or config.roles) or [[]]
     location_groups = location_query_groups(config.locations) or [[]]
-    industry_groups = _chunks(unique_terms(config.industries), 3) or [[]]
+    industry_groups = _industry_query_groups(config.industries)
     companies = unique_terms(config.company_names)
     business_clause = _business_model_clause(config.business_model)
     modifiers = _query_modifiers(config)
 
-    discovery = _query_matrix(
+    core_discovery = _query_matrix(
+        role_groups=role_groups,
+        location_groups=location_groups,
+        industry_groups=[[]],
+        companies=[""],
+        business_clause=business_clause,
+        modifiers=modifiers,
+    )
+    industry_discovery = _query_matrix(
         role_groups=role_groups,
         location_groups=location_groups,
         industry_groups=industry_groups,
         companies=[""],
         business_clause=business_clause,
         modifiers=modifiers,
+    ) if industry_groups else []
+    discovery = _weave([(core_discovery, 1), (industry_discovery, 1)])
+
+    core_company_scoped = _query_matrix(
+        role_groups=role_groups,
+        location_groups=location_groups,
+        industry_groups=[[]],
+        companies=companies,
+        business_clause=business_clause,
+        modifiers=modifiers,
     )
-    company_scoped = _query_matrix(
+    industry_company_scoped = _query_matrix(
         role_groups=role_groups,
         location_groups=location_groups,
         industry_groups=industry_groups,
         companies=companies,
         business_clause=business_clause,
         modifiers=modifiers,
-    )
+    ) if companies and industry_groups else []
+    company_scoped = _weave([(core_company_scoped, 1), (industry_company_scoped, 1)])
 
     if config.require_target_company and company_scoped:
         ordered = company_scoped
@@ -69,9 +93,16 @@ def _query_matrix(
     if not companies:
         return []
     dimensions = (companies, role_groups, location_groups, industry_groups)
-    indexed = product(*(range(len(values)) for values in dimensions))
-    # Diagonal ordering gives every dimension early coverage when max_queries is small.
-    combinations = sorted(indexed, key=lambda indexes: (sum(indexes), max(indexes), indexes))
+    indexed = list(product(*(range(len(values)) for values in dimensions)))
+    # Cycle through every value in the largest dimension first. This prevents a
+    # bounded plan from spending its whole budget on the first role or industry.
+    coverage = [
+        tuple(index % len(values) for values in dimensions)
+        for index in range(max(len(values) for values in dimensions))
+    ]
+    combinations = _dedupe_indexes(
+        [*coverage, *sorted(indexed, key=lambda indexes: (sum(indexes), max(indexes), indexes))]
+    )
     queries: list[str] = []
     for company_index, role_index, location_index, industry_index in combinations:
         queries.append(
@@ -88,8 +119,13 @@ def _query_matrix(
     return queries
 
 
-def _chunks(values: list[str], size: int) -> list[list[str]]:
-    return [values[index : index + size] for index in range(0, len(values), size)]
+def _industry_query_groups(industries: list[str]) -> list[list[str]]:
+    groups: list[list[str]] = []
+    for industry in unique_terms(industries):
+        groups.append(
+            unique_terms(_INDUSTRY_QUERY_TERMS.get(normalize_text(industry), [industry]))
+        )
+    return groups
 
 
 def _business_model_clause(value: str) -> str:
@@ -103,7 +139,15 @@ def _business_model_clause(value: str) -> str:
 
 def _query_modifiers(config: ScrapeConfig) -> str:
     include = " ".join(quote_term(term) for term in unique_terms(config.include_terms))
-    excludes = unique_terms([*DEFAULT_EXCLUDE_TERMS, *config.exclude_terms])
+    positive_terms = {
+        normalize_text(term)
+        for term in [*config.roles, *config.locations, *config.industries, *config.include_terms]
+    }
+    excludes = [
+        term
+        for term in unique_terms(config.exclude_terms)
+        if normalize_text(term) not in positive_terms
+    ]
     exclude = " ".join(f"-{quote_term(term)}" for term in excludes)
     return " ".join(part for part in (include, exclude) if part)
 
@@ -132,3 +176,7 @@ def _dedupe(values: list[str]) -> list[str]:
             seen.add(cleaned)
             result.append(cleaned)
     return result
+
+
+def _dedupe_indexes(values: list[tuple[int, ...]]) -> list[tuple[int, ...]]:
+    return list(dict.fromkeys(values))

@@ -19,6 +19,13 @@ locations:
       - Bengaluru/Karnataka/India
       - Bangalore/Karnataka/India
 
+  Whitefield:
+    region: India
+    variants:
+      - Whitefield
+      - Whitefield, Bengaluru
+      - Whitefield, Bangalore
+
   Mumbai:
     region: India
     variants:

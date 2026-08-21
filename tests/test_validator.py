@@ -106,6 +106,25 @@ def test_company_match_does_not_bypass_an_industry_filter():
     assert rejection.reason == "industry_company"
 
 
+def test_it_industry_does_not_match_the_english_pronoun_it():
+    lead, rejection = validate_candidate(
+        _candidate(
+            company="Example Retail",
+            body="Location: Bengaluru · It operates a consumer fashion marketplace.",
+            evidence="Location: Bengaluru · It operates a consumer fashion marketplace.",
+        ),
+        roles=["Chief Data Officer"],
+        locations=["Bengaluru"],
+        industries=["IT"],
+        company_names=[],
+        existing_urls=set(),
+    )
+
+    assert lead is None
+    assert rejection is not None
+    assert rejection.reason == "industry_company"
+
+
 def test_required_and_excluded_terms_are_enforced_on_candidate_evidence():
     candidate = _candidate(evidence="Location: Bengaluru · fintech payments · former CDO")
 

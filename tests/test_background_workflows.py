@@ -586,6 +586,25 @@ class StopAfterLeadSearch:
         ]
 
 
+class StopAfterWrongLocationLeadSearch:
+    name = "fake"
+
+    def __init__(self, job_dir: Path):
+        self.job_dir = job_dir
+
+    def search(self, query, *, max_results, headless=True):
+        (self.job_dir / "stop.requested").touch()
+        return [
+            SearchResult(
+                title="Asha Rao - Chief Technology Officer - Razorpay | LinkedIn",
+                body="Location: Mumbai · Razorpay payments platform.",
+                href="https://www.linkedin.com/in/asha-rao/",
+                source=self.name,
+                query=query,
+            )
+        ]
+
+
 class LeadChallengeSource:
     name = "google_browser"
 
@@ -702,7 +721,8 @@ def test_main_lead_job_checkpoints_search_and_resumes_into_verification(tmp_path
     result, checkpoint = load_lead_job_checkpoint(job_dir)
     assert checkpoint["phase"] == "search"
     assert checkpoint["query_index"] == 1
-    assert result.leads == []
+    assert [lead.name for lead in result.leads] == ["Asha Rao"]
+    assert result.leads[0].location == "Bengaluru"
 
     clear_stop(job_dir)
     second = StopAfterLeadSearch(job_dir, stop=False)
@@ -714,6 +734,98 @@ def test_main_lead_job_checkpoints_search_and_resumes_into_verification(tmp_path
     assert [lead.name for lead in result.leads] == ["Asha Rao"]
     workbook = load_workbook(final_status["xlsx_path"], read_only=True)
     assert "Filter Contract" in workbook.sheetnames
+
+
+def test_stopped_lead_search_applies_location_filter_before_pausing(tmp_path: Path):
+    job_dir = create_job(
+        "lead_harvest",
+        {
+            "roles": ["CTO"],
+            "locations": ["Bengaluru", "Whitefield"],
+            "industries": ["FinTech"],
+            "require_target_company": False,
+            "sources": ["fake"],
+            "minimum_confidence": 0,
+            "target_count": 1,
+            "max_queries": 1,
+        },
+        jobs_root=tmp_path,
+    )
+
+    result = run_lead_job(
+        job_dir,
+        source_builder=lambda _names: [StopAfterWrongLocationLeadSearch(job_dir)],
+    )
+    status = read_status(job_dir)
+
+    assert status["state"] == "paused"
+    assert status["phase"] == "search"
+    assert status["matched"] == 0
+    assert status["rejected"] == 1
+    assert result.leads == []
+    assert result.rejections[0].reason == "location"
+
+
+def test_paused_search_can_verify_checkpoint_without_more_provider_requests(tmp_path: Path):
+    job_dir = create_job(
+        "lead_harvest",
+        {
+            "roles": ["CTO"],
+            "locations": ["Bengaluru"],
+            "industries": [],
+            "require_target_company": False,
+            "sources": ["fake"],
+            "minimum_confidence": 0,
+            "target_count": 1,
+            "max_queries": 1,
+            "verify_collected_only": True,
+        },
+        jobs_root=tmp_path,
+    )
+    (job_dir / "checkpoint.json").write_text(
+        json.dumps(
+            {
+                "version": 3,
+                "phase": "search",
+                "query_index": 0,
+                "source_index": 0,
+                "page_index": 0,
+                "validation_index": 0,
+                "candidates": [
+                    {
+                        "name": "Asha Rao",
+                        "designation": "Chief Technology Officer",
+                        "company": "Razorpay",
+                        "linkedin_url": "https://www.linkedin.com/in/asha-rao/",
+                        "title": "Asha Rao - Chief Technology Officer - Razorpay",
+                        "body": "Location: Bengaluru · payments technology leader.",
+                        "source": "fake",
+                        "query": "saved query",
+                        "evidence": "Location: Bengaluru · payments technology leader.",
+                        "sources_seen": ["fake"],
+                        "queries_seen": ["saved query"],
+                    }
+                ],
+                "leads": [],
+                "rejections": [],
+                "metrics": {"candidates_found": 1},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_lead_job(
+        job_dir,
+        source_builder=lambda _names: pytest.fail("verification must not search again"),
+    )
+    status = read_status(job_dir)
+    saved_config = json.loads((job_dir / "config.json").read_text(encoding="utf-8"))
+
+    assert status["state"] == "paused"
+    assert status["phase"] == "search"
+    assert status["matched"] == 1
+    assert [lead.name for lead in result.leads] == ["Asha Rao"]
+    assert "verify_collected_only" not in saved_config
 
 
 class PagedLeadSource:

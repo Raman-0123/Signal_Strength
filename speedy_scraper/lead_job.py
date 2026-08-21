@@ -8,6 +8,7 @@ from typing import Any
 
 from speedy_scraper.background_jobs import (
     JobHeartbeat,
+    clear_stop,
     read_json,
     stop_requested,
     update_status,
@@ -60,6 +61,7 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
         if not isinstance(raw_config, dict):
             raise ValueError("Invalid lead-harvest job config")
         config = config_from_mapping(raw_config)
+        verify_collected_only = bool(raw_config.get("verify_collected_only"))
         if config.require_target_company and not config.company_names:
             raise ValueError("Hard company filtering requires at least one target company")
         if config.minimum_sources > len(independent_source_families(config.sources)):
@@ -87,6 +89,9 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
     checkpoint = read_json(checkpoint_path, default={})
     if not isinstance(checkpoint, dict):
         checkpoint = {}
+    if verify_collected_only:
+        raw_config.pop("verify_collected_only", None)
+        write_json(path / "config.json", raw_config)
 
     phase = str(checkpoint.get("phase") or "search")
     query_index = int(checkpoint.get("query_index") or 0)
@@ -141,7 +146,7 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
         for key, value in dict(checkpoint.get("company_evidence_cache") or {}).items()
     }
     try:
-        existing_urls = load_existing_urls(config.existing_files)
+        dedupe_urls = load_existing_urls(config.existing_files)
     except Exception as exc:
         update_status(
             path,
@@ -157,6 +162,7 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
             rejected=len(rejections),
         )
         raise
+    existing_urls = set(dedupe_urls)
     existing_urls.update(lead.linkedin_url for lead in leads)
     pool_target = max(
         config.target_count * config.candidate_pool_multiplier,
@@ -165,6 +171,47 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
 
     try:
         if phase == "search":
+            if verify_collected_only:
+                clear_stop(path)
+                validation_index = _reset_classification(leads, rejections, metrics)
+                existing_urls = set(dedupe_urls)
+                phase = "verify"
+                result, validation_index = _run_verification_phase(
+                    path,
+                    checkpoint_path,
+                    config,
+                    queries,
+                    query_index,
+                    source_index,
+                    validation_index,
+                    candidates_by_url,
+                    leads,
+                    rejections,
+                    source_errors,
+                    metrics,
+                    company_evidence_cache,
+                    existing_urls,
+                )
+                return _pause_job(
+                    path,
+                    checkpoint_path,
+                    config,
+                    queries,
+                    "search",
+                    query_index,
+                    source_index,
+                    validation_index,
+                    candidates_by_url,
+                    result.leads,
+                    result.rejections,
+                    result.source_errors,
+                    Counter(result.metrics),
+                    company_evidence_cache,
+                    message=(
+                        "Classified the collected candidates; resume when you want to "
+                        "continue public discovery"
+                    ),
+                )
             query_index, source_index, page_index = _run_search_phase(
                 path,
                 checkpoint_path,
@@ -185,6 +232,29 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
                 source_builder=source_builder,
             )
             if stop_requested(path):
+                # "Stop safely" must still apply the user's filters to everything
+                # already collected. Preserve the search cursor, clear the stop signal,
+                # classify the current batch, and then return to a resumable search pause.
+                clear_stop(path)
+                validation_index = _reset_classification(leads, rejections, metrics)
+                existing_urls = set(dedupe_urls)
+                phase = "verify"
+                result, validation_index = _run_verification_phase(
+                    path,
+                    checkpoint_path,
+                    config,
+                    queries,
+                    query_index,
+                    source_index,
+                    validation_index,
+                    candidates_by_url,
+                    leads,
+                    rejections,
+                    source_errors,
+                    metrics,
+                    company_evidence_cache,
+                    existing_urls,
+                )
                 return _pause_job(
                     path,
                     checkpoint_path,
@@ -195,14 +265,19 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
                     source_index,
                     validation_index,
                     candidates_by_url,
-                    leads,
-                    rejections,
-                    source_errors,
-                    metrics,
+                    result.leads,
+                    result.rejections,
+                    result.source_errors,
+                    Counter(result.metrics),
                     company_evidence_cache,
+                    message=(
+                        "Search paused after classifying the candidates collected so far; "
+                        "resume to continue discovery"
+                    ),
                 )
             phase = "consolidate"
-            validation_index = 0
+            validation_index = _reset_classification(leads, rejections, metrics)
+            existing_urls = set(dedupe_urls)
             _save_checkpoint(
                 checkpoint_path,
                 phase,
@@ -510,12 +585,11 @@ def _run_search_phase(
                 metrics["source_searches"] += 1
             metrics[f"{source.name}_results"] += len(results)
             for candidate in candidates_from_results(results):
-                if candidate.linkedin_url in existing_urls:
-                    metrics["duplicates"] += 1
-                    continue
                 current = candidates_by_url.get(candidate.linkedin_url)
                 if current:
                     merge_candidates(current, candidate)
+                elif candidate.linkedin_url in existing_urls:
+                    metrics["duplicates"] += 1
                 else:
                     candidates_by_url[candidate.linkedin_url] = candidate
 
@@ -727,6 +801,8 @@ def _pause_job(
     source_errors: list[str],
     metrics: Counter[str],
     company_evidence_cache: dict[str, str],
+    *,
+    message: str = "Paused safely after the current unit; relaunch to resume",
 ) -> ScrapeResult:
     metrics["candidates_found"] = len(candidates_by_url)
     metrics["rejected"] = len(rejections)
@@ -757,7 +833,7 @@ def _pause_job(
         path,
         state="paused",
         phase=phase,
-        message="Paused safely after the current unit; relaunch to resume",
+        message=message,
         candidates=len(candidates_by_url),
         matched=len(leads),
         rejected=len(rejections),
@@ -766,6 +842,20 @@ def _pause_job(
         xlsx_path=str(xlsx_path),
     )
     return result
+
+
+def _reset_classification(
+    leads: list[VerifiedLead],
+    rejections: list[RejectedCandidate],
+    metrics: Counter[str],
+) -> int:
+    """Prepare all collected candidates for a clean, repeatable filter pass."""
+    leads.clear()
+    rejections.clear()
+    for key in list(metrics):
+        if key == "verified" or key == "rejected" or key.startswith("rejected_"):
+            metrics.pop(key, None)
+    return 0
 
 
 def _write_exports(

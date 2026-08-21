@@ -15,6 +15,15 @@ CONFIG_DIR = Path(__file__).resolve().parents[1] / "config"
 ROLE_TAXONOMY_PATH = CONFIG_DIR / "role_taxonomy.yaml"
 LOCATION_TAXONOMY_PATH = CONFIG_DIR / "location_taxonomy.yaml"
 
+_ROLE_INPUT_ALIASES = {
+    "director talent accquisition": "Director Talent Acquisition",
+    "head of talent acquistion": "Head of Talent Acquisition",
+    "ta heads": "Head of Talent Acquisition",
+    "ta leaders": "Talent Acquisition Leader",
+    "talent acquistion head": "Head of Talent Acquisition",
+}
+_PEOPLE_FUNCTIONS = {"human_resources", "talent_acquisition"}
+
 
 @dataclass(frozen=True)
 class RoleDefinition:
@@ -71,7 +80,7 @@ def load_location_taxonomy(
 
 
 def resolve_role(value: str) -> RoleDefinition:
-    requested = normalize_text(value)
+    requested = normalize_text(_ROLE_INPUT_ALIASES.get(normalize_text(value), value))
     definitions = load_role_taxonomy()
     for definition in definitions.values():
         if requested == normalize_text(definition.key):
@@ -87,6 +96,24 @@ def resolve_role(value: str) -> RoleDefinition:
         seniority="unspecified",
         query_group=normalize_text(cleaned),
     )
+
+
+def contextualize_roles(roles: list[str]) -> list[str]:
+    """Resolve ambiguous acronyms and common input mistakes before planning/filtering."""
+    selected = unique_terms(roles)
+    people_context = any(
+        normalize_text(role) != "cpo" and resolve_role(role).function in _PEOPLE_FUNCTIONS
+        for role in selected
+    )
+    normalized: list[str] = []
+    for role in selected:
+        key = normalize_text(role)
+        if key == "cpo" and people_context:
+            normalized.append("Chief People Officer")
+        else:
+            corrected = _ROLE_INPUT_ALIASES.get(key, role)
+            normalized.append(resolve_role(corrected).key)
+    return unique_terms(normalized)
 
 
 def resolve_location(value: str) -> LocationDefinition:

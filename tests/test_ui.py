@@ -17,6 +17,7 @@ def test_action_button_css_has_semantic_run_stop_and_recovery_states():
     assert "lead-resume-action" in css
     assert "lead-network-retry-action" in css
     assert "lead-challenge-retry-action" in css
+    assert "lead-verify-collected-action" in css
     assert "--action-run:#087d62" in css
     assert "--action-stop:#c43d2b" in css
     assert "--action-resume:#1769aa" in css

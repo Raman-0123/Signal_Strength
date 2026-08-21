@@ -6,6 +6,7 @@ from typing import Any
 import yaml
 
 from speedy_scraper.models import DEFAULT_SOURCE_NAMES, ScrapeConfig
+from speedy_scraper.taxonomy import contextualize_roles
 
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "config" / "catalog.yaml"
 
@@ -26,7 +27,7 @@ def config_from_mapping(value: dict[str, Any], *, catalog: dict[str, Any] | None
     merged = {**source_defaults, **preset, **value}
     minimum_confidence_value = merged.get("minimum_confidence")
     return ScrapeConfig(
-        roles=_list(merged.get("roles")),
+        roles=contextualize_roles(_list(merged.get("roles"))),
         locations=_list(merged.get("locations")),
         industries=_list(merged.get("industries")),
         company_names=_list(merged.get("company_names")),

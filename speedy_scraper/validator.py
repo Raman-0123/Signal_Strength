@@ -53,6 +53,21 @@ _B2B_TERMS = [
     "payments infrastructure",
 ]
 
+_INDUSTRY_EVIDENCE_TERMS = {
+    "bfsi": ["BFSI", "banking", "bank", "financial services", "fintech", "insurance"],
+    "gcc": [
+        "GCC",
+        "global capability center",
+        "global capability centre",
+        "global competence center",
+        "global competence centre",
+    ],
+    "hr tech": ["HR Tech", "HR technology", "HR software", "human resources technology"],
+    # Never match the raw token "it": it is also a common English pronoun.
+    "it": ["information technology", "IT services", "software", "technology"],
+    "saas": ["SaaS", "software as a service", "cloud software"],
+}
+
 _COMPANY_NOISE_TOKENS = {
     "co",
     "company",
@@ -253,7 +268,13 @@ def industry_matches(
     if not industries:
         return True
     evidence = clean_spaces(f"{candidate.company} {candidate.designation} {candidate.evidence} {company_evidence}")
-    return any_term_in_text(evidence, industries)
+    return any(
+        any_term_in_text(
+            evidence,
+            _INDUSTRY_EVIDENCE_TERMS.get(normalize_text(industry), [industry]),
+        )
+        for industry in industries
+    )
 
 
 def candidate_filter_reason(
