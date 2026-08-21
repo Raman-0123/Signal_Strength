@@ -35,7 +35,7 @@ from speedy_scraper.sources import (
     search_source_page,
 )
 from speedy_scraper.text import any_term_in_text, clean_spaces
-from speedy_scraper.validator import validate_candidate
+from speedy_scraper.validator import candidate_filter_reason, validate_candidate
 
 CHECKPOINT_VERSION = 3
 
@@ -441,7 +441,7 @@ def _run_search_phase(
     try:
         while (
             query_index < len(queries)
-            and len(candidates_by_url) < pool_target
+            and _relevant_candidate_count(candidates_by_url.values(), config) < pool_target
             and len(disabled_sources) < len(sources)
         ):
             if stop_requested(path):
@@ -458,9 +458,7 @@ def _run_search_phase(
                     current_page=page_index + 1,
                 ):
                     try:
-                        source_limit = (
-                            config.max_results_per_query if source.name == "ddgs" else 10
-                        )
+                        source_limit = min(10, config.max_results_per_query)
                         batch = search_source_page(
                             source,
                             query,
@@ -623,9 +621,8 @@ def _run_verification_phase(
             and company_key not in {"", "unknown"}
         )
         if needs_company_evidence and company_key not in company_evidence_cache:
-            # The lead-harvest app is intentionally Google-result-only. Do not
-            # make a hidden DDGS/company lookup during validation: an industry
-            # match must be present in the candidate's own Google result card.
+            # Do not make a hidden provider lookup during validation: an industry
+            # match must be present in the candidate's own collected result evidence.
             company_evidence_cache[company_key] = ""
 
         lead, rejection = validate_candidate(
@@ -640,6 +637,8 @@ def _run_verification_phase(
             require_target_company=config.require_target_company,
             minimum_confidence=config.minimum_confidence,
             minimum_sources=config.minimum_sources,
+            include_terms=config.include_terms,
+            exclude_terms=config.exclude_terms,
         )
         if lead:
             leads.append(lead)
@@ -690,6 +689,26 @@ def _run_verification_phase(
             source_errors=source_errors,
         ),
         validation_index,
+    )
+
+
+def _relevant_candidate_count(candidates, config: ScrapeConfig) -> int:
+    """Count candidates matching the prompt before confidence/source gates."""
+    return sum(
+        not candidate_filter_reason(
+            candidate,
+            roles=config.roles,
+            locations=config.locations,
+            industries=config.industries,
+            company_names=config.company_names,
+            business_model=config.business_model,
+            require_target_company=config.require_target_company,
+            include_terms=config.include_terms,
+            exclude_terms=config.exclude_terms,
+        )
+        and len(independent_source_families(candidate.sources_seen or {candidate.source}))
+        >= config.minimum_sources
+        for candidate in candidates
     )
 
 

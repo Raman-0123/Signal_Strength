@@ -49,6 +49,35 @@ def test_ddgs_no_results_are_not_recorded_as_provider_errors(monkeypatch):
     assert source.search("site:linkedin.com/in \"Example Bank\" CTO", max_results=10) == []
 
 
+def test_ddgs_page_search_uses_duckduckgo_first_and_forwards_page(monkeypatch):
+    calls = []
+
+    class PagedDDGS:
+        def __init__(self, **_options):
+            pass
+
+        def text(self, query, **options):
+            calls.append((query, options))
+            return [
+                {
+                    "title": "Asha Rao - CTO - Razorpay | LinkedIn",
+                    "body": "Location: Bengaluru",
+                    "href": "https://www.linkedin.com/in/asha-rao/",
+                }
+            ]
+
+    monkeypatch.setitem(sys.modules, "ddgs", SimpleNamespace(DDGS=PagedDDGS))
+    source = DdgsSource()
+
+    page = source.search_page("site:linkedin.com/in CTO", page=2, max_results=1)
+
+    assert source.backends[0] == "duckduckgo"
+    assert calls[0][1]["backend"] == "duckduckgo"
+    assert calls[0][1]["page"] == 2
+    assert page.page == 2
+    assert page.has_next is True
+
+
 def test_browser_html_parser_extracts_linkedin_cards():
     html = """
     <html><body>

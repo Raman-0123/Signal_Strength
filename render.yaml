@@ -1,0 +1,85 @@
+databases:
+  - name: signal-campaign-db
+    plan: basic-256mb
+    databaseName: signal_campaigns
+    user: signal_campaigns
+
+services:
+  - type: web
+    name: signal-streamlit
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.address 0.0.0.0 --server.port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: signal-campaign-db
+          property: connectionString
+      - key: PUBLIC_API_URL
+        value: https://signal-campaign-api.onrender.com
+      - key: ADMIN_PASSWORD_SHA256
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: TOKEN_ENCRYPTION_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_OAUTH_REDIRECT_URI
+        value: https://signal-campaign-api.onrender.com/oauth/gmail/callback
+
+  - type: web
+    name: signal-campaign-api
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    preDeployCommand: alembic upgrade head
+    startCommand: uvicorn speedy_scraper.campaign_api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: signal-campaign-db
+          property: connectionString
+      - key: PUBLIC_APP_URL
+        value: https://signal-streamlit.onrender.com/Email_Campaigns
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_OAUTH_REDIRECT_URI
+        value: https://signal-campaign-api.onrender.com/oauth/gmail/callback
+      - key: GOOGLE_PUBSUB_VERIFICATION_TOKEN
+        sync: false
+      - key: TOKEN_ENCRYPTION_KEY
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+
+  - type: worker
+    name: signal-campaign-worker
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m speedy_scraper.campaign_worker --poll-seconds 15
+    maxShutdownDelaySeconds: 60
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: signal-campaign-db
+          property: connectionString
+      - key: PUBLIC_API_URL
+        value: https://signal-campaign-api.onrender.com
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_OAUTH_REDIRECT_URI
+        value: https://signal-campaign-api.onrender.com/oauth/gmail/callback
+      - key: GOOGLE_PUBSUB_TOPIC
+        sync: false
+      - key: TOKEN_ENCRYPTION_KEY
+        sync: false

@@ -1,0 +1,150 @@
+{
+  "version": 2,
+  "task_index": 0,
+  "source_index": 1,
+  "pocs": [
+    {
+      "name": "Manmohan N",
+      "designation": "Assistant Vice President, Marketing",
+      "company": "JPMorgan Chase & Co.",
+      "linkedin_url": "https://www.linkedin.com/in/manmohan-n-42578091/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Manmohan N - Assistant Vice President, Marketing Web results Manmohan N - Assistant Vice President, Marketing ... LinkedIn · Manmohan N 290+ followers LinkedIn · Manmohan N 290+ followers Bengaluru, Karnataka, India · Assistant Vice President, Marketing Campaign Management · JPMorgan Chase & Co. Assistant Vice President, Marketing Campaign Management · Experience: JPMorgan Chase & Co. · Education: Bangalore University · Location: Bengaluru · 288 ...",
+      "requested_company": "JPMorgan Chase",
+      "requested_designation": "VP Marketing"
+    },
+    {
+      "name": "Arpit Shrivastava",
+      "designation": "VP Marketing Analytics",
+      "company": "JPMorgan",
+      "linkedin_url": "https://www.linkedin.com/in/arpitshrivastava777/",
+      "source": "google_browser",
+      "confidence": 88,
+      "evidence": "Arpit Shrivastava - VP Marketing Analytics @ JPMorgan Arpit Shrivastava - VP Marketing Analytics @ JPMorgan ... LinkedIn · Arpit Shrivastava 1.7K+ followers LinkedIn · Arpit Shrivastava 1.7K+ followers Jacksonville, Florida, United States · Vice President Quant Analytics Manager · JPMorganChase VP Marketing Analytics @ JPMorgan Chase & Co. | Master of Science in Business Analytics · As a VP Marketing Analytics at JPMorgan Chase , I ... Bengaluru , ... Read more",
+      "requested_company": "JPMorgan Chase",
+      "requested_designation": "VP Marketing"
+    }
+  ],
+  "rejections": [
+    {
+      "Name": "Pratigya Gupta",
+      "Designation": "Marketing BI & Analytics",
+      "Company": "JPMorgan",
+      "LinkedIn URL": "https://www.linkedin.com/in/pratigya-gupta-961344119/",
+      "Source": "google_browser",
+      "Evidence": "Pratigya Gupta - VP - Marketing BI & Analytics at JPMorgan Pratigya Gupta - VP - Marketing BI & Analytics at JPMorgan ... LinkedIn · Pratigya Gupta 850+ followers LinkedIn · Pratigya Gupta 850+ followers Mumbai, Maharashtra, India · Vice President - Marketing BI & Analytics · JPMorganChase VP - Marketing BI & Analytics at JPMorgan Chase & Co. · Experienced Analyst ...",
+      "Requested Company": "JPMorgan Chase",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Pankaj Mishra, PMP®",
+      "Designation": "Vice President - Lead Technical Program Manager",
+      "Company": "JPMorgan Chase & Co., leading large-scale platform modernization and merchant onboarding ... Read mo",
+      "LinkedIn URL": "https://www.linkedin.com/in/pankaj-mishra-pmp%c2%ae-136842a/",
+      "Source": "google_browser",
+      "Evidence": "Pankaj Mishra, PMP® - Vice President | Lead Technical Pankaj Mishra, PMP® - Vice President | Lead Technical ... LinkedIn · Pankaj Mishra, PMP® 840+ followers LinkedIn · Pankaj Mishra, PMP® 840+ followers Plano, Texas, United States · Vice President | Lead Technical Program Manager · JPMorgan Chase & Co. Currently serving as Vice President - Lead Technical Program Manager at JPMorgan Chase & Co., leading large-scale platform modernization and merchant onboarding ... Read more",
+      "Requested Company": "JPMorgan Chase",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Pratyusha Mantrala (She/Her/Hers)",
+      "Designation": "Vice President at",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/pratyulakshmi/",
+      "Source": "google_browser",
+      "Evidence": "Pratyusha Mantrala (She/Her/Hers) - Vice President at Pratyusha Mantrala (She/Her/Hers) - Vice President at ... LinkedIn · Pratyusha Mantrala (She/Her/Hers) 1.2K+ followers LinkedIn · Pratyusha Mantrala (She/Her/Hers) 1.2K+ followers JPMorgan Chase & Co. 10 years 11 months. JPMorgan Chase ...",
+      "Requested Company": "JPMorgan Chase",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Suresh G",
+      "Designation": "AVP",
+      "Company": "Product Owner (PSPO-1)",
+      "LinkedIn URL": "https://www.linkedin.com/in/suresh-g-26756491/",
+      "Source": "google_browser",
+      "Evidence": "Suresh G - AVP - Product Owner (PSPO-1) | Scrum Master Suresh G - AVP - Product Owner (PSPO-1) | Scrum Master ... LinkedIn · Suresh G 1K+ followers LinkedIn · Suresh G 1K+ followers Bengaluru, Karnataka, India · Business Analyst · JPMorgan Chase & Co. ... JPMorgan Chase & Co. · Location: Bengaluru · 500+ connections on LinkedIn. View Suresh G's profile on LinkedIn, a professional community of 1 billion members.",
+      "Requested Company": "JPMorgan Chase",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Devangi Patel",
+      "Designation": "JP Morgan Chase & Co",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/pateldevangi/",
+      "Source": "google_browser",
+      "Evidence": "Devangi Patel - JP Morgan Chase & Co LinkedIn · Devangi Patel 190+ followers Devangi Patel - JP Morgan Chase & Co LinkedIn · Devangi Patel 190+ followers LinkedIn · Devangi Patel 190+ followers Plano, Texas, United States · Vice President - Fraud Strategy Analyst · JPMorgan Chase & Co. Experience ; Vice President - Fraud Strategy Analyst. JPMorgan Chase & Co. Jun 2023 ; Vice President - Marketing Data Analyst. JPMorganChase. Jul 2018 ; Data ... Read more",
+      "Requested Company": "JPMorgan Chase",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Rupali Nevrekar",
+      "Designation": "Vice President",
+      "Company": "JP Morgan Chase Bank",
+      "LinkedIn URL": "https://www.linkedin.com/in/rupali-nevrekar-b4579421/",
+      "Source": "google_browser",
+      "Evidence": "Rupali Nevrekar - Vice President - JP Morgan Chase Bank Rupali Nevrekar - Vice President - JP Morgan Chase Bank ... LinkedIn · Rupali Nevrekar 340+ followers LinkedIn · Rupali Nevrekar 340+ followers Mumbai, Maharashtra, India · Vice President · JPMorgan Chase & Co.",
+      "Requested Company": "JPMorgan Chase",
+      "Requested Designation": "VP Marketing",
+      "Reason": "designation_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "Apoorva A. N.",
+      "Designation": "AISM-Agility lead, who empowers and gets",
+      "Company": "Unknown",
+      "LinkedIn URL": "https://www.linkedin.com/in/apoorvanaidu/",
+      "Source": "google_browser",
+      "Evidence": "Apoorva A. N. - AISM-Agility lead, who empowers and gets Apoorva A. N. - AISM-Agility lead, who empowers and gets ... LinkedIn · Apoorva A. N. 1.3K+ followers LinkedIn · Apoorva A. N. 1.3K+ followers ... JPMorgan Chase & Co. · Education: University of Houston · Location ... Vice President of Marketing . Sep 2012 - Jun 2013. Management Information Systems ... Read more",
+      "Requested Company": "JPMorgan Chase",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    },
+    {
+      "Name": "jishnu pradeep",
+      "Designation": "Assistant Manager",
+      "Company": "Operations",
+      "LinkedIn URL": "https://www.linkedin.com/in/jishnu-pradeep-4b867484/",
+      "Source": "google_browser",
+      "Evidence": "jishnu pradeep - Assistant Manager - Operations LinkedIn · jishnu pradeep 120+ followers jishnu pradeep - Assistant Manager - Operations LinkedIn · jishnu pradeep 120+ followers LinkedIn · jishnu pradeep 120+ followers 11 years 3 months. uae. JPMorgan Chase &amp; Co. Graphic. VP Marketing . JPMorgan Chase & Co. Aug 2014 - Oct 2014 3 months. Bangalore. Education. Visvesvaraya ... Read more",
+      "Requested Company": "JPMorgan Chase",
+      "Requested Designation": "VP Marketing",
+      "Reason": "company_mismatch",
+      "Reviewable": true
+    }
+  ],
+  "errors": [],
+  "source_errors": [],
+  "retry_queue": [],
+  "provider_outcomes": {
+    "google_browser": {
+      "attempts": 1,
+      "successful_searches": 1,
+      "empty_searches": 0,
+      "errors": 0,
+      "challenges": 0,
+      "results": 10
+    },
+    "ddgs": {
+      "attempts": 0,
+      "successful_searches": 0,
+      "empty_searches": 0,
+      "errors": 0,
+      "challenges": 0,
+      "results": 0
+    }
+  },
+  "captcha_required": false,
+  "warning_state": ""
+}

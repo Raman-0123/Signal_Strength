@@ -78,7 +78,7 @@ with st.form("url_people_form"):
     sources = col_sources.multiselect(
         "Search sources",
         source_options,
-        default=["google_browser"] + list(DEFAULT_SOURCE_NAMES),
+        default=["google_browser", "ddgs"],
         format_func=lambda v: source_labels[v],
         help="No LinkedIn login and no direct LinkedIn scraping.",
     )
@@ -146,8 +146,6 @@ if submitted:
     if not urls:
         st.error("Enter at least one URL.")
     else:
-        if any(source in {"ddgs", "duckduckgo_browser"} for source in sources) and "google_browser" not in sources:
-            sources = ["google_browser", *sources]
         job_config = {
             "source_urls": urls,
             "source_url": urls[0],  # backward-compat

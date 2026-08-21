@@ -1,0 +1,31 @@
+{
+  "state": "paused",
+  "workflow": "lead_harvest",
+  "job_id": "20260821T120338Z_baa7d11f",
+  "message": "Paused safely after the current unit; relaunch to resume",
+  "processed": 52,
+  "total": 150,
+  "updated_at": "2026-08-21T12:08:14.588947+00:00",
+  "pid": 55661,
+  "phase": "search",
+  "candidates": 212,
+  "matched": 0,
+  "rejected": 0,
+  "searches_completed": 52,
+  "searches_total": 150,
+  "heartbeat_at": "2026-08-21T12:08:10.750718+00:00",
+  "heartbeat_tick": 0,
+  "activity": "Public candidate search in progress",
+  "current_query": "site:linkedin.com/in (\"VP of HR\" OR \"VP People\" OR \"VP People & Culture\" OR \"SVP HR\") WHITEFIELD (IT OR GCC) -jobs -hiring -recruiter -recruitment -careers",
+  "current_source": "ddgs",
+  "current_page": 2,
+  "captcha_required": true,
+  "captcha_source": "google_browser",
+  "source_errors": [
+    "google_browser: google_browser verification was not completed within 60 seconds; retry from the saved Google page"
+  ],
+  "failed_searches": 1,
+  "csv_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/lead_harvest/20260821T120338Z_baa7d11f/Verified_Leads_partial.csv",
+  "rejected_csv_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/lead_harvest/20260821T120338Z_baa7d11f/Rejected_Candidates_partial.csv",
+  "xlsx_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/lead_harvest/20260821T120338Z_baa7d11f/Verified_Leads_partial.xlsx"
+}

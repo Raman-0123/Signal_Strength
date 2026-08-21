@@ -1,0 +1,50 @@
+{
+  "state": "completed_with_warnings",
+  "workflow": "company_pocs",
+  "job_id": "20260820T110112Z_a45449a1",
+  "message": "Completed with warnings: 18 matched POCs; 114 searches still need recovery",
+  "processed": 126,
+  "total": 126,
+  "updated_at": "2026-08-20T12:15:51.820759+00:00",
+  "pid": 20868,
+  "matched": 18,
+  "searches_completed": 252,
+  "searches_total": 252,
+  "provider_outcomes": {
+    "google_browser": {
+      "attempts": 13,
+      "successful_searches": 12,
+      "empty_searches": 0,
+      "errors": 1,
+      "challenges": 1,
+      "results": 120
+    },
+    "ddgs": {
+      "attempts": 240,
+      "successful_searches": 3,
+      "empty_searches": 237,
+      "errors": 0,
+      "challenges": 0,
+      "results": 57
+    }
+  },
+  "retry_count": 114,
+  "failed_searches": 114,
+  "current_company": "WeWork Prestige Tech Park",
+  "current_designation": "VP",
+  "current_source": "ddgs",
+  "current_query": "site:linkedin.com/in \"WeWork Prestige Tech Park\" (VP OR \"Vice President\") \"Bengaluru\"  -\"jobs\" -\"hiring\" -\"recruiter\" -\"recruitment\" -\"careers\"",
+  "heartbeat_at": "2026-08-20T12:15:51.006958+00:00",
+  "heartbeat_tick": 10,
+  "activity": "Retrying a failed public search",
+  "captcha_required": true,
+  "captcha_source": "ddgs",
+  "source_errors": [
+    "google_browser: google_browser challenge detected; retry from the saved Google page"
+  ],
+  "fallback_recommended": true,
+  "csv_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260820T110112Z_a45449a1/Company_Designation_POCs.csv",
+  "xlsx_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260820T110112Z_a45449a1/Company_Designation_POCs.xlsx",
+  "manual_recovery_available": true,
+  "cloud_manual_recovery": false
+}

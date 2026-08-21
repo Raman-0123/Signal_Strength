@@ -1,0 +1,50 @@
+{
+  "state": "completed_with_warnings",
+  "workflow": "company_pocs",
+  "job_id": "20260820T110124Z_d4924231",
+  "message": "Completed with warnings: 68 matched POCs; 1 searches still need recovery",
+  "processed": 126,
+  "total": 126,
+  "updated_at": "2026-08-20T11:37:27.216668+00:00",
+  "pid": 20943,
+  "matched": 68,
+  "searches_completed": 252,
+  "searches_total": 252,
+  "provider_outcomes": {
+    "google_browser": {
+      "attempts": 10,
+      "successful_searches": 9,
+      "empty_searches": 0,
+      "errors": 1,
+      "challenges": 1,
+      "results": 90
+    },
+    "ddgs": {
+      "attempts": 127,
+      "successful_searches": 125,
+      "empty_searches": 2,
+      "errors": 0,
+      "challenges": 0,
+      "results": 862
+    }
+  },
+  "retry_count": 1,
+  "failed_searches": 1,
+  "current_company": "frog Design Studio",
+  "current_designation": "Senior Director",
+  "current_source": "ddgs",
+  "current_query": "site:linkedin.com/in \"frog Design Studio\" \"Senior Director\" \"Bengaluru\"  -\"jobs\" -\"hiring\" -\"recruiter\" -\"recruitment\" -\"careers\"",
+  "heartbeat_at": "2026-08-20T11:37:26.540190+00:00",
+  "heartbeat_tick": 9,
+  "activity": "Retrying a failed public search",
+  "captcha_required": true,
+  "captcha_source": "ddgs",
+  "source_errors": [
+    "google_browser: google_browser challenge detected; retry from the saved Google page"
+  ],
+  "fallback_recommended": true,
+  "csv_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260820T110124Z_d4924231/Company_Designation_POCs.csv",
+  "xlsx_path": "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260820T110124Z_d4924231/Company_Designation_POCs.xlsx",
+  "manual_recovery_available": true,
+  "cloud_manual_recovery": false
+}

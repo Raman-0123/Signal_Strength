@@ -21,7 +21,11 @@ from speedy_scraper.sources import (
 )
 from speedy_scraper.taxonomy import canonical_location_from_text
 from speedy_scraper.text import any_term_in_text, clean_spaces, or_group
-from speedy_scraper.validator import role_match_strength, validate_candidate
+from speedy_scraper.validator import (
+    candidate_filter_reason,
+    role_match_strength,
+    validate_candidate,
+)
 
 ProgressCallback = Callable[[dict[str, object]], None]
 
@@ -47,7 +51,7 @@ class LeadScraper:
         self._emit(progress, "started", target=config.target_count, queries=len(queries), sources=len(sources))
         try:
             for query_index, query in enumerate(queries, start=1):
-                if len(candidates_by_url) >= pool_target:
+                if _relevant_candidate_count(candidates_by_url.values(), config) >= pool_target:
                     break
                 exhausted_sources: set[str] = set()
                 page_budget = min(
@@ -68,9 +72,7 @@ class LeadScraper:
                             candidates=len(candidates_by_url),
                         )
                         try:
-                            source_limit = (
-                                config.max_results_per_query if source.name == "ddgs" else 10
-                            )
+                            source_limit = min(10, config.max_results_per_query)
                             batch = search_source_page(
                                 source,
                                 query,
@@ -156,6 +158,8 @@ class LeadScraper:
                 require_target_company=config.require_target_company,
                 minimum_confidence=config.minimum_confidence,
                 minimum_sources=config.minimum_sources,
+                include_terms=config.include_terms,
+                exclude_terms=config.exclude_terms,
             )
             if lead:
                 leads.append(lead)
@@ -194,6 +198,25 @@ def rank_candidates(candidates, config: ScrapeConfig) -> list[RawCandidate]:
             len(candidate.evidence),
         ),
         reverse=True,
+    )
+
+
+def _relevant_candidate_count(candidates, config: ScrapeConfig) -> int:
+    return sum(
+        not candidate_filter_reason(
+            candidate,
+            roles=config.roles,
+            locations=config.locations,
+            industries=config.industries,
+            company_names=config.company_names,
+            business_model=config.business_model,
+            require_target_company=config.require_target_company,
+            include_terms=config.include_terms,
+            exclude_terms=config.exclude_terms,
+        )
+        and len(independent_source_families(candidate.sources_seen or {candidate.source}))
+        >= config.minimum_sources
+        for candidate in candidates
     )
 
 

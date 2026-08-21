@@ -9,20 +9,25 @@ import pandas as pd
 import streamlit as st
 
 from speedy_scraper.background_jobs import (
+    clear_saved_jobs,
     create_job,
+    delete_saved_job,
     heartbeat_age_seconds,
     job_is_stale,
     launch_job,
     list_jobs,
+    process_is_running,
     read_json,
     read_status,
     request_stop,
     write_json,
 )
-from speedy_scraper.config import load_catalog
+from speedy_scraper.config import config_from_mapping, load_catalog
 from speedy_scraper.exports import leads_frame, rejections_frame
 from speedy_scraper.lead_job import load_lead_job_checkpoint
 from speedy_scraper.pipeline import load_existing_urls
+from speedy_scraper.query import build_queries
+from speedy_scraper.sources import independent_source_families
 from speedy_scraper.taxonomy import load_location_taxonomy, load_role_taxonomy
 from speedy_scraper.ui import (
     action_button_css,
@@ -31,8 +36,8 @@ from speedy_scraper.ui import (
 )
 
 st.set_page_config(
-    page_title="Signal · Google Lead Finder",
-    page_icon="G",
+    page_title="Signal · Public Lead Finder",
+    page_icon="S",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -221,6 +226,14 @@ def _worker_log_tail(job_dir: Path, *, limit: int = 5000) -> str:
         return ""
 
 
+def _prepare_saved_provider_retry(job_dir: Path) -> None:
+    """Retry failed cursors without replacing the engines selected by the user."""
+    config = read_json(job_dir / "config.json", default={})
+    config = config if isinstance(config, dict) else {}
+    config["retry_failed_searches"] = True
+    write_json(job_dir / "config.json", config)
+
+
 def _unreviewed_candidates_frame(checkpoint: dict, result) -> pd.DataFrame:
     """Expose candidates preserved before a failed or paused verification pass."""
     reviewed_urls = {
@@ -240,7 +253,7 @@ def _unreviewed_candidates_frame(checkpoint: dict, result) -> pd.DataFrame:
                 "Company": str(item.get("company") or ""),
                 "LinkedIn URL": url,
                 "Status": "Awaiting verification",
-                "Google Evidence": str(item.get("evidence") or ""),
+                "Search Evidence": str(item.get("evidence") or ""),
             }
         )
     return pd.DataFrame(
@@ -251,7 +264,7 @@ def _unreviewed_candidates_frame(checkpoint: dict, result) -> pd.DataFrame:
             "Company",
             "LinkedIn URL",
             "Status",
-            "Google Evidence",
+            "Search Evidence",
         ],
     )
 
@@ -259,9 +272,9 @@ def _unreviewed_candidates_frame(checkpoint: dict, result) -> pd.DataFrame:
 st.markdown(
     """
     <div class="signal-hero">
-      <div class="eyebrow">Signal / Google lead finder</div>
+      <div class="eyebrow">Signal / multi-engine lead finder</div>
       <h1>Search less.<br>Find the right people.</h1>
-      <p>One visible Chrome session searches public Google result pages for personal LinkedIn profiles. No Bing, no DuckDuckGo, no LinkedIn login.</p>
+      <p>Run focused public searches through Google, DDGS, or DuckDuckGo and keep only personal LinkedIn profiles that pass every selected filter.</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -277,12 +290,12 @@ st.markdown(
 )
 st.markdown(
     """
-    <div class="google-note"><strong>Chrome stays visible.</strong><span>If Google asks for verification, complete it in that window. The same saved browser profile and query will continue automatically.</span></div>
+    <div class="google-note"><strong>Choose the search engines.</strong><span>DDGS runs without a browser. Browser providers can stay visible so you can complete a verification prompt if one appears.</span></div>
     """,
     unsafe_allow_html=True,
 )
 
-with st.form("google_lead_search", clear_on_submit=False):
+with st.form("public_lead_search", clear_on_submit=False):
     left, right = st.columns(2, gap="large")
     role_options, location_options, industry_options = _search_filter_options()
     selected_roles = left.multiselect(
@@ -303,7 +316,7 @@ with st.form("google_lead_search", clear_on_submit=False):
         options=location_options,
         placeholder="Choose locations or type a custom place",
         accept_new_options=True,
-        help="Candidates must show one of these locations in their Google result card. Type a custom place and press Enter if it is not listed.",
+        help="Candidates must show one of these locations in their public result card. Type a custom place and press Enter if it is not listed.",
     )
     selected_industries = right.multiselect(
         "Industry keywords (optional)",
@@ -313,22 +326,66 @@ with st.form("google_lead_search", clear_on_submit=False):
         help="Choose from the catalog or type a custom keyword and press Enter.",
     )
 
+    source_labels = {
+        "google_browser": "Google browser",
+        "ddgs": "DDGS metasearch",
+        "duckduckgo_browser": "DuckDuckGo browser",
+        "bing_browser": "Bing browser",
+    }
+    search_sources = st.multiselect(
+        "Public search engines",
+        options=list(source_labels),
+        default=["google_browser", "ddgs"],
+        format_func=lambda value: source_labels[value],
+        help="Each selected engine runs independently. Google is no longer added automatically.",
+    )
+
     settings_left, settings_middle, settings_right = st.columns([1, 1, 1.5])
     target_count = settings_left.number_input(
         "Lead target", min_value=1, max_value=500, value=50, step=10,
-        help="The final count depends on how many public Google results pass every filter.",
+        help="The final count depends on how many public results pass every filter.",
     )
-    google_pages = settings_middle.select_slider(
-        "Google pages / search",
+    search_pages = settings_middle.select_slider(
+        "Depth / query",
         options=[1, 2, 3, 4, 5],
         value=2,
-        help="More pages take longer and increase the chance of a Google verification prompt.",
+        help="Each step requests up to 10 more results per query and selected engine.",
     )
     strict_company = settings_right.checkbox(
         "Current company must match",
         value=True,
         help="Applied only when company names are entered.",
     )
+
+    browser_selected = any(source.endswith("_browser") for source in search_sources)
+    browser_left, browser_right = st.columns(2)
+    show_browser = browser_left.checkbox(
+        "Show browser windows",
+        value=True,
+        disabled=not browser_selected,
+        help="Useful for completing Google or DuckDuckGo verification prompts locally.",
+    )
+    corroborate = browser_right.checkbox(
+        "Require two-engine confirmation",
+        value=False,
+        disabled=len(independent_source_families(search_sources)) < 2,
+        help="Improves precision but returns only profiles found by two selected engines.",
+    )
+
+    with st.expander("Accuracy rules", expanded=False):
+        accuracy_left, accuracy_right = st.columns(2, gap="large")
+        include_terms_text = accuracy_left.text_area(
+            "Required evidence terms — one per line",
+            height=90,
+            placeholder="B2B\npayments",
+            help="Every term must appear in the candidate's own result evidence.",
+        )
+        exclude_terms_text = accuracy_right.text_area(
+            "Reject evidence terms — one per line",
+            height=90,
+            placeholder="former\nconsultant",
+            help="A candidate is rejected if any term appears in their result evidence.",
+        )
 
     with st.expander("Remove duplicates", expanded=False):
         st.markdown(
@@ -350,7 +407,7 @@ with st.form("google_lead_search", clear_on_submit=False):
 
     with st.container(key="lead-run-action"):
         submitted = st.form_submit_button(
-            "Open Chrome & find leads",
+            "Find verified leads",
             type="primary",
             width="stretch",
         )
@@ -360,47 +417,59 @@ if submitted:
     locations = _items("\n".join(str(item) for item in selected_locations))
     companies = _items(companies_text)
     industries = _items("\n".join(str(item) for item in selected_industries))
+    include_terms = _items(include_terms_text)
+    exclude_terms = _items(exclude_terms_text)
     errors: list[str] = []
     if not roles:
         errors.append("Add at least one job title.")
     if not locations and not companies:
-        errors.append("Add a location or at least one company to keep Google searches focused.")
+        errors.append("Add a location or at least one company to keep searches focused.")
+    if not search_sources:
+        errors.append("Select at least one public search engine.")
     if errors:
         for message in errors:
             st.error(message)
     else:
-        # Scale larger targets while keeping the total run below 150 Google
-        # result pages. The target is aspirational because public result volume
-        # and the strict validation pass determine the final verified count.
-        max_search_pages = 150
+        # Scale larger targets while keeping the total provider-request plan bounded.
+        max_search_requests = 150
+        provider_count = max(1, len(search_sources))
+        max_query_budget = max_search_requests // (int(search_pages) * provider_count)
         automatic_query_budget = min(
-            max_search_pages // int(google_pages),
-            max(8, math.ceil(int(target_count) / (int(google_pages) * 3.5))),
+            max_query_budget,
+            max(12, math.ceil(int(target_count) / (int(search_pages) * 2.5))),
         )
         config = {
-            "ui_version": "google_only_v1",
+            "ui_version": "multi_source_v2",
             "target_count": int(target_count),
             "business_model": "Any",
             "roles": roles,
             "locations": locations,
             "industries": industries,
             "company_names": companies,
-            "sources": ["google_browser"],
+            "sources": search_sources,
             "max_queries": automatic_query_budget,
-            "max_results_per_query": int(google_pages) * 10,
-            "max_pages_per_query": int(google_pages),
-            "source_failure_limit": 1,
+            "max_results_per_query": int(search_pages) * 10,
+            "max_pages_per_query": int(search_pages),
+            "source_failure_limit": 2,
             "candidate_pool_multiplier": 2,
-            "browser_headless": False,
-            "google_manual_challenge_seconds": 60,
+            "browser_headless": not bool(show_browser and browser_selected),
+            "google_manual_challenge_seconds": (
+                60 if show_browser and "google_browser" in search_sources else 0
+            ),
             "require_target_company": bool(companies and strict_company),
-            "minimum_confidence": 70,
-            "minimum_sources": 1,
-            "query_mode": "Balanced",
-            "include_terms": [],
-            "exclude_terms": [],
+            "minimum_confidence": 80,
+            "minimum_sources": 2 if corroborate else 1,
+            "query_mode": "Strict",
+            "include_terms": include_terms,
+            "exclude_terms": exclude_terms,
             "existing_files": [],
         }
+        full_plan_config = {**config, "max_queries": max_query_budget}
+        full_plan_size = len(build_queries(config_from_mapping(full_plan_config)))
+        config["max_queries"] = min(
+            max_query_budget,
+            max(automatic_query_budget, full_plan_size),
+        )
         job_dir = create_job("lead_harvest", config).resolve()
         sheet_files = download_gsheet(gsheet_url, job_dir)
         existing_files = _save_uploads(dedupe_files, job_dir) + sheet_files
@@ -420,7 +489,7 @@ if submitted:
             st.rerun()
 
 previous_jobs = list_jobs("lead_harvest")
-if len(previous_jobs) > 1:
+if previous_jobs:
     with st.expander("Open an earlier run", expanded=False):
         selected_job = st.selectbox(
             "Saved run",
@@ -430,12 +499,80 @@ if len(previous_jobs) > 1:
             ),
             label_visibility="collapsed",
         )
-        if st.button("Open run", width="stretch"):
+        selected_status = read_status(selected_job)
+        selected_live = (
+            str(selected_status.get("state") or "") in {"starting", "running", "stopping"}
+            and process_is_running(int(selected_status.get("pid") or 0))
+        )
+        archive_open, archive_delete, archive_clear = st.columns([1, 1, 1])
+        if archive_open.button("Open selected", width="stretch"):
             st.session_state.lead_job_dir = str(selected_job.resolve())
             st.rerun()
+        with archive_delete.container(key="lead-delete-job-action"):
+            if st.button(
+                "✕ Delete selected",
+                disabled=selected_live,
+                help="Stop a live worker before deleting its files.",
+                width="stretch",
+            ):
+                st.session_state.lead_delete_job = str(selected_job.resolve())
+                st.rerun()
+        with archive_clear.container(key="lead-clear-jobs-action"):
+            if st.button("Clear saved runs", width="stretch"):
+                st.session_state.lead_confirm_clear_jobs = True
+                st.rerun()
+
+        delete_target = st.session_state.get("lead_delete_job")
+        if delete_target:
+            delete_path = Path(str(delete_target)).resolve()
+            st.warning(
+                f"Delete **{delete_path.name}** including its checkpoints, logs, and exports?"
+            )
+            confirm_delete, cancel_delete = st.columns(2)
+            with confirm_delete.container(key="lead-confirm-delete-action"):
+                if st.button("Confirm delete", type="primary", width="stretch"):
+                    removed = delete_saved_job(delete_path, "lead_harvest")
+                    if removed and st.session_state.get("lead_job_dir") == str(delete_path):
+                        st.session_state.lead_job_dir = ""
+                    st.session_state.lead_archive_message = (
+                        f"Deleted {delete_path.name}."
+                        if removed
+                        else "That run is still live and was kept. Stop it before deleting."
+                    )
+                    st.session_state.pop("lead_delete_job", None)
+                    st.rerun()
+            if cancel_delete.button("Cancel", width="stretch"):
+                st.session_state.pop("lead_delete_job", None)
+                st.rerun()
+
+        if st.session_state.get("lead_confirm_clear_jobs"):
+            st.warning(
+                "Delete every saved Lead Finder run, including its checkpoints, logs, and "
+                "exports? Workers that are still live will be kept."
+            )
+            confirm_clear, cancel_clear = st.columns(2)
+            with confirm_clear.container(key="lead-confirm-clear-action"):
+                if st.button("Confirm clear saved runs", type="primary", width="stretch"):
+                    deleted, kept = clear_saved_jobs("lead_harvest")
+                    current_job = str(st.session_state.get("lead_job_dir") or "")
+                    if current_job and Path(current_job).name in deleted:
+                        st.session_state.lead_job_dir = ""
+                    message = f"Deleted {len(deleted)} saved run(s)."
+                    if kept:
+                        message += f" Kept {len(kept)} live run(s)."
+                    st.session_state.lead_archive_message = message
+                    st.session_state.pop("lead_confirm_clear_jobs", None)
+                    st.rerun()
+            if cancel_clear.button("Cancel", width="stretch"):
+                st.session_state.pop("lead_confirm_clear_jobs", None)
+                st.rerun()
+
+archive_message = st.session_state.pop("lead_archive_message", None)
+if archive_message:
+    st.success(str(archive_message))
 
 st.markdown(
-    '<div class="section-head"><h2>Live results</h2><span class="micro">Checkpointed after every Google page</span></div>',
+    '<div class="section-head"><h2>Live results</h2><span class="micro">Checkpointed after every provider page</span></div>',
     unsafe_allow_html=True,
 )
 
@@ -444,7 +581,7 @@ st.markdown(
 def job_monitor() -> None:
     raw_path = str(st.session_state.get("lead_job_dir") or "")
     if not raw_path:
-        st.info("Enter a search brief above to start your first Google lead run.")
+        st.info("Enter a search brief above to start your first public lead run.")
         return
 
     job_dir = Path(raw_path)
@@ -460,11 +597,14 @@ def job_monitor() -> None:
     active = state in {"starting", "running", "stopping"}
     heartbeat_age = heartbeat_age_seconds(status)
     live = active and not stale and (heartbeat_age is None or heartbeat_age <= 8)
-    detail = str(status.get("message") or "Preparing Google Chrome")
+    configured_sources = [str(item) for item in job_config.get("sources") or []]
+    current_source = str(status.get("current_source") or "")
+    current_source_label = source_labels.get(current_source, current_source or "search provider")
+    detail = str(status.get("message") or "Preparing search providers")
     current_page = status.get("current_page")
     if current_page:
-        detail = f"Google page {current_page} · {detail}"
-    label = "GOOGLE SEARCHING" if live else (
+        detail = f"{current_source_label} · page {current_page} · {detail}"
+    label = "PUBLIC SEARCH RUNNING" if live else (
         "RECOVERY NEEDED" if stale else state.replace("_", " ").upper()
     )
     st.markdown(
@@ -490,7 +630,9 @@ def job_monitor() -> None:
         "challenge" in item.lower() or "unusual traffic" in item.lower()
         for item in errors
     )
+    challenge_source = str(status.get("captcha_source") or "")
     ip_changed = any("public ip changed" in item.lower() for item in errors)
+    recovery_action_rendered = False
     if ip_changed:
         st.error(
             "Google detected two public IP addresses in this browser session. Turn off your "
@@ -498,7 +640,8 @@ def job_monitor() -> None:
             "This CAPTCHA cannot be completed reliably while the IP is changing."
         )
         if not active:
-            with st.container(key="lead-resume-action"):
+            recovery_action_rendered = True
+            with st.container(key="lead-network-retry-action"):
                 if st.button("Retry after fixing the network", width="stretch"):
                     prepare_failed_search_retry(job_dir, local_manual=True)
                     request_stop(job_dir)
@@ -506,22 +649,33 @@ def job_monitor() -> None:
                     st.rerun(scope="fragment")
     elif challenged and active:
         st.warning(
-            "Google needs verification. Complete it in the open Chrome window; "
-            "the worker waits up to one minute on the same page."
+            f"{source_labels.get(challenge_source, challenge_source or 'A search provider')} "
+            "needs verification. Complete it in the open browser window if available; "
+            "the other selected providers continue independently."
         )
     elif challenged:
-        st.error(
-            "Google did not release the verification page in time. No fallback engine was used."
-        )
-        with st.container(key="lead-resume-action"):
-            if st.button("Retry the failed Google page in Chrome", width="stretch"):
-                prepare_failed_search_retry(job_dir, local_manual=True)
+        st.error(f"{source_labels.get(challenge_source, challenge_source or 'A search provider')} did not release its verification page in time.")
+        recovery_action_rendered = True
+        with st.container(key="lead-challenge-retry-action"):
+            google_recovery = challenge_source == "google_browser" or (
+                not challenge_source and "google_browser" in configured_sources
+            )
+            retry_label = (
+                "Retry the failed Google page in Chrome"
+                if google_recovery
+                else "Retry failed searches with selected engines"
+            )
+            if st.button(retry_label, width="stretch"):
+                if google_recovery:
+                    prepare_failed_search_retry(job_dir, local_manual=True)
+                else:
+                    _prepare_saved_provider_retry(job_dir)
                 request_stop(job_dir)
                 launch_job(job_dir, "speedy_scraper.lead_job")
                 st.rerun(scope="fragment")
 
     if stale:
-        st.warning("The worker stopped responding. Your last completed Google page is saved.")
+        st.warning("The worker stopped responding. Its last completed provider page is saved.")
 
     controls_a, controls_b, controls_meta = st.columns([1, 1, 2])
     if active and not stale:
@@ -529,22 +683,21 @@ def job_monitor() -> None:
             if st.button("Stop safely", disabled=state == "stopping", width="stretch"):
                 request_stop(job_dir)
                 st.rerun(scope="fragment")
-    elif state in {"paused", "failed"} or stale:
+    elif (state in {"paused", "failed"} or stale) and not recovery_action_rendered:
         with controls_a.container(key="lead-resume-action"):
-            if st.button("Resume in Chrome", width="stretch"):
-                prepare_failed_search_retry(job_dir, local_manual=True)
+            if st.button("Resume selected engines", width="stretch"):
                 launch_job(job_dir, "speedy_scraper.lead_job")
                 st.rerun(scope="fragment")
     with controls_b.container(key="lead-refresh-action"):
         st.button("Refresh", width="stretch")
     controls_meta.caption(
         f"Run {job_dir.name} · {datetime.now().strftime('%H:%M:%S')} · "
-        f"Google only · checkpoint v{checkpoint.get('version', '—')}"
+        f"{len(configured_sources) or 1} engine(s) · checkpoint v{checkpoint.get('version', '—')}"
     )
 
     metric_a, metric_b, metric_c, metric_d = st.columns(4)
     metric_a.metric(
-        "Google candidates",
+        "Search candidates",
         int(status.get("candidates") or result.metrics.get("candidates_found", 0)),
     )
     metric_b.metric("Verified leads", len(result.leads))
@@ -554,15 +707,20 @@ def job_monitor() -> None:
     existing_url_count = int(job_config.get("existing_url_count") or 0)
     if existing_url_count:
         st.caption(
-            f"Checking every Google result against {existing_url_count:,} prior LinkedIn URLs."
+            f"Checking every result against {existing_url_count:,} prior LinkedIn URLs."
         )
+
+    if result.queries:
+        with st.expander(f"Focused query plan ({len(result.queries)})", expanded=False):
+            st.caption("Every query includes the selected role, location, industry, and evidence rules that apply to it.")
+            st.code("\n".join(result.queries), language="text")
 
     if result.leads:
         st.dataframe(leads_frame(result.leads), width="stretch", hide_index=True)
     elif not active:
-        st.info("No Google result has passed every selected filter yet.")
+        st.info("No public result has passed every selected filter yet.")
     else:
-        st.caption("Verified leads will appear here while Chrome searches.")
+        st.caption("Verified leads will appear here while the selected engines search.")
 
     if result.rejections:
         rejected_frame = rejections_frame(result.rejections)
@@ -570,7 +728,7 @@ def job_monitor() -> None:
             f"Rejected candidates ({len(result.rejections)})",
             expanded=not result.leads,
         ):
-            st.caption("Each row includes the exact filter reason and Google evidence.")
+            st.caption("Each row includes the exact filter reason and search evidence.")
             st.dataframe(rejected_frame, width="stretch", hide_index=True)
             st.download_button(
                 "Download rejected candidates (CSV)",
@@ -587,7 +745,7 @@ def job_monitor() -> None:
             expanded=state in {"failed", "paused"},
         ):
             st.caption(
-                "Google found these profiles, but the run stopped before the accuracy filters "
+                "Public search found these profiles, but the run stopped before the accuracy filters "
                 "could classify them as verified or rejected."
             )
             st.dataframe(unreviewed_frame, width="stretch", hide_index=True)

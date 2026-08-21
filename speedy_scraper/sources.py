@@ -150,7 +150,7 @@ class DdgsSource(SearchSource):
 
     def __init__(
         self,
-        backends: tuple[str, ...] = ("brave", "yahoo"),
+        backends: tuple[str, ...] = ("duckduckgo", "brave", "yahoo"),
         *,
         personal_profiles_only: bool = True,
     ):
@@ -159,6 +159,25 @@ class DdgsSource(SearchSource):
         self._client: Any = None
 
     def search(self, query: str, *, max_results: int, headless: bool = True) -> list[SearchResult]:
+        return self._search(query, page=1, max_results=max_results)
+
+    def search_page(
+        self,
+        query: str,
+        *,
+        page: int,
+        max_results: int,
+        headless: bool = True,
+    ) -> SearchPage:
+        page_number = max(1, int(page))
+        results = self._search(query, page=page_number, max_results=max_results)
+        return SearchPage(
+            results=results,
+            page=page_number,
+            has_next=len(results) >= max(1, int(max_results)),
+        )
+
+    def _search(self, query: str, *, page: int, max_results: int) -> list[SearchResult]:
         from ddgs import DDGS
 
         if self._client is None:
@@ -171,6 +190,7 @@ class DdgsSource(SearchSource):
                     "region": "in-en",
                     "safesearch": "off",
                     "max_results": max(max_results, 10),
+                    "page": page,
                 }
                 if backend != "auto":
                     kwargs["backend"] = backend
@@ -186,6 +206,7 @@ class DdgsSource(SearchSource):
                     return results
             except TypeError:
                 try:
+                    # Compatibility with older DDGS versions that do not expose page.
                     raw = list(self._client.text(query, max_results=max_results))
                     results = _search_results_from_raw(
                         raw,

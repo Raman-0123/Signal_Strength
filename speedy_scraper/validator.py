@@ -5,7 +5,11 @@ import re
 from speedy_scraper.linkedin import linkedin_id, normalize_linkedin_url
 from speedy_scraper.models import RawCandidate, RejectedCandidate, VerifiedLead
 from speedy_scraper.sources import independent_source_families
-from speedy_scraper.taxonomy import canonical_location_from_text, role_definition_matches
+from speedy_scraper.taxonomy import (
+    canonical_location_from_text,
+    resolve_role,
+    role_definition_matches,
+)
 from speedy_scraper.text import any_term_in_text, clean_spaces, normalize_text, term_in_text
 
 _INVALID_NAMES = {
@@ -91,6 +95,8 @@ def validate_candidate(
     require_target_company: bool = False,
     minimum_confidence: int = 0,
     minimum_sources: int = 1,
+    include_terms: list[str] | None = None,
+    exclude_terms: list[str] | None = None,
 ) -> tuple[VerifiedLead | None, RejectedCandidate | None]:
     url = normalize_linkedin_url(candidate.linkedin_url)
     if not url:
@@ -99,19 +105,21 @@ def validate_candidate(
         return None, _reject(candidate, "duplicate")
     if not _clean_identity(candidate):
         return None, _reject(candidate, "incomplete")
-    if not role_matches(candidate.designation, roles):
-        return None, _reject(candidate, "role")
-    if require_target_company and company_names and not any(
-        company_matches(candidate.company, company) for company in company_names
-    ):
-        return None, _reject(candidate, "target_company")
+    reason = candidate_filter_reason(
+        candidate,
+        roles=roles,
+        locations=locations,
+        industries=industries,
+        company_names=company_names,
+        company_evidence=company_evidence,
+        business_model=business_model,
+        require_target_company=require_target_company,
+        include_terms=include_terms or [],
+        exclude_terms=exclude_terms or [],
+    )
+    if reason:
+        return None, _reject(candidate, reason)
     location = location_match(candidate, locations)
-    if not location:
-        return None, _reject(candidate, "location")
-    if not industry_matches(candidate, industries, company_names, company_evidence):
-        return None, _reject(candidate, "industry_company")
-    if not business_model_matches(candidate, company_evidence, business_model):
-        return None, _reject(candidate, "business_model")
     if _independent_source_count(candidate.sources_seen or {candidate.source}) < max(
         1, minimum_sources
     ):
@@ -147,7 +155,15 @@ def validate_candidate(
 def role_matches(designation: str, roles: list[str]) -> bool:
     if not roles:
         return True
-    return any(role_match_strength(designation, role) > 0 for role in roles)
+    # Generic seniority choices must not widen a functional brief. For example,
+    # selecting "VP Marketing" and "VP" should not admit a VP of Product.
+    specific_roles = [
+        role
+        for role in roles
+        if resolve_role(role).function not in {"generic_vp", "generic_director"}
+    ]
+    effective_roles = specific_roles or roles
+    return any(role_match_strength(designation, role) > 0 for role in effective_roles)
 
 
 def role_match_strength(designation: str, role: str) -> int:
@@ -234,12 +250,47 @@ def industry_matches(
     company_names: list[str],
     company_evidence: str = "",
 ) -> bool:
-    if not industries and not company_names:
+    if not industries:
         return True
     evidence = clean_spaces(f"{candidate.company} {candidate.designation} {candidate.evidence} {company_evidence}")
-    if company_names and any_term_in_text(candidate.company, company_names):
-        return True
     return any_term_in_text(evidence, industries)
+
+
+def candidate_filter_reason(
+    candidate: RawCandidate,
+    *,
+    roles: list[str],
+    locations: list[str],
+    industries: list[str],
+    company_names: list[str],
+    company_evidence: str = "",
+    business_model: str = "Any",
+    require_target_company: bool = False,
+    include_terms: list[str] | None = None,
+    exclude_terms: list[str] | None = None,
+) -> str:
+    """Return the first failed user-visible filter, or an empty string."""
+    evidence = clean_spaces(
+        f"{candidate.name} {candidate.designation} {candidate.company} "
+        f"{candidate.title} {candidate.body} {candidate.evidence} {company_evidence}"
+    )
+    if exclude_terms and any_term_in_text(evidence, exclude_terms):
+        return "excluded_terms"
+    if include_terms and not all(term_in_text(evidence, term) for term in include_terms):
+        return "required_terms"
+    if not role_matches(candidate.designation, roles):
+        return "role"
+    if require_target_company and company_names and not any(
+        company_matches(candidate.company, company) for company in company_names
+    ):
+        return "target_company"
+    if not location_match(candidate, locations):
+        return "location"
+    if not industry_matches(candidate, industries, company_names, company_evidence):
+        return "industry_company"
+    if not business_model_matches(candidate, company_evidence, business_model):
+        return "business_model"
+    return ""
 
 
 def business_model_matches(candidate: RawCandidate, company_evidence: str, business_model: str) -> bool:

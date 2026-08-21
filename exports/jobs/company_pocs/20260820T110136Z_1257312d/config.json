@@ -1,0 +1,53 @@
+{
+  "companies": [
+    "JPMorgan Chase",
+    "Goldman Sachs",
+    "Nutanix",
+    "Cohesity",
+    "Cisco",
+    "Wells Fargo",
+    "Walmart Global Tech",
+    "Myntra",
+    "Capgemini",
+    "Accenture",
+    "Cognizant",
+    "LG Soft India",
+    "frog",
+    "Infiniti Research",
+    "Radisys India Limited",
+    "Cohesity India",
+    "Lycadigital Private Limited",
+    "Infiniti Research",
+    "frog Design Studio",
+    "LogicaTech Software Development Company",
+    "Ekakshar",
+    "WeWork Prestige Tech Park"
+  ],
+  "designations": [
+    "VP Marketing",
+    "Head of Marketing",
+    "Director of Marketing",
+    "Senior Director",
+    "CMO",
+    "VP"
+  ],
+  "locations": [
+    "Bengaluru"
+  ],
+  "target_count": 102,
+  "query_passes": 1,
+  "sources": [
+    "google_browser",
+    "ddgs"
+  ],
+  "browser_headless": false,
+  "google_manual_challenge_seconds": 0,
+  "max_results_per_search": 25,
+  "retry_attempts": 2,
+  "include_terms": [],
+  "exclude_terms": [],
+  "existing_files": [
+    "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260820T110136Z_1257312d/dedupe_inputs/CMO roundtable Bangalore (1).xlsx",
+    "/Users/ramanjotsingh/Desktop/ScrapeIT/Speedy-Scraper/exports/jobs/company_pocs/20260820T110136Z_1257312d/dedupe_inputs/gsheet_1YvORzUOOeB3tGMIVrwKxN2z_AKcaOhMhbCK6tQxvGlQ_0.csv"
+  ]
+}

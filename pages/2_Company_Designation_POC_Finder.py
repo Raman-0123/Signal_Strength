@@ -200,8 +200,6 @@ if start:
     if not companies or not designations:
         st.error("Enter at least one company and one designation.")
     else:
-        if any(source in {"ddgs", "duckduckgo_browser"} for source in sources) and "google_browser" not in sources:
-            sources = ["google_browser", *sources]
         config = {
             "companies": companies,
             "designations": designations,

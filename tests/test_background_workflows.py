@@ -1,11 +1,24 @@
 import json
+import os
 from pathlib import Path
 
 import pytest
 from openpyxl import load_workbook
 
-from speedy_scraper.background_jobs import clear_stop, create_job, job_is_stale, read_status
-from speedy_scraper.company_pocs import build_company_poc_tasks, run_company_poc_job
+from speedy_scraper.background_jobs import (
+    clear_saved_jobs,
+    clear_stop,
+    create_job,
+    delete_saved_job,
+    job_is_stale,
+    read_status,
+    update_status,
+)
+from speedy_scraper.company_pocs import (
+    build_company_poc_tasks,
+    load_company_poc_checkpoint,
+    run_company_poc_job,
+)
 from speedy_scraper.lead_job import load_lead_job_checkpoint, run_lead_job
 from speedy_scraper.models import SearchPage, SearchResult
 from speedy_scraper.sources import SourceError
@@ -32,6 +45,24 @@ class StopAfterFirstUrlSearch:
                 query=query,
             )
         ]
+
+
+def test_saved_job_deletion_and_clear_keep_live_workers(tmp_path: Path):
+    removable = create_job("lead_harvest", {}, jobs_root=tmp_path)
+    assert delete_saved_job(removable, "lead_harvest", jobs_root=tmp_path) is True
+    assert not removable.exists()
+
+    completed = create_job("lead_harvest", {}, jobs_root=tmp_path)
+    update_status(completed, state="completed")
+    live = create_job("lead_harvest", {}, jobs_root=tmp_path)
+    update_status(live, state="running", pid=os.getpid())
+
+    deleted, kept = clear_saved_jobs("lead_harvest", jobs_root=tmp_path)
+
+    assert deleted == [completed.name]
+    assert kept == [live.name]
+    assert not completed.exists()
+    assert live.exists()
 
 
 class ResumeUrlSearch:
@@ -201,6 +232,71 @@ def test_company_poc_job_rejects_company_match_with_wrong_designation(tmp_path: 
     )
     pocs = run_company_poc_job(job_dir, source_builder=lambda _names: [WrongRoleSource()])
     assert pocs == []
+
+
+class EmptyDdgsSource:
+    name = "ddgs"
+
+    def search(self, query, *, max_results, headless=True):
+        return []
+
+
+def test_company_poc_job_respects_a_ddgs_only_provider_choice(tmp_path: Path):
+    requested_names = []
+    job_dir = create_job(
+        "company_pocs",
+        {
+            "companies": ["Razorpay"],
+            "designations": ["CTO"],
+            "sources": ["ddgs"],
+        },
+        jobs_root=tmp_path,
+    )
+
+    def build(names):
+        requested_names.extend(names)
+        return [EmptyDdgsSource()]
+
+    run_company_poc_job(job_dir, source_builder=build)
+
+    assert requested_names == ["ddgs"]
+
+
+class WrongLocationSource:
+    name = "fake"
+
+    def search(self, query, *, max_results, headless=True):
+        return [
+            SearchResult(
+                title="Asha Rao - CTO - Razorpay | LinkedIn",
+                body="Location: Mumbai · Chief Technology Officer at Razorpay.",
+                href="https://www.linkedin.com/in/asha-rao/",
+                source=self.name,
+                query=query,
+            )
+        ]
+
+
+def test_company_poc_job_enforces_location_filter(tmp_path: Path):
+    job_dir = create_job(
+        "company_pocs",
+        {
+            "companies": ["Razorpay"],
+            "designations": ["CTO"],
+            "locations": ["Singapore"],
+            "sources": ["fake"],
+        },
+        jobs_root=tmp_path,
+    )
+
+    pocs = run_company_poc_job(
+        job_dir,
+        source_builder=lambda _names: [WrongLocationSource()],
+    )
+    _, rejections = load_company_poc_checkpoint(job_dir)
+
+    assert pocs == []
+    assert rejections[0]["Reason"] == "location_mismatch"
 
 
 class BlendedEvidenceSource:

@@ -27,10 +27,18 @@ from speedy_scraper.sources import (
     configure_google_challenge_wait,
 )
 from speedy_scraper.taxonomy import resolve_role
-from speedy_scraper.text import clean_spaces, normalize_text, or_group, unique_terms
+from speedy_scraper.text import (
+    any_term_in_text,
+    clean_spaces,
+    normalize_text,
+    or_group,
+    term_in_text,
+    unique_terms,
+)
 from speedy_scraper.validator import (
     company_match_strength,
     company_matches,
+    location_match,
     role_match_strength,
     role_matches,
 )
@@ -162,8 +170,6 @@ def run_company_poc_job(
     if not tasks:
         raise ValueError("Enter at least one company and one designation")
     requested_sources = _strings(config.get("sources")) or list(DEFAULT_SOURCE_NAMES)
-    if any(name in {"ddgs", "duckduckgo_browser"} for name in requested_sources) and "google_browser" not in requested_sources:
-        requested_sources = ["google_browser", *requested_sources]
     sources: list[SearchSource] = configure_google_challenge_wait(
         (source_builder or build_sources)(requested_sources),
         int(config.get("google_manual_challenge_seconds") or 0),
@@ -212,6 +218,8 @@ def run_company_poc_job(
         config["retry_failed_searches"] = False
         write_json(path / "config.json", config)
     retry_attempts = max(1, int(config.get("retry_attempts") or DEFAULT_RETRY_ATTEMPTS))
+    include_terms = _strings(config.get("include_terms"))
+    exclude_terms = _strings(config.get("exclude_terms"))
     provider_outcomes = _provider_outcomes(
         checkpoint.get("provider_outcomes") if checkpoint else None,
         [source.name for source in sources],
@@ -382,6 +390,8 @@ def run_company_poc_job(
                 rejections,
                 seen,
                 seen_people,
+                include_terms=include_terms,
+                exclude_terms=exclude_terms,
             )
 
             source_index += 1
@@ -437,6 +447,8 @@ def run_company_poc_job(
             headless=headless,
             max_attempts=retry_attempts,
             checkpoint_path=checkpoint_path,
+            include_terms=include_terms,
+            exclude_terms=exclude_terms,
         )
 
         csv_path, xlsx_path = write_company_poc_exports(
@@ -652,6 +664,9 @@ def _consume_results(
     rejections: list[dict[str, Any]],
     seen: set[str],
     seen_people: set[str],
+    *,
+    include_terms: list[str] | None = None,
+    exclude_terms: list[str] | None = None,
 ) -> None:
     rejected_urls = {
         str(item.get("LinkedIn URL") or "")
@@ -663,7 +678,14 @@ def _consume_results(
         identity = f"{normalize_text(candidate.name)}|{normalize_text(candidate.company)}"
         if not canonical or canonical in seen or identity in seen_people:
             continue
-        poc, reason = _match_candidate(candidate, task["company"], task["designation"])
+        poc, reason = _match_candidate(
+            candidate,
+            task["company"],
+            task["designation"],
+            location=task.get("location", ""),
+            include_terms=include_terms or [],
+            exclude_terms=exclude_terms or [],
+        )
         if poc:
             pocs.append(poc)
             seen.add(canonical)
@@ -706,6 +728,8 @@ def _retry_failed_searches(
     headless: bool,
     max_attempts: int,
     checkpoint_path: Path,
+    include_terms: list[str],
+    exclude_terms: list[str],
 ) -> tuple[list[dict[str, Any]], bool]:
     source_by_name = {source.name: source for source in sources}
     remaining: list[dict[str, Any]] = []
@@ -761,7 +785,16 @@ def _retry_failed_searches(
                     result_count=len(results),
                     empty=not results,
                 )
-                _consume_results(results, task, pocs, rejections, seen, seen_people)
+                _consume_results(
+                    results,
+                    task,
+                    pocs,
+                    rejections,
+                    seen,
+                    seen_people,
+                    include_terms=include_terms,
+                    exclude_terms=exclude_terms,
+                )
                 if results:
                     item["resolved_by"] = fallback.name
                     item["attempts"] = attempts
@@ -879,10 +912,26 @@ def write_company_poc_exports(
     return csv_path, xlsx_path
 
 
-def _match_candidate(candidate, company: str, designation: str) -> tuple[CompanyPoc | None, str]:
+def _match_candidate(
+    candidate,
+    company: str,
+    designation: str,
+    *,
+    location: str = "",
+    include_terms: list[str] | None = None,
+    exclude_terms: list[str] | None = None,
+) -> tuple[CompanyPoc | None, str]:
     name = clean_spaces(candidate.name)
     if not _valid_name(name):
         return None, "invalid_name"
+    match_text = clean_spaces(
+        f"{candidate.name} {candidate.designation} {candidate.company} "
+        f"{candidate.title} {candidate.body} {candidate.evidence}"
+    )
+    if exclude_terms and any_term_in_text(match_text, exclude_terms):
+        return None, "excluded_terms"
+    if include_terms and not all(term_in_text(match_text, term) for term in include_terms):
+        return None, "required_terms"
     parsed_company = clean_spaces(candidate.company)
     company_strength = company_match_strength(parsed_company, company)
     if not company_strength:
@@ -891,6 +940,8 @@ def _match_candidate(candidate, company: str, designation: str) -> tuple[Company
     role_strength = role_match_strength(parsed_designation, designation)
     if not role_strength:
         return None, "designation_mismatch"
+    if location and not location_match(candidate, [location]):
+        return None, "location_mismatch"
     evidence = clean_spaces(f"{candidate.title} {candidate.body}")[:700]
     confidence = 68 + company_strength * 4 + role_strength * 4
     if len(candidate.sources_seen) > 1:

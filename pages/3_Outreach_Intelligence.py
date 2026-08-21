@@ -17,6 +17,12 @@ from speedy_scraper.background_jobs import (
     update_status,
     write_json,
 )
+from speedy_scraper.campaign_db import session_scope
+from speedy_scraper.email_campaigns import (
+    campaign_history_frame,
+    candidates_from_frame,
+    create_campaign,
+)
 from speedy_scraper.outreach_intelligence import (
     CANONICAL_FIELDS,
     FIELD_LABELS,
@@ -399,6 +405,28 @@ previous_sources = [
     _uploaded_source(uploaded, SourceRole.PREVIOUS) for uploaded in previous_uploads or []
 ]
 previous_sources.extend(st.session_state.oi_google_sources)
+try:
+    with session_scope() as campaign_session:
+        stored_campaign_history = campaign_history_frame(campaign_session)
+except Exception:
+    stored_campaign_history = pd.DataFrame()
+include_campaign_history = st.checkbox(
+    "Include sent campaign history in duplicate checking",
+    value=False,
+    disabled=stored_campaign_history.empty,
+    help=(
+        "Uses sent, replied, bounced, and unsubscribed campaign recipients as another "
+        "previous-outreach source."
+    ),
+)
+if include_campaign_history:
+    previous_sources.append(
+        _sheet_source(
+            "Campaign_Outreach_History.csv",
+            stored_campaign_history.to_csv(index=False).encode("utf-8-sig"),
+            "campaign_database",
+        )
+    )
 
 default_region = st.text_input(
     "Default phone country",
@@ -421,7 +449,12 @@ if primary_source:
         except Exception as exc:
             st.error(f"Could not read primary source: {exc}")
 for source in previous_sources:
-    origin = "Google Sheet" if source["origin"] != "upload" else "Previous file"
+    if source["origin"] == "upload":
+        origin = "Previous file"
+    elif source["origin"] == "campaign_database":
+        origin = "Campaign history"
+    else:
+        origin = "Google Sheet"
     with st.expander(f"{origin} · {source['source_name']}", expanded=False):
         try:
             mapped_previous.append(_mapping_editor(source, default_region))
@@ -647,6 +680,44 @@ def _result_monitor() -> None:
     with fresh_tab:
         fresh = _filter_frame(frames["fresh"], search, decisions)
         st.dataframe(fresh, width="stretch", hide_index=True)
+        if not fresh.empty and st.button(
+            "Create email campaign from these safe leads",
+            type="primary",
+            width="stretch",
+            key=f"oi_create_campaign_{job_dir.name}",
+        ):
+            try:
+                candidates, rejected = candidates_from_frame(
+                    fresh,
+                    {
+                        "record_id": "Primary Record ID",
+                        "full_name": "Name",
+                        "email": "Email",
+                        "company": "Company",
+                        "designation": "Designation",
+                        "linkedin_url": "LinkedIn URL",
+                        "decision": "Final Decision",
+                    },
+                )
+                if not candidates:
+                    raise ValueError(
+                        "No safe row has a valid email address. Add emails before creating a campaign."
+                    )
+                with session_scope() as campaign_session:
+                    campaign, suppressed = create_campaign(
+                        campaign_session,
+                        name=f"Outreach · {job_dir.name}",
+                        candidates=candidates,
+                        source_reference=f"outreach_intelligence:{job_dir.name}",
+                    )
+                    campaign_id = campaign.id
+                st.session_state["email_campaign_id"] = campaign_id
+                skipped = len(rejected) + len(suppressed)
+                if skipped:
+                    st.warning(f"Campaign created; {skipped} invalid or suppressed rows were skipped.")
+                st.switch_page("pages/4_Email_Campaigns.py")
+            except Exception as exc:
+                st.error(str(exc))
         _download_csv("Download Fresh Outreach CSV", fresh, "Fresh_Outreach.csv")
     with common_tab:
         common = _filter_frame(frames["common"], search, decisions)

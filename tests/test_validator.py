@@ -1,5 +1,6 @@
 from speedy_scraper.models import RawCandidate
 from speedy_scraper.validator import (
+    candidate_filter_reason,
     company_matches,
     role_match_strength,
     role_matches,
@@ -77,6 +78,53 @@ def test_generic_senior_titles_match_function_variants_without_downgrading_direc
     assert role_match_strength("Senior Director of Customer Experience", "Senior Director")
     assert role_matches("Senior Director Technology", ["Senior Director"])
     assert not role_matches("Director of Customer Experience", ["Senior Director"])
+
+
+def test_generic_roles_do_not_widen_a_specific_functional_brief():
+    roles = ["VP Marketing", "VP", "Senior Director"]
+
+    assert role_matches("Vice President of Marketing", roles)
+    assert not role_matches("Vice President Product Strategy", roles)
+
+
+def test_company_match_does_not_bypass_an_industry_filter():
+    lead, rejection = validate_candidate(
+        _candidate(
+            company="Angel One",
+            body="Location: Bengaluru · consumer fashion marketplace.",
+            evidence="Location: Bengaluru · consumer fashion marketplace.",
+        ),
+        roles=["Chief Data Officer"],
+        locations=["Bengaluru"],
+        industries=["FinTech"],
+        company_names=["Angel One"],
+        existing_urls=set(),
+    )
+
+    assert lead is None
+    assert rejection is not None
+    assert rejection.reason == "industry_company"
+
+
+def test_required_and_excluded_terms_are_enforced_on_candidate_evidence():
+    candidate = _candidate(evidence="Location: Bengaluru · fintech payments · former CDO")
+
+    assert candidate_filter_reason(
+        candidate,
+        roles=["Chief Data Officer"],
+        locations=["Bengaluru"],
+        industries=["FinTech"],
+        company_names=[],
+        include_terms=["payments", "enterprise"],
+    ) == "required_terms"
+    assert candidate_filter_reason(
+        candidate,
+        roles=["Chief Data Officer"],
+        locations=["Bengaluru"],
+        industries=["FinTech"],
+        company_names=[],
+        exclude_terms=["former"],
+    ) == "excluded_terms"
 
 
 def test_location_taxonomy_accepts_alias_and_returns_canonical_location():

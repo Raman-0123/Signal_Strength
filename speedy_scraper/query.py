@@ -1,67 +1,91 @@
 from __future__ import annotations
 
+from itertools import product
+
 from speedy_scraper.models import ScrapeConfig
-from speedy_scraper.taxonomy import location_query_groups, role_query_groups
+from speedy_scraper.taxonomy import location_query_groups, resolve_role, role_query_groups
 from speedy_scraper.text import normalize_text, or_group, quote_term, unique_terms
 
 LINKEDIN_SITE = "site:linkedin.com/in"
+DEFAULT_EXCLUDE_TERMS = ("jobs", "hiring", "recruiter", "recruitment", "careers")
 
 
 def build_queries(config: ScrapeConfig) -> list[str]:
-    role_groups = role_query_groups(config.roles)
-    location_groups = location_query_groups(config.locations)
-    industries = unique_terms(config.industries)
-    company_names = unique_terms(config.company_names)
-    industry_groups = _chunks(industries, 2) or [[]]
+    """Build focused queries in which every selected filter class is represented.
+
+    Search engines routinely relax long queries. Keeping each industry chunk small and
+    repeating the role/location context produces a wider but still relevant plan. The
+    previous planner emitted coverage queries without industries and only used the first
+    few industry chunks, which allowed an early candidate pool to be filled with noise.
+    """
+    specific_roles = [
+        role
+        for role in config.roles
+        if resolve_role(role).function not in {"generic_vp", "generic_director"}
+    ]
+    role_groups = role_query_groups(specific_roles or config.roles) or [[]]
+    location_groups = location_query_groups(config.locations) or [[]]
+    industry_groups = _chunks(unique_terms(config.industries), 3) or [[]]
+    companies = unique_terms(config.company_names)
     business_clause = _business_model_clause(config.business_model)
     modifiers = _query_modifiers(config)
-    precise: list[str] = []
-    contextual: list[str] = []
-    coverage: list[str] = []
 
-    combinations = [
-        (company_index + role_index + location_index, company_index, role_index, location_index)
-        for company_index in range(len(company_names))
-        for role_index in range(len(role_groups))
-        for location_index in range(max(1, len(location_groups)))
-    ]
-    for _weight, company_index, role_index, location_index in sorted(combinations):
-        role_clause = or_group(role_groups[role_index])
-        company_clause = quote_term(company_names[company_index])
-        location_clause = (
-            or_group(location_groups[location_index]) if location_groups else ""
-        )
-        precise.append(_join(LINKEDIN_SITE, role_clause, company_clause, location_clause, modifiers))
+    discovery = _query_matrix(
+        role_groups=role_groups,
+        location_groups=location_groups,
+        industry_groups=industry_groups,
+        companies=[""],
+        business_clause=business_clause,
+        modifiers=modifiers,
+    )
+    company_scoped = _query_matrix(
+        role_groups=role_groups,
+        location_groups=location_groups,
+        industry_groups=industry_groups,
+        companies=companies,
+        business_clause=business_clause,
+        modifiers=modifiers,
+    )
 
-    for role_index, role_group in enumerate(role_groups):
-        role_clause = or_group(role_group)
-        for location_group in location_groups or [[]]:
-            location_clause = or_group(location_group)
-            industry_clause = or_group(industry_groups[role_index % len(industry_groups)])
-            contextual.append(
-                _join(LINKEDIN_SITE, role_clause, location_clause, industry_clause, modifiers)
-            )
-            if business_clause:
-                contextual.append(
-                    _join(LINKEDIN_SITE, role_clause, location_clause, business_clause, modifiers)
-                )
-            coverage.append(_join(LINKEDIN_SITE, role_clause, location_clause, modifiers))
-        for company_index, company in enumerate(company_names):
-            industry_clause = or_group(industry_groups[company_index % len(industry_groups)])
-            contextual.append(
-                _join(LINKEDIN_SITE, role_clause, quote_term(company), industry_clause, modifiers)
-            )
-
-    for role in unique_terms(config.roles):
-        for location_group in location_groups:
-            for location in location_group:
-                coverage.append(_join(LINKEDIN_SITE, quote_term(role), quote_term(location), modifiers))
-
-    if config.require_target_company:
-        ordered = _weave([(precise, 3), (contextual, 1), (coverage, 1)])
+    if config.require_target_company and company_scoped:
+        ordered = company_scoped
+    elif company_scoped:
+        # Treat optional companies as strong search hints while retaining discovery.
+        ordered = _weave([(company_scoped, 2), (discovery, 1)])
     else:
-        ordered = _weave([(contextual, 2), (precise, 1), (coverage, 1)])
+        ordered = discovery
     return _dedupe(ordered)[: config.max_queries]
+
+
+def _query_matrix(
+    *,
+    role_groups: list[list[str]],
+    location_groups: list[list[str]],
+    industry_groups: list[list[str]],
+    companies: list[str],
+    business_clause: str,
+    modifiers: str,
+) -> list[str]:
+    if not companies:
+        return []
+    dimensions = (companies, role_groups, location_groups, industry_groups)
+    indexed = product(*(range(len(values)) for values in dimensions))
+    # Diagonal ordering gives every dimension early coverage when max_queries is small.
+    combinations = sorted(indexed, key=lambda indexes: (sum(indexes), max(indexes), indexes))
+    queries: list[str] = []
+    for company_index, role_index, location_index, industry_index in combinations:
+        queries.append(
+            _join(
+                LINKEDIN_SITE,
+                quote_term(companies[company_index]),
+                or_group(role_groups[role_index]),
+                or_group(location_groups[location_index]),
+                or_group(industry_groups[industry_index]),
+                business_clause,
+                modifiers,
+            )
+        )
+    return queries
 
 
 def _chunks(values: list[str], size: int) -> list[list[str]]:
@@ -79,9 +103,8 @@ def _business_model_clause(value: str) -> str:
 
 def _query_modifiers(config: ScrapeConfig) -> str:
     include = " ".join(quote_term(term) for term in unique_terms(config.include_terms))
-    exclude = " ".join(f"-{quote_term(term)}" for term in unique_terms(config.exclude_terms))
-    if normalize_text(config.query_mode) in {"exact", "exact strict", "exact / strict", "strict"}:
-        include = " ".join(part for part in (include, '"current"') if part)
+    excludes = unique_terms([*DEFAULT_EXCLUDE_TERMS, *config.exclude_terms])
+    exclude = " ".join(f"-{quote_term(term)}" for term in excludes)
     return " ".join(part for part in (include, exclude) if part)
 
 

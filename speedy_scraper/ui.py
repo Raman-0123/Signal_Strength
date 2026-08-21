@@ -70,6 +70,8 @@ def action_button_css() -> str:
         background:var(--action-stop-hover)!important;
     }
     .st-key-lead-resume-action button,
+    .st-key-lead-network-retry-action button,
+    .st-key-lead-challenge-retry-action button,
     .st-key-url-resume-action button,
     .st-key-company-resume-action button,
     [class*="st-key-"][class*="captcha_recovery"] button {
@@ -77,6 +79,8 @@ def action_button_css() -> str:
         color:var(--action-text)!important;
     }
     .st-key-lead-resume-action button:hover,
+    .st-key-lead-network-retry-action button:hover,
+    .st-key-lead-challenge-retry-action button:hover,
     .st-key-url-resume-action button:hover,
     .st-key-company-resume-action button:hover,
     [class*="st-key-"][class*="captcha_recovery"] button:hover {
@@ -94,21 +98,29 @@ def action_button_css() -> str:
         background:var(--action-refresh-hover)!important;
     }
     .st-key-company-delete-job-action button,
-    .st-key-company-confirm-delete-action button {
+    .st-key-company-confirm-delete-action button,
+    .st-key-lead-delete-job-action button,
+    .st-key-lead-confirm-delete-action button {
         background:var(--action-stop)!important;
         color:var(--action-text)!important;
     }
     .st-key-company-delete-job-action button:hover,
-    .st-key-company-confirm-delete-action button:hover {
+    .st-key-company-confirm-delete-action button:hover,
+    .st-key-lead-delete-job-action button:hover,
+    .st-key-lead-confirm-delete-action button:hover {
         background:var(--action-stop-hover)!important;
     }
     .st-key-company-clear-jobs-action button,
-    .st-key-company-confirm-clear-action button {
+    .st-key-company-confirm-clear-action button,
+    .st-key-lead-clear-jobs-action button,
+    .st-key-lead-confirm-clear-action button {
         background:#b7791f!important;
         color:var(--action-text)!important;
     }
     .st-key-company-clear-jobs-action button:hover,
-    .st-key-company-confirm-clear-action button:hover {
+    .st-key-company-confirm-clear-action button:hover,
+    .st-key-lead-clear-jobs-action button:hover,
+    .st-key-lead-confirm-clear-action button:hover {
         background:#8f5d18!important;
     }
     button:disabled {
@@ -159,7 +171,7 @@ def enable_manual_recovery(job_dir: Path, *, extra_sources: list[str] | None = N
         config = json.loads(config_path.read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError, OSError):
         config = {}
-    if config.get("ui_version") != "google_only_v1":
+    if config.get("ui_version") not in {"google_only_v1", "multi_source_v2"}:
         # Migrate old lead jobs away from plans such as 80 queries x 5 pages.
         # New Google-only jobs keep the explicit 1-3 page choice from the form.
         config.update(
@@ -176,7 +188,6 @@ def enable_manual_recovery(job_dir: Path, *, extra_sources: list[str] | None = N
             "sources": ["google_browser"],
             "browser_headless": False,
             "google_manual_challenge_seconds": 60,
-            "exclude_terms": [],
         }
     )
     config_path.write_text(json.dumps(config, indent=2), encoding="utf-8")

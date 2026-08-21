@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -203,6 +204,43 @@ def list_jobs(workflow: str, *, jobs_root: Path = JOBS_ROOT) -> list[Path]:
     if not directory.exists():
         return []
     return sorted((path for path in directory.iterdir() if path.is_dir()), reverse=True)
+
+
+def delete_saved_job(
+    job_dir: Path | str,
+    workflow: str,
+    *,
+    jobs_root: Path = JOBS_ROOT,
+) -> bool:
+    """Delete one saved job, refusing paths outside the workflow or live workers."""
+    workflow_root = (jobs_root / workflow).resolve()
+    target = Path(job_dir).resolve()
+    if target.parent != workflow_root:
+        raise ValueError("Saved job is outside the selected workflow")
+    if not target.is_dir():
+        return False
+    status = read_status(target)
+    active_state = str(status.get("state") or "") in {"starting", "running", "stopping"}
+    if active_state and process_is_running(int(status.get("pid") or 0)):
+        return False
+    shutil.rmtree(target)
+    return True
+
+
+def clear_saved_jobs(
+    workflow: str,
+    *,
+    jobs_root: Path = JOBS_ROOT,
+) -> tuple[list[str], list[str]]:
+    """Delete every non-live saved job and return (deleted names, kept-live names)."""
+    deleted: list[str] = []
+    kept: list[str] = []
+    for job_dir in list_jobs(workflow, jobs_root=jobs_root):
+        if delete_saved_job(job_dir, workflow, jobs_root=jobs_root):
+            deleted.append(job_dir.name)
+        else:
+            kept.append(job_dir.name)
+    return deleted, kept
 
 
 def process_is_running(pid: int) -> bool:

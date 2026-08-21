@@ -1,5 +1,7 @@
 import json
+import re
 import urllib.request
+from pathlib import Path
 
 from speedy_scraper.ui import (
     action_button_css,
@@ -13,9 +15,18 @@ def test_action_button_css_has_semantic_run_stop_and_recovery_states():
     assert "lead-run-action" in css
     assert "lead-stop-action" in css
     assert "lead-resume-action" in css
+    assert "lead-network-retry-action" in css
+    assert "lead-challenge-retry-action" in css
     assert "--action-run:#087d62" in css
     assert "--action-stop:#c43d2b" in css
     assert "--action-resume:#1769aa" in css
+
+
+def test_lead_finder_container_keys_are_unique():
+    source = (Path(__file__).parents[1] / "app.py").read_text(encoding="utf-8")
+    keys = re.findall(r'\.container\(key="([^"]+)"\)', source)
+
+    assert len(keys) == len(set(keys))
 
 
 def test_manual_retry_removes_legacy_fallback_sources(tmp_path):
@@ -26,6 +37,7 @@ def test_manual_retry_removes_legacy_fallback_sources(tmp_path):
                 "max_queries": 80,
                 "max_results_per_query": 30,
                 "max_pages_per_query": 5,
+                "exclude_terms": ["former"],
             }
         ),
         encoding="utf-8",
@@ -40,6 +52,7 @@ def test_manual_retry_removes_legacy_fallback_sources(tmp_path):
     assert config["max_queries"] == 24
     assert config["max_results_per_query"] == 10
     assert config["max_pages_per_query"] == 1
+    assert config["exclude_terms"] == ["former"]
 
 
 def test_google_sheet_tab_is_saved_as_a_dedupe_input(tmp_path, monkeypatch):
