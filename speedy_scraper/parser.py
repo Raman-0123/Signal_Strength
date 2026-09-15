@@ -44,6 +44,28 @@ def parse_profile_result(result: SearchResult, clean_url: str | None = None) -> 
     )
 
 
+def repair_candidate_fields(candidate: RawCandidate) -> RawCandidate:
+    """Backfill weak saved fields when richer evidence is already available."""
+    name, designation, company = parse_profile_fields(candidate.title, candidate.body)
+    if _name_quality(name) > _name_quality(candidate.name):
+        candidate.name = name
+    has_structured_role = bool(
+        re.search(r"\bTitle\s*:\s*[^·•|\n]{2,100}", candidate.body, re.IGNORECASE)
+    )
+    has_structured_company = bool(
+        re.search(
+            r"\b(?:Current Company|Company)\s*:\s*[^·•|\n]{2,100}",
+            candidate.body,
+            re.IGNORECASE,
+        )
+    )
+    if has_structured_role or _designation_quality(designation) > _designation_quality(candidate.designation):
+        candidate.designation = designation
+    if has_structured_company or _company_quality(company) > _company_quality(candidate.company):
+        candidate.company = company
+    return candidate
+
+
 def parse_profile_fields(title: str, body: str = "") -> tuple[str, str, str]:
     title = clean_spaces(_PROFILE_SUFFIX_RE.sub("", title or ""))
     parts = [
@@ -68,18 +90,39 @@ def parse_profile_fields(title: str, body: str = "") -> tuple[str, str, str]:
     if not company and len(parts) >= 3:
         company = parts[2]
 
-    body_role, body_company = _body_role_company(body)
-    if body_role and (not designation or len(normalize_text(body_role).split()) > len(normalize_text(designation).split())):
-        designation = body_role
-    if body_company:
-        company = body_company
+    # Google's result card exposes the current role and company as labelled
+    # fields. These are stronger evidence than prose later in the snippet,
+    # which frequently describes a former position, event, or another person.
+    structured_role = _title_field(body)
+    structured_company = _company_field(body, name=name)
+    if structured_role:
+        designation = structured_role
+    if structured_company:
+        company = structured_company
+
+    if not structured_role or not structured_company:
+        body_role, body_company = _body_role_company(body, name=name)
+        explicit_current = bool(
+            re.search(r"\bCurrent(?:ly)?\s*(?::|serving|working)", body, re.IGNORECASE)
+        )
+        compatible_role = _roles_compatible(designation, body_role)
+        if body_role and (not designation or explicit_current or compatible_role):
+            if (
+                not designation
+                or explicit_current
+                or len(normalize_text(body_role).split())
+                > len(normalize_text(designation).split())
+            ):
+                designation = body_role
+            if body_company and not structured_company:
+                company = body_company
 
     if not company:
         company = _experience_company(body)
     if not designation:
         designation = _title_field(body)
     if not company:
-        company = _company_field(body)
+        company = _company_field(body, name=name)
 
     name = _clean_name(name)
     designation = _clean_designation(designation)
@@ -179,7 +222,7 @@ def _split_role_company(value: str) -> tuple[str, str]:
     return role, company
 
 
-def _body_role_company(body: str) -> tuple[str, str]:
+def _body_role_company(body: str, *, name: str = "") -> tuple[str, str]:
     for pattern in (
         r"\bCurrent\s*:\s*(?P<value>[^·•|\n]{2,160})",
         r"\bCurrently\s+(?:serving|working)\s+as\s+(?P<value>[^·•|\n]{2,160})",
@@ -189,7 +232,151 @@ def _body_role_company(body: str) -> tuple[str, str]:
             role, company = _split_role_company(match.group("value"))
             if role or company:
                 return role, company
+    # Google's current result card flattens its structured summary into:
+    # ``<location> · <current role> · <company><snippet>``. Older checkpoints
+    # contain that text without labels, so recover it here as well.
+    parts = [clean_spaces(part) for part in re.split(r"\s*[·•]\s*", body) if clean_spaces(part)]
+    for index in range(1, len(parts) - 1):
+        location = parts[index - 1]
+        role = _clean_designation(parts[index])
+        if not _looks_like_search_location(location) or not _looks_like_search_role(role):
+            continue
+        company = _search_company_prefix(parts[index + 1], name=name)
+        if company:
+            return role, company
+    sentence_match = re.search(
+        r"\b(?P<role>(?:Chief|Group\s+Head|Head\s+of)[^.·•]{2,120}?)\s*\.\s*"
+        r"(?P<company>[A-Z][^·•]{1,180}?)"
+        r"(?=\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4}"
+        r"|\s+\.{3}|\s+Read more|$)",
+        body,
+        re.IGNORECASE,
+    )
+    if sentence_match:
+        role = _clean_designation(sentence_match.group("role"))
+        company = _search_company_prefix(sentence_match.group("company"), name=name)
+        if _looks_like_search_role(role) and company:
+            return role, company
+
+    at_match = re.search(
+        r"\b(?P<role>(?:Chief|Vice\s+President|VP|Director|Head)[^·•.]{2,140}?)"
+        r"\s+(?:at|@)\s+(?P<company>[^·•]{2,160})",
+        body,
+        re.IGNORECASE,
+    )
+    if at_match:
+        context_prefix = body[max(0, at_match.start() - 240) : at_match.start()]
+        # A blended search snippet can mention an unrelated person's role and
+        # company. Only accept this loose sentence form when the candidate's
+        # own name appears immediately before it in the result card.
+        if normalize_text(name) and normalize_text(name) in normalize_text(context_prefix):
+            role = _clean_designation(at_match.group("role"))
+            company = _search_company_prefix(at_match.group("company"), name=name)
+            if _looks_like_search_role(role) and company:
+                return role, company
     return "", ""
+
+
+def _looks_like_search_location(value: str) -> bool:
+    text = clean_spaces(value)
+    return bool(
+        re.search(
+            r"\b(?:India|Area|Region|District|Remote|Main)\s*$",
+            text,
+            re.IGNORECASE,
+        )
+    )
+
+
+def _looks_like_search_role(value: str) -> bool:
+    key = normalize_text(value)
+    markers = {
+        "chief",
+        "cto",
+        "cio",
+        "cdo",
+        "director",
+        "developer",
+        "engineering",
+        "head",
+        "hr",
+        "manager",
+        "officer",
+        "president",
+        "specialist",
+        "success",
+        "technical",
+        "technology",
+        "vice",
+        "vp",
+    }
+    return bool(set(key.split()) & markers)
+
+
+def _roles_compatible(left: str, right: str) -> bool:
+    """Return true when two snippets describe the same functional role."""
+    if not normalize_text(left) or not normalize_text(right):
+        return False
+    signatures: list[set[str]] = []
+    for value in (left, right):
+        key = normalize_text(value)
+        markers: set[str] = set()
+        phrases = {
+            "cio": r"\b(?:cio|chief information officer)\b",
+            "cto": r"\b(?:cto|chief technology officer|chief technical officer)\b",
+            "cdo": r"\b(?:cdo|chief data officer|chief digital officer)\b",
+            "ciso": r"\b(?:ciso|chief information security officer)\b",
+            "ceo": r"\b(?:ceo|chief executive officer)\b",
+            "cfo": r"\b(?:cfo|chief financial officer)\b",
+            "cmo": r"\b(?:cmo|chief marketing officer)\b",
+            "chro": r"\b(?:chro|chief human resources officer)\b",
+        }
+        markers.update(name for name, pattern in phrases.items() if re.search(pattern, key))
+        signatures.append(markers)
+    return bool(signatures[0] & signatures[1])
+
+
+def _search_company_prefix(value: str, *, name: str = "") -> str:
+    company = clean_spaces(value)
+    if not company:
+        return ""
+    stoppers = [
+        r"Web results",
+        r"LinkedIn(?:\s|$)",
+        r"Experience",
+        r"About",
+        r"Currently",
+        r"Leading",
+        r"Responsible",
+        r"Chief(?:\s|$)",
+        r"Director(?:\s|$)",
+        r"Head(?:\s|$)",
+        r"Vice President(?:\s|$)",
+        r"VP(?:\s|$)",
+        r"CTO(?:\s|$)",
+        r"CIO(?:\s|$)",
+        r"CDO(?:\s|$)",
+        r"I\s+(?:currently|hire|lead|specialize|have)",
+        r"A\s+(?:progressive|recognized|seasoned|technology|visionary)",
+        r"An\s+(?:experienced|accomplished|executive)",
+        r"As\s+(?:a|an|the)",
+        r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4}",
+    ]
+    if clean_spaces(name):
+        stoppers.insert(0, re.escape(clean_spaces(name)))
+    company = re.split(
+        r",\s+(?=(?:a|an|the)\s+)",
+        company,
+        maxsplit=1,
+        flags=re.IGNORECASE,
+    )[0]
+    company = re.split(
+        rf"\s+(?=(?:{'|'.join(stoppers)}))",
+        company,
+        maxsplit=1,
+        flags=re.IGNORECASE,
+    )[0]
+    return _clean_company(company).rstrip(" .,-–—")
 
 
 def _experience_company(body: str) -> str:
@@ -204,9 +391,9 @@ def _title_field(body: str) -> str:
     return _clean_designation(match.group(1)) if match else ""
 
 
-def _company_field(body: str) -> str:
+def _company_field(body: str, *, name: str = "") -> str:
     match = re.search(r"\b(?:Current Company|Company)\s*:\s*([^·•|\n]{2,100})", body, re.IGNORECASE)
-    return _clean_company(match.group(1)) if match else ""
+    return _search_company_prefix(match.group(1), name=name) if match else ""
 
 
 def _clean_fragment(value: str) -> str:
@@ -231,7 +418,7 @@ def _clean_company(value: str) -> str:
     value = re.split(r"\b(?:Ex|Formerly|Location|Education)\b\s*:?", value, maxsplit=1, flags=re.IGNORECASE)[0]
     value = re.split(r"[·•|]", value, maxsplit=1)[0]
     value = re.sub(r"^at\s+", "", value, flags=re.IGNORECASE)
-    value = re.sub(r"\s*,\s*$", "", value)
+    value = re.sub(r"\s*[,;]\s*$", "", value)
     return clean_spaces(value)
 
 

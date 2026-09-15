@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import random
+import re
 import time
 import urllib.parse
 from collections.abc import Callable
@@ -12,6 +13,7 @@ from bs4 import BeautifulSoup
 
 from speedy_scraper.linkedin import normalize_linkedin_url
 from speedy_scraper.models import SearchPage, SearchResult
+from speedy_scraper.text import clean_spaces
 
 
 class SourceError(RuntimeError):
@@ -150,12 +152,14 @@ class DdgsSource(SearchSource):
 
     def __init__(
         self,
-        backends: tuple[str, ...] = ("duckduckgo", "brave", "yahoo"),
+        backends: tuple[str, ...] = ("yahoo", "duckduckgo", "brave"),
         *,
         personal_profiles_only: bool = True,
+        region: str = "wt-wt",
     ):
         self.backends = backends
         self.personal_profiles_only = personal_profiles_only
+        self.region = region
         self._client: Any = None
 
     def search(self, query: str, *, max_results: int, headless: bool = True) -> list[SearchResult]:
@@ -185,29 +189,23 @@ class DdgsSource(SearchSource):
 
         last_error: Exception | None = None
         for backend in self.backends:
-            try:
-                kwargs = {
-                    "region": "in-en",
-                    "safesearch": "off",
-                    "max_results": max(max_results, 10),
-                    "page": page,
-                }
-                if backend != "auto":
-                    kwargs["backend"] = backend
-                raw = list(self._client.text(query, **kwargs))
-                results = _search_results_from_raw(
-                    raw,
-                    query=query,
-                    source=self.name,
-                    max_results=max_results,
-                    personal_profiles_only=self.personal_profiles_only,
-                )
-                if results:
-                    return results
-            except TypeError:
+            for provider_query in _ddgs_query_variants(query):
                 try:
-                    # Compatibility with older DDGS versions that do not expose page.
-                    raw = list(self._client.text(query, max_results=max_results))
+                    kwargs = {
+                        "region": self.region,
+                        "safesearch": "off",
+                        "max_results": max(max_results, 10),
+                        "page": page,
+                    }
+                    if backend != "auto":
+                        kwargs["backend"] = backend
+                    try:
+                        raw = list(self._client.text(provider_query, **kwargs))
+                    except TypeError:
+                        # Compatibility with older DDGS versions without page/backend.
+                        raw = list(
+                            self._client.text(provider_query, max_results=max_results)
+                        )
                     results = _search_results_from_raw(
                         raw,
                         query=query,
@@ -219,8 +217,6 @@ class DdgsSource(SearchSource):
                         return results
                 except Exception as exc:  # pragma: no cover - depends on live provider
                     last_error = exc
-            except Exception as exc:  # pragma: no cover - depends on live provider
-                last_error = exc
         if last_error is None:
             return []
         # DDGS uses an exception for a normal zero-hit response on some
@@ -233,6 +229,17 @@ class DdgsSource(SearchSource):
             disable_source=_looks_like_provider_challenge(last_error),
             challenge=_looks_like_provider_challenge(last_error),
         )
+
+
+def _ddgs_query_variants(query: str) -> list[str]:
+    """Use portable quoted roles before provider-specific title operators."""
+    portable = re.sub(
+        r"\bintitle:(\"[^\"]+\"|[^\s()]+)",
+        lambda match: match.group(1),
+        query,
+        flags=re.IGNORECASE,
+    )
+    return list(dict.fromkeys([clean_spaces(portable), clean_spaces(query)]))
 
 
 class BrowserSearchSource(SearchSource):
@@ -315,6 +322,7 @@ class BrowserSearchSource(SearchSource):
             source=self.name,
             max_results=page_size,
             result_selectors=self.result_selectors,
+            href_resolver=_browser_href_resolver(page_obj, source=self.name),
         )
         if not results and self.name == GOOGLE_CHALLENGE_SOURCE and _google_ip_mismatch(html):
             self._disabled_reason = (
@@ -352,6 +360,7 @@ class BrowserSearchSource(SearchSource):
                 source=self.name,
                 max_results=page_size,
                 result_selectors=self.result_selectors,
+                href_resolver=_browser_href_resolver(page_obj, source=self.name),
             )
         if not results and _challenge_page(html):
             self._disabled_reason = (
@@ -633,6 +642,7 @@ def _parse_search_html(
     source: str,
     max_results: int,
     result_selectors: tuple[str, ...] = (),
+    href_resolver: Callable[[str], str] | None = None,
 ) -> list[SearchResult]:
     soup = BeautifulSoup(html, "html.parser")
     results: list[SearchResult] = []
@@ -644,12 +654,26 @@ def _parse_search_html(
         cards = soup.select("a[href*='linkedin.com/in/']")
     for card in cards:
         anchors = [card] if getattr(card, "name", "") == "a" else card.select("a[href]")
+        # Search cards can contain several links to the same result. Prefer the
+        # headline link so providers with opaque redirect URLs only need one
+        # redirect lookup per card.
+        anchors.sort(
+            key=lambda anchor: (
+                not bool(anchor.select_one("h3")),
+                not bool(anchor.get("jsname") == "UWckNb"),
+            )
+        )
         for anchor in anchors:
             href = _unwrap_search_href(str(anchor.get("href", "")))
+            if href_resolver is not None:
+                href = _unwrap_search_href(href_resolver(href))
             if not normalize_linkedin_url(href):
                 continue
             title = anchor.get_text(" ", strip=True)
             body = card.get_text(" ", strip=True) if hasattr(card, "get_text") else title
+            structured_summary = _structured_result_summary(card)
+            if structured_summary:
+                body = clean_spaces(f"{structured_summary} {body}")
             key = normalize_linkedin_url(href)
             if key in seen:
                 continue
@@ -657,7 +681,91 @@ def _parse_search_html(
             results.append(SearchResult(title=title, body=body, href=href, source=source, query=query))
             if len(results) >= max_results:
                 return results
+            break
     return results
+
+
+def _structured_result_summary(card: Any) -> str:
+    """Preserve Google's location/role/company strip with explicit labels."""
+    if not hasattr(card, "select_one"):
+        return ""
+    summary = card.select_one("div.YrbPuc")
+    if summary is None:
+        return ""
+    parts: list[str] = []
+    for child in summary.children:
+        if not hasattr(child, "get_text"):
+            continue
+        value = clean_spaces(child.get_text(" ", strip=True))
+        if value and value not in {"·", "•", "|"}:
+            parts.append(value)
+    if len(parts) < 3:
+        return ""
+    return f"Location: {parts[0]} · Title: {parts[1]} · Company: {parts[2]}"
+
+
+def _browser_href_resolver(
+    page_obj: Any,
+    *,
+    source: str,
+) -> Callable[[str], str] | None:
+    """Resolve provider-owned result redirects using the active browser session.
+
+    Google began returning opaque ``/goto?url=...`` links in September 2026.
+    Those tokens do not contain a client-decodable destination, but Google's
+    endpoint returns the public LinkedIn URL in a normal 302 response.
+    """
+    if source != GOOGLE_CHALLENGE_SOURCE:
+        return None
+
+    cache: dict[str, str] = {}
+
+    def resolve(href: str) -> str:
+        raw = str(href or "").strip()
+        if not _is_google_goto_href(raw):
+            return raw
+        if raw in cache:
+            return cache[raw]
+
+        resolved = raw
+        response: Any = None
+        try:
+            page_url = str(getattr(page_obj, "url", "") or "https://www.google.com/")
+            redirect_url = urllib.parse.urljoin(page_url, raw)
+            context = getattr(page_obj, "context", None)
+            if callable(context):
+                context = context()
+            request = getattr(context, "request", None)
+            if request is not None:
+                response = request.get(
+                    redirect_url,
+                    max_redirects=0,
+                    fail_on_status_code=False,
+                    timeout=10000,
+                )
+                location = str(response.headers.get("location", ""))
+                if normalize_linkedin_url(location):
+                    resolved = location
+        except Exception:
+            # The normal parser will reject the unresolved provider URL. A
+            # temporary redirect failure must not abort other result cards.
+            resolved = raw
+        finally:
+            if response is not None:
+                try:
+                    response.dispose()
+                except Exception:
+                    pass
+        cache[raw] = resolved
+        return resolved
+
+    return resolve
+
+
+def _is_google_goto_href(value: str) -> bool:
+    parsed = urllib.parse.urlparse(str(value or "").strip())
+    host = (parsed.hostname or "").lower()
+    return parsed.path == "/goto" and (not host or host.endswith("google.com"))
 
 
 def _search_results_from_raw(

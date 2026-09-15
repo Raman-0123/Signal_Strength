@@ -1,0 +1,287 @@
+{
+  "version": 3,
+  "phase": "search",
+  "query_index": 0,
+  "source_index": 1,
+  "page_index": 1,
+  "validation_index": 9,
+  "candidates": [
+    {
+      "name": "Hong Chen",
+      "designation": "CIO, Singtel Singapore",
+      "company": "Singtel",
+      "linkedin_url": "https://www.linkedin.com/in/hchen245/",
+      "title": "Hong Chen - CIO, Singtel Singapore",
+      "body": "CIO, Singtel Singapore · Experience: Singtel · Location: Singapore · 500+ connections on LinkedIn. View Hong Chen’s profile on LinkedIn, a professional community of 1 billion members. CIO | Leading technology teams across 12 countries in APAC | Supply Chain Executive | ex-Management Consultant · International experience: lived and worked in four countries across three... CIO, Consumer & Digital Banking · Technology leader with over 15 years of experience in managing technology transformation and modernization in the banking and financial services sector. CIO / CTO - Cloud & Digital Transformation Leader | Enterprise Architecture | Infrastructure & Support | High-Performance Team Builder | APAC Experience · A highly accomplished and globally... With a proven track record of successfully managing enterprise projects in Hospitality, Integrated Resorts, Banking, Payments, Airlines, Central Government and E-business with 20+ years of IT... CXO, CIO, Trade Finance, Trade Ops, IT, Digital, Information Security, Cybersecurity, Tech Risk, Financial Services, Corporate Banking, Wholesale Banking · 20 years experience in Asia and Global Information Technology, Infrastructure, information Secu",
+      "source": "ddgs",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "evidence": "Hong Chen - CIO, Singtel Singapore CIO, Singtel Singapore · Experience: Singtel · Location: Singapore · 500+ connections on LinkedIn. View Hong Chen’s profile on LinkedIn, a professional community of 1 billion members. CIO | Leading technology teams across 12 countries in APAC | Supply Chain Executive | ex-Management Consultant · International experience: lived and worked in four countries across three... CIO, Consumer & Digital Banking · Technology leader with over 15 years of experience in managing technology transformation and modernization in the banking and financial services sector. CIO / CTO - Cloud & Digital Transformation Leader | Enterprise Architecture | Infrastructure & Support | High-Performance Team Builder | APAC Experience · A highly accomplished and globally... With a proven track record of successfully managing enterprise projects in Hospitality, Integrated Resorts, Ban",
+      "sources_seen": [
+        "ddgs"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")"
+      ]
+    },
+    {
+      "name": "Mihaela Isac",
+      "designation": "CIO | Leading technology teams across 12",
+      "company": "lived and worked in four countries across three... CIO, Consumer & Digital Banking",
+      "linkedin_url": "https://www.linkedin.com/in/mihaela-isac/",
+      "title": "Mihaela Isac - CIO | Leading technology teams across 12",
+      "body": "CIO | Leading technology teams across 12 countries in APAC | Supply Chain Executive | ex-Management Consultant · International experience: lived and worked in four countries across three... CIO, Consumer & Digital Banking · Technology leader with over 15 years of experience in managing technology transformation and modernization in the banking and financial services sector. CIO / CTO - Cloud & Digital Transformation Leader | Enterprise Architecture | Infrastructure & Support | High-Performance Team Builder | APAC Experience · A highly accomplished and globally... With a proven track record of successfully managing enterprise projects in Hospitality, Integrated Resorts, Banking, Payments, Airlines, Central Government and E-business with 20+ years of IT... CXO, CIO, Trade Finance, Trade Ops, IT, Digital, Information Security, Cybersecurity, Tech Risk, Financial Services, Corporate Banking, Wholesale Banking · 20 years experience in Asia and Global Information Technology, Infrastructure, information Security, IT Transformation, Digital Transformation, Run and Change within the Banking Industry. In-depth infrastructure service delivery experience ... I love to deliver meaningful impact",
+      "source": "ddgs",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "evidence": "Mihaela Isac - CIO | Leading technology teams across 12 CIO | Leading technology teams across 12 countries in APAC | Supply Chain Executive | ex-Management Consultant · International experience: lived and worked in four countries across three... CIO, Consumer & Digital Banking · Technology leader with over 15 years of experience in managing technology transformation and modernization in the banking and financial services sector. CIO / CTO - Cloud & Digital Transformation Leader | Enterprise Architecture | Infrastructure & Support | High-Performance Team Builder | APAC Experience · A highly accomplished and globally... With a proven track record of successfully managing enterprise projects in Hospitality, Integrated Resorts, Banking, Payments, Airlines, Central Government and E-business with 20+ years of IT... CXO, CIO, Trade Finance, Trade Ops, IT, Digital, Information Security, Cybersec",
+      "sources_seen": [
+        "ddgs"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")"
+      ]
+    },
+    {
+      "name": "Wan Mohd Fairuz",
+      "designation": "CIO, Consumer & Digital Banking",
+      "company": "Unknown",
+      "linkedin_url": "https://www.linkedin.com/in/wan-mohd-fairuz-92990517/",
+      "title": "Wan Mohd Fairuz - CIO, Consumer & Digital Banking",
+      "body": "CIO, Consumer & Digital Banking · Technology leader with over 15 years of experience in managing technology transformation and modernization in the banking and financial services sector.",
+      "source": "ddgs",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "evidence": "Wan Mohd Fairuz - CIO, Consumer & Digital Banking CIO, Consumer & Digital Banking · Technology leader with over 15 years of experience in managing technology transformation and modernization in the banking and financial services sector.",
+      "sources_seen": [
+        "ddgs"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")"
+      ]
+    },
+    {
+      "name": "Wayne Hutchins",
+      "designation": "CIO / CTO",
+      "company": "Cloud & Digital Transformation",
+      "linkedin_url": "https://www.linkedin.com/in/waynehutchins/",
+      "title": "Wayne Hutchins - CIO / CTO - Cloud & Digital Transformation",
+      "body": "CIO / CTO - Cloud & Digital Transformation Leader | Enterprise Architecture | Infrastructure & Support | High-Performance Team Builder | APAC Experience · A highly accomplished and globally...",
+      "source": "ddgs",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "evidence": "Wayne Hutchins - CIO / CTO - Cloud & Digital Transformation CIO / CTO - Cloud & Digital Transformation Leader | Enterprise Architecture | Infrastructure & Support | High-Performance Team Builder | APAC Experience · A highly accomplished and globally...",
+      "sources_seen": [
+        "ddgs"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")"
+      ]
+    },
+    {
+      "name": "Desmond Lee",
+      "designation": "CXO, CIO, Trade Finance, Trade Ops, IT, Digital",
+      "company": "Unknown",
+      "linkedin_url": "https://www.linkedin.com/in/desmond-lee-87329aa1/",
+      "title": "Desmond Lee - CXO, CIO, Trade Finance, Trade Ops, IT, Digital",
+      "body": "CXO, CIO, Trade Finance, Trade Ops, IT, Digital, Information Security, Cybersecurity, Tech Risk, Financial Services, Corporate Banking, Wholesale Banking · 20 years experience in Asia and Global Information Technology, Infrastructure, information Security, IT Transformation, Digital Transformation, Run and Change within the Banking Industry. In-depth infrastructure service delivery experience ...",
+      "source": "ddgs",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "evidence": "Desmond Lee - CXO, CIO, Trade Finance, Trade Ops, IT, Digital CXO, CIO, Trade Finance, Trade Ops, IT, Digital, Information Security, Cybersecurity, Tech Risk, Financial Services, Corporate Banking, Wholesale Banking · 20 years experience in Asia and Global Information Technology, Infrastructure, information Security, IT Transformation, Digital Transformation, Run and Change within the Banking Industry. In-depth infrastructure service delivery experience ...",
+      "sources_seen": [
+        "ddgs"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")"
+      ]
+    },
+    {
+      "name": "Anthony P.",
+      "designation": "Chief Information Officer (Global IT)| M&A",
+      "company": "Sunningdale Tech Ltd",
+      "linkedin_url": "https://www.linkedin.com/in/anthony-p-75a57477/",
+      "title": "Anthony P. - Chief Information Officer (Global IT)| M&A",
+      "body": "I love to deliver meaningful impact by inspiring and advocating for those around me. · Experience: Sunningdale Tech Ltd · Education: University of Liverpool · Location: Singapore · 500+...",
+      "source": "ddgs",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "evidence": "Anthony P. - Chief Information Officer (Global IT)| M&A I love to deliver meaningful impact by inspiring and advocating for those around me. · Experience: Sunningdale Tech Ltd · Education: University of Liverpool · Location: Singapore · 500+...",
+      "sources_seen": [
+        "ddgs"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")"
+      ]
+    },
+    {
+      "name": "Jonathan Phang",
+      "designation": "EVP, IT and CTO",
+      "company": "TP",
+      "linkedin_url": "https://www.linkedin.com/in/jon-phang/",
+      "title": "Jonathan Phang - CIO & CTO, TP in Asia Pacific LinkedIn · Jonathan Phang 590+ followers",
+      "body": "Location: Singapore, Singapore · Title: EVP, IT and CTO · Company: TP Web results Jonathan Phang - CIO & CTO, TP in Asia Pacific LinkedIn · Jonathan Phang 590+ followers LinkedIn · Jonathan Phang 590+ followers Singapore, Singapore · EVP, IT and CTO · TP Jonathan Phang. CIO & CTO, TP in Asia Pacific. TP The University of Salford. Singapore, Singapore . Read more",
+      "source": "google_browser",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "evidence": "Jonathan Phang - CIO & CTO, TP in Asia Pacific LinkedIn · Jonathan Phang 590+ followers Location: Singapore, Singapore · Title: EVP, IT and CTO · Company: TP Web results Jonathan Phang - CIO & CTO, TP in Asia Pacific LinkedIn · Jonathan Phang 590+ followers LinkedIn · Jonathan Phang 590+ followers Singapore, Singapore · EVP, IT and CTO · TP Jonathan Phang. CIO & CTO, TP in Asia Pacific. TP The University of Salford. Singapore, Singapore . Read more",
+      "sources_seen": [
+        "google_browser"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")"
+      ]
+    },
+    {
+      "name": "Radhey Shyam",
+      "designation": "Chief Operating Officer - Asia Market",
+      "company": "Reinsurance Group of America, Incorporated",
+      "linkedin_url": "https://www.linkedin.com/in/radhey-shyam-n/",
+      "title": "Radhey Shyam - CIO, COO, Transformation, Thought",
+      "body": "Location: Singapore · Title: Chief Operating Officer - Asia Market · Company: Reinsurance Group of America, Incorporated Radhey Shyam - CIO, COO, Transformation, Thought ... LinkedIn · Radhey Shyam 2.2K+ followers LinkedIn · Radhey Shyam 2.2K+ followers Singapore · Chief Operating Officer - Asia Market · Reinsurance Group of America, Incorporated Singapore, Singapore . Head of Transformation Asia Pacific. Allianz Technology. Jun 2020 - Sep 2022 2 years 4 months. Singapore, Singapore . AIG. 18 years 6 ... Read more",
+      "source": "google_browser",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "evidence": "Radhey Shyam - CIO, COO, Transformation, Thought Location: Singapore · Title: Chief Operating Officer - Asia Market · Company: Reinsurance Group of America, Incorporated Radhey Shyam - CIO, COO, Transformation, Thought ... LinkedIn · Radhey Shyam 2.2K+ followers LinkedIn · Radhey Shyam 2.2K+ followers Singapore · Chief Operating Officer - Asia Market · Reinsurance Group of America, Incorporated Singapore, Singapore . Head of Transformation Asia Pacific. Allianz Technology. Jun 2020 - Sep 2022 2 years 4 months. Singapore, Singapore . AIG. 18 years 6 ... Read more",
+      "sources_seen": [
+        "google_browser"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")"
+      ]
+    },
+    {
+      "name": "Michael Yeo",
+      "designation": "INDEPENDENT TECHNOLOGY ADVISOR",
+      "company": "Freelancer- Self employed",
+      "linkedin_url": "https://www.linkedin.com/in/michael-yeo-wm/",
+      "title": "Michael Yeo - CIO | CTO | Global Technology Executive LinkedIn · Michael Yeo 210+ followers",
+      "body": "Location: Singapore, Singapore · Title: INDEPENDENT TECHNOLOGY ADVISOR | CIO / CTO ADVISORY · Company: Freelancer- Self employed Michael Yeo - CIO | CTO | Global Technology Executive LinkedIn · Michael Yeo 210+ followers LinkedIn · Michael Yeo 210+ followers Singapore, Singapore · INDEPENDENT TECHNOLOGY ADVISOR | CIO / CTO ADVISORY · Freelancer- Self employed Freelancer- Self employed National University of Singapore . Singapore, Singapore . 213 followers 184 connections. See your mutual connections. View mutual ... Read more",
+      "source": "google_browser",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "evidence": "Michael Yeo - CIO | CTO | Global Technology Executive LinkedIn · Michael Yeo 210+ followers Location: Singapore, Singapore · Title: INDEPENDENT TECHNOLOGY ADVISOR | CIO / CTO ADVISORY · Company: Freelancer- Self employed Michael Yeo - CIO | CTO | Global Technology Executive LinkedIn · Michael Yeo 210+ followers LinkedIn · Michael Yeo 210+ followers Singapore, Singapore · INDEPENDENT TECHNOLOGY ADVISOR | CIO / CTO ADVISORY · Freelancer- Self employed Freelancer- Self employed National University of Singapore . Singapore, Singapore . 213 followers 184 connections. See your mutual connections. View mutual ... Read more",
+      "sources_seen": [
+        "google_browser"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")"
+      ]
+    }
+  ],
+  "leads": [
+    {
+      "name": "Hong Chen",
+      "designation": "CIO, Singtel Singapore",
+      "company": "Singtel",
+      "location": "Singapore",
+      "linkedin_id": "hchen245",
+      "linkedin_url": "https://www.linkedin.com/in/hchen245/",
+      "source": "ddgs",
+      "confidence": 85,
+      "evidence": "Hong Chen - CIO, Singtel Singapore CIO, Singtel Singapore · Experience: Singtel · Location: Singapore · 500+ connections on LinkedIn. View Hong Chen’s profile on LinkedIn, a professional community of 1 billion members. CIO | Leading technology teams across 12 countries in APAC | Supply Chain Executive | ex-Management Consultant · International experience: lived and worked in four countries across three... CIO, Consumer & Digital Banking · Technology leader with over 15 years of experience in managing technology transformation and modernization in the banking and financial services sector. CIO / CTO - Cloud & Digital Transformation Leader | Enterprise Architecture | Infrastructure & Support | High-Performance Team Builder | APAC Experience · A highly accomplished and globally... With a proven track record of successfully managing enterprise projects in Hospitality, Integrated Resorts, Ban"
+    },
+    {
+      "name": "Anthony P.",
+      "designation": "Chief Information Officer (Global IT)| M&A",
+      "company": "Sunningdale Tech Ltd",
+      "location": "Singapore",
+      "linkedin_id": "anthony-p-75a57477",
+      "linkedin_url": "https://www.linkedin.com/in/anthony-p-75a57477/",
+      "source": "ddgs",
+      "confidence": 85,
+      "evidence": "Anthony P. - Chief Information Officer (Global IT)| M&A I love to deliver meaningful impact by inspiring and advocating for those around me. · Experience: Sunningdale Tech Ltd · Education: University of Liverpool · Location: Singapore · 500+..."
+    }
+  ],
+  "rejections": [
+    {
+      "name": "Mihaela Isac",
+      "designation": "CIO | Leading technology teams across 12",
+      "company": "lived and worked in four countries across three... CIO, Consumer & Digital Banking",
+      "linkedin_url": "https://www.linkedin.com/in/mihaela-isac/",
+      "reason": "incomplete",
+      "source": "ddgs",
+      "evidence": "Mihaela Isac - CIO | Leading technology teams across 12 CIO | Leading technology teams across 12 countries in APAC | Supply Chain Executive | ex-Management Consultant · International experience: lived and worked in four countries across three... CIO, Consumer & Digital Banking · Technology leader with over 15 years of experience in managing technology transformation and modernization in the banking and financial services sector. CIO / CTO - Cloud & Digital Transformation Leader | Enterprise Architecture | Infrastructure & Support | High-Performance Team Builder | APAC Experience · A highly accomplished and globally... With a proven track record of successfully managing enterprise projects in Hospitality, Integrated Resorts, Banking, Payments, Airlines, Central Government and E-business with 20+ years of IT... CXO, CIO, Trade Finance, Trade Ops, IT, Digital, Information Security, Cybersec"
+    },
+    {
+      "name": "Wayne Hutchins",
+      "designation": "CIO / CTO",
+      "company": "Cloud & Digital Transformation",
+      "linkedin_url": "https://www.linkedin.com/in/waynehutchins/",
+      "reason": "location",
+      "source": "ddgs",
+      "evidence": "Wayne Hutchins - CIO / CTO - Cloud & Digital Transformation CIO / CTO - Cloud & Digital Transformation Leader | Enterprise Architecture | Infrastructure & Support | High-Performance Team Builder | APAC Experience · A highly accomplished and globally..."
+    },
+    {
+      "name": "Michael Yeo",
+      "designation": "INDEPENDENT TECHNOLOGY ADVISOR",
+      "company": "Freelancer- Self employed",
+      "linkedin_url": "https://www.linkedin.com/in/michael-yeo-wm/",
+      "reason": "role",
+      "source": "google_browser",
+      "evidence": "Michael Yeo - CIO | CTO | Global Technology Executive LinkedIn · Michael Yeo 210+ followers Location: Singapore, Singapore · Title: INDEPENDENT TECHNOLOGY ADVISOR | CIO / CTO ADVISORY · Company: Freelancer- Self employed Michael Yeo - CIO | CTO | Global Technology Executive LinkedIn · Michael Yeo 210+ followers LinkedIn · Michael Yeo 210+ followers Singapore, Singapore · INDEPENDENT TECHNOLOGY ADVISOR | CIO / CTO ADVISORY · Freelancer- Self employed Freelancer- Self employed National University of Singapore . Singapore, Singapore . 213 followers 184 connections. See your mutual connections. View mutual ... Read more"
+    },
+    {
+      "name": "Radhey Shyam",
+      "designation": "Chief Operating Officer - Asia Market",
+      "company": "Reinsurance Group of America, Incorporated",
+      "linkedin_url": "https://www.linkedin.com/in/radhey-shyam-n/",
+      "reason": "role",
+      "source": "google_browser",
+      "evidence": "Radhey Shyam - CIO, COO, Transformation, Thought Location: Singapore · Title: Chief Operating Officer - Asia Market · Company: Reinsurance Group of America, Incorporated Radhey Shyam - CIO, COO, Transformation, Thought ... LinkedIn · Radhey Shyam 2.2K+ followers LinkedIn · Radhey Shyam 2.2K+ followers Singapore · Chief Operating Officer - Asia Market · Reinsurance Group of America, Incorporated Singapore, Singapore . Head of Transformation Asia Pacific. Allianz Technology. Jun 2020 - Sep 2022 2 years 4 months. Singapore, Singapore . AIG. 18 years 6 ... Read more"
+    },
+    {
+      "name": "Jonathan Phang",
+      "designation": "EVP, IT and CTO",
+      "company": "TP",
+      "linkedin_url": "https://www.linkedin.com/in/jon-phang/",
+      "reason": "role",
+      "source": "google_browser",
+      "evidence": "Jonathan Phang - CIO & CTO, TP in Asia Pacific LinkedIn · Jonathan Phang 590+ followers Location: Singapore, Singapore · Title: EVP, IT and CTO · Company: TP Web results Jonathan Phang - CIO & CTO, TP in Asia Pacific LinkedIn · Jonathan Phang 590+ followers LinkedIn · Jonathan Phang 590+ followers Singapore, Singapore · EVP, IT and CTO · TP Jonathan Phang. CIO & CTO, TP in Asia Pacific. TP The University of Salford. Singapore, Singapore . Read more"
+    },
+    {
+      "name": "Desmond Lee",
+      "designation": "CXO, CIO, Trade Finance, Trade Ops, IT, Digital",
+      "company": "Unknown",
+      "linkedin_url": "https://www.linkedin.com/in/desmond-lee-87329aa1/",
+      "reason": "location",
+      "source": "ddgs",
+      "evidence": "Desmond Lee - CXO, CIO, Trade Finance, Trade Ops, IT, Digital CXO, CIO, Trade Finance, Trade Ops, IT, Digital, Information Security, Cybersecurity, Tech Risk, Financial Services, Corporate Banking, Wholesale Banking · 20 years experience in Asia and Global Information Technology, Infrastructure, information Security, IT Transformation, Digital Transformation, Run and Change within the Banking Industry. In-depth infrastructure service delivery experience ..."
+    },
+    {
+      "name": "Wan Mohd Fairuz",
+      "designation": "CIO, Consumer & Digital Banking",
+      "company": "Unknown",
+      "linkedin_url": "https://www.linkedin.com/in/wan-mohd-fairuz-92990517/",
+      "reason": "location",
+      "source": "ddgs",
+      "evidence": "Wan Mohd Fairuz - CIO, Consumer & Digital Banking CIO, Consumer & Digital Banking · Technology leader with over 15 years of experience in managing technology transformation and modernization in the banking and financial services sector."
+    }
+  ],
+  "source_errors": [
+    "google_browser: google_browser browser search failed: Locator.press_sequentially: Target page, context or browser has been closed\nCall log:\n  - waiting for locator(\"textarea[name='q'], input[name='q']\").first\n    - locator resolved to <textarea name=\"q\" rows=\"1\" id=\"ti6dpd\" autofocus=\"\" class=\"gLFyf\" placeholder=\"\" jsname=\"yZiJbe\" role=\"combobox\" maxlength=\"2048\" autocorrect=\"off\" aria-owns=\"Alh6id\" autocomplete=\"off\" spellcheck=\"false\" aria-label=\"Search\" autocapitalize=\"off\" aria-expanded=\"false\" aria-haspopup=\"false\" aria-controls=\"Alh6id\" aria-autocomplete=\"both\" data-ved=\"0ahUKEwjg7_fOx-aWAxUNlOEIHdlRDGIQ39UDCBE\"></textarea>\n  - elementHandle.type(\"site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")\")\n"
+  ],
+  "failed_searches": [
+    {
+      "query_index": 0,
+      "page": 1,
+      "source": "google_browser",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")",
+      "reason": "google_browser browser search failed: Locator.press_sequentially: Target page, context or browser has been closed\nCall log:\n  - waiting for locator(\"textarea[name='q'], input[name='q']\").first\n    - locator resolved to <textarea name=\"q\" rows=\"1\" id=\"ti6dpd\" autofocus=\"\" class=\"gLFyf\" placeholder=\"\" jsname=\"yZiJbe\" role=\"combobox\" maxlength=\"2048\" autocorrect=\"off\" aria-owns=\"Alh6id\" autocomplete=\"off\" spellcheck=\"false\" aria-label=\"Search\" autocapitalize=\"off\" aria-expanded=\"false\" aria-haspopup=\"false\" aria-controls=\"Alh6id\" aria-autocomplete=\"both\" data-ved=\"0ahUKEwjg7_fOx-aWAxUNlOEIHdlRDGIQ39UDCBE\"></textarea>\n  - elementHandle.type(\"site:linkedin.com/in intitle:\"CIO\" (Singapore OR \"Singapore, Singapore\" OR \"Greater Singapore Area\")\")\n",
+      "challenge": false
+    }
+  ],
+  "metrics": {
+    "google_browser_errors": 1,
+    "source_searches": 3,
+    "google_browser_results": 10,
+    "candidates_found": 9,
+    "ddgs_results": 7,
+    "duplicates": 8,
+    "verified": 2,
+    "rejected": 7,
+    "rejected_incomplete": 1,
+    "rejected_location": 3,
+    "rejected_role": 3
+  },
+  "company_evidence_cache": {},
+  "disabled_sources": [],
+  "exhausted_sources": [
+    "ddgs"
+  ],
+  "source_failures": {
+    "google_browser": 0,
+    "ddgs": 0
+  }
+}

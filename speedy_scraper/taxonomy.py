@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -198,7 +199,10 @@ def role_definition_matches(designation: str, requested_role: str) -> int:
             "vp",
         )
     )
-    exact_term = any(term_in_text(designation, term) for term in requested.terms)
+    matching_terms = [term for term in requested.terms if term_in_text(designation, term)]
+    exact_term = any(_has_unqualified_role_term(designation, term) for term in matching_terms)
+    if matching_terms and not exact_term:
+        return 0
     if exact_term and (
         not is_unclassified_acronym or designation_key == requested_key or has_role_context
     ):
@@ -230,6 +234,21 @@ def role_definition_matches(designation: str, requested_role: str) -> int:
                 continue
             return 2
     return 0
+
+
+def _has_unqualified_role_term(designation: str, term: str) -> bool:
+    """Exclude assistant/deputy/former variants from an exact executive-role match."""
+    text = normalize_text(designation)
+    needle = normalize_text(term)
+    if not text or not needle:
+        return False
+    pattern = re.compile(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])")
+    qualifiers = {"assistant", "associate", "deputy", "ex", "former"}
+    for match in pattern.finditer(text):
+        prefix = text[: match.start()].split()[-2:]
+        if not qualifiers.intersection(prefix):
+            return True
+    return False
 
 
 def _load_mapping(path: Path, section: str) -> dict[str, Any]:

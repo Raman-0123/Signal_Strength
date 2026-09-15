@@ -24,7 +24,7 @@ from speedy_scraper.models import (
     SearchResult,
     VerifiedLead,
 )
-from speedy_scraper.parser import candidates_from_results, merge_candidates
+from speedy_scraper.parser import candidates_from_results, merge_candidates, repair_candidate_fields
 from speedy_scraper.pipeline import load_existing_urls, rank_candidates
 from speedy_scraper.query import build_queries
 from speedy_scraper.sources import (
@@ -371,12 +371,18 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
             for item in failed_searches
         )
         final_state = "completed_with_warnings" if failed_searches else "completed"
+        provider_summary = " · ".join(
+            f"{source}: {int(metrics.get(f'{source}_results', 0))} results"
+            for source in config.sources
+        )
         final_message = (
             f"Completed with warnings: {len(leads)} verified leads; "
             f"{len(failed_searches)} searches need recovery"
             if final_state == "completed_with_warnings"
             else f"Completed with {len(leads)} verified leads"
         )
+        if provider_summary:
+            final_message = f"{final_message} · {provider_summary}"
         update_status(
             path,
             state=final_state,
@@ -392,6 +398,10 @@ def run_lead_job(job_dir: Path | str, *, source_builder=None) -> ScrapeResult:
             xlsx_path=str(xlsx_path),
             failed_searches=len(failed_searches),
             captcha_required=unresolved_challenge,
+            activity="All selected engines finished",
+            current_query="",
+            current_source="",
+            current_page=0,
         )
         return result
     except Exception as exc:
@@ -431,9 +441,28 @@ def load_lead_job_checkpoint(job_dir: Path | str) -> tuple[ScrapeResult, dict[st
     if not isinstance(config_data, dict):
         config_data = {}
     config = config_from_mapping(config_data)
+    candidates_by_url = {
+        candidate.linkedin_url: candidate
+        for candidate in (
+            _raw_candidate_from_data(item) for item in checkpoint.get("candidates", [])
+        )
+        if candidate.linkedin_url
+    }
     result = ScrapeResult(
-        leads=[_verified_lead_from_data(item) for item in checkpoint.get("leads", [])],
-        rejections=[_rejection_from_data(item) for item in checkpoint.get("rejections", [])],
+        leads=[
+            _verified_lead_from_data(
+                item,
+                candidate=candidates_by_url.get(str(item.get("linkedin_url") or "")),
+            )
+            for item in checkpoint.get("leads", [])
+        ],
+        rejections=[
+            _rejection_from_data(
+                item,
+                candidate=candidates_by_url.get(str(item.get("linkedin_url") or "")),
+            )
+            for item in checkpoint.get("rejections", [])
+        ],
         metrics={
             str(key): int(value)
             for key, value in dict(checkpoint.get("metrics") or {}).items()
@@ -976,7 +1005,7 @@ def _raw_candidate_to_data(candidate: RawCandidate) -> dict[str, object]:
 
 
 def _raw_candidate_from_data(value: dict[str, Any]) -> RawCandidate:
-    return RawCandidate(
+    return repair_candidate_fields(RawCandidate(
         name=str(value.get("name") or ""),
         designation=str(value.get("designation") or ""),
         company=str(value.get("company") or ""),
@@ -988,14 +1017,21 @@ def _raw_candidate_from_data(value: dict[str, Any]) -> RawCandidate:
         evidence=str(value.get("evidence") or ""),
         sources_seen={str(item) for item in value.get("sources_seen") or []},
         queries_seen={str(item) for item in value.get("queries_seen") or []},
-    )
+    ))
 
 
-def _verified_lead_from_data(value: dict[str, Any]) -> VerifiedLead:
+def _verified_lead_from_data(
+    value: dict[str, Any],
+    *,
+    candidate: RawCandidate | None = None,
+) -> VerifiedLead:
+    company = str(value.get("company") or "")
+    if _missing_field(company) and candidate is not None and not _missing_field(candidate.company):
+        company = candidate.company
     return VerifiedLead(
         name=str(value.get("name") or ""),
         designation=str(value.get("designation") or ""),
-        company=str(value.get("company") or ""),
+        company=company,
         location=str(value.get("location") or ""),
         linkedin_id=str(value.get("linkedin_id") or ""),
         linkedin_url=str(value.get("linkedin_url") or ""),
@@ -1005,16 +1041,27 @@ def _verified_lead_from_data(value: dict[str, Any]) -> VerifiedLead:
     )
 
 
-def _rejection_from_data(value: dict[str, Any]) -> RejectedCandidate:
+def _rejection_from_data(
+    value: dict[str, Any],
+    *,
+    candidate: RawCandidate | None = None,
+) -> RejectedCandidate:
+    company = str(value.get("company") or "")
+    if _missing_field(company) and candidate is not None and not _missing_field(candidate.company):
+        company = candidate.company
     return RejectedCandidate(
         name=str(value.get("name") or ""),
         designation=str(value.get("designation") or ""),
-        company=str(value.get("company") or ""),
+        company=company,
         linkedin_url=str(value.get("linkedin_url") or ""),
         reason=str(value.get("reason") or ""),
         source=str(value.get("source") or ""),
         evidence=str(value.get("evidence") or ""),
     )
+
+
+def _missing_field(value: str) -> bool:
+    return clean_spaces(value).lower() in {"", "unknown", "none", "n/a", "na"}
 
 
 def main() -> None:

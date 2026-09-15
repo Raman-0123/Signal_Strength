@@ -26,10 +26,11 @@ def config_from_mapping(value: dict[str, Any], *, catalog: dict[str, Any] | None
     source_defaults = dict(catalog.get("source_defaults") or {})
     merged = {**source_defaults, **preset, **value}
     minimum_confidence_value = merged.get("minimum_confidence")
+    industries = _effective_industries(_list(merged.get("industries")), catalog)
     return ScrapeConfig(
         roles=contextualize_roles(_list(merged.get("roles"))),
         locations=_list(merged.get("locations")),
-        industries=_list(merged.get("industries")),
+        industries=industries,
         company_names=_list(merged.get("company_names")),
         business_model=str(merged.get("business_model") or "Any"),
         target_count=max(1, int(merged.get("target_count") or 150)),
@@ -77,3 +78,16 @@ def _list(value: Any) -> list[str]:
     if isinstance(value, str):
         return [item.strip() for item in value.split(",") if item.strip()]
     return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _effective_industries(selected: list[str], catalog: dict[str, Any]) -> list[str]:
+    """An all-selected industry catalog is equivalent to no industry constraint."""
+    available = {
+        str(industry).strip().casefold()
+        for preset in (catalog.get("presets") or {}).values()
+        if isinstance(preset, dict)
+        for industry in preset.get("industries") or []
+        if str(industry).strip()
+    }
+    selected_keys = {industry.casefold() for industry in selected}
+    return [] if available and available.issubset(selected_keys) else selected

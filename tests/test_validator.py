@@ -40,6 +40,29 @@ def test_validates_clean_fintech_bengaluru_role():
     assert lead.location == "Bengaluru"
 
 
+def test_role_and_location_only_can_clear_standard_confidence_gate():
+    lead, rejection = validate_candidate(
+        _candidate(
+            name="Brendan Lee",
+            designation="Global CIO",
+            company="Dyson",
+            title="Brendan Lee - Global CIO",
+            body="Location: Singapore · Title: Global CIO · Company: Dyson",
+            evidence="Global CIO at Dyson in Singapore",
+        ),
+        roles=["CIO"],
+        locations=["Singapore"],
+        industries=[],
+        company_names=[],
+        existing_urls=set(),
+        minimum_confidence=80,
+    )
+
+    assert rejection is None
+    assert lead is not None
+    assert lead.confidence >= 80
+
+
 def test_rejects_malformed_name_and_long_designation():
     lead, rejection = validate_candidate(
         _candidate(
@@ -65,6 +88,9 @@ def test_role_matching_preserves_requested_function_and_seniority():
     assert role_matches("Chief Digital Officer", ["CDO"])
     assert role_matches("Co-Founder & CEO", ["Co-founder"])
     assert role_matches("Chief Executive Officer", ["CEO"])
+    assert not role_matches("Assistant Chief Information Officer", ["CIO"])
+    assert not role_matches("Group CISO & Former CIO", ["CIO"])
+    assert role_matches("CIO | formerly at Example Bank", ["CIO"])
 
 
 def test_company_matching_ignores_legal_suffixes_but_not_mentions():
@@ -190,3 +216,101 @@ def test_strict_filter_contract_enforces_target_company_and_source_count():
     assert lead is None
     assert rejection is not None
     assert rejection.reason == "source_count"
+
+
+def test_rejects_incidental_cio_mention_when_structured_current_title_differs():
+    lead, rejection = validate_candidate(
+        _candidate(
+            name="Nerissa Yu",
+            designation="CHIEF INFORMATION OFFICER ASSOCIATION",
+            company="MedTech Innovator Asia Pacific",
+            title="Nerissa Yu - Program manager",
+            body=(
+                "Location: Singapore · Title: Program Manager · "
+                "Company: MedTech Innovator Asia Pacific · attended ASEAN CHIEF "
+                "INFORMATION OFFICER ASSOCIATION event"
+            ),
+            evidence="Singapore · program manager · CIO association event",
+        ),
+        roles=["CIO"],
+        locations=["Singapore"],
+        industries=[],
+        company_names=[],
+        existing_urls=set(),
+    )
+
+    assert lead is None
+    assert rejection is not None
+    assert rejection.reason == "role"
+
+
+def test_rejects_historical_singapore_when_structured_current_location_differs():
+    lead, rejection = validate_candidate(
+        _candidate(
+            name="Adrian Garcia",
+            designation="Chief Information Officer",
+            company="Boena Lodges",
+            title="Adrian Garcia - CIO at Boena",
+            body=(
+                "Location: Costa Rica · Title: Chief Information Officer · "
+                "Company: Boena Lodges · formerly based in Singapore"
+            ),
+            evidence="Chief Information Officer · Singapore",
+        ),
+        roles=["CIO"],
+        locations=["Singapore"],
+        industries=[],
+        company_names=[],
+        existing_urls=set(),
+    )
+
+    assert lead is None
+    assert rejection is not None
+    assert rejection.reason == "location"
+
+
+def test_rejects_unstructured_historical_location_after_dated_role():
+    lead, rejection = validate_candidate(
+        _candidate(
+            name="Adrian Garcia",
+            designation="Chief Information Officer",
+            company="Boena Lodges",
+            title="Adrian Garcia - CIO at Boena",
+            body=(
+                "Chief Information Officer. Boena Lodges. Dec 2023 - Present. "
+                "Singapore, Singapore. Guest Lecturer. Stanford University."
+            ),
+            evidence="Chief Information Officer · Singapore",
+        ),
+        roles=["CIO"],
+        locations=["Singapore"],
+        industries=[],
+        company_names=[],
+        existing_urls=set(),
+    )
+
+    assert lead is None
+    assert rejection is not None
+    assert rejection.reason == "location"
+
+
+def test_rejects_company_name_misparsed_as_current_role():
+    lead, rejection = validate_candidate(
+        _candidate(
+            name="Aik Lim Low",
+            designation="CIO Academy Asia",
+            company="CIO Academy Asia",
+            title="Aik Lim Low - CIO Academy Asia",
+            body="Experience: CIO Academy Asia · Location: Singapore",
+            evidence="CIO Academy Asia · Singapore",
+        ),
+        roles=["CIO"],
+        locations=["Singapore"],
+        industries=[],
+        company_names=[],
+        existing_urls=set(),
+    )
+
+    assert lead is None
+    assert rejection is not None
+    assert rejection.reason == "role"

@@ -4,7 +4,7 @@ from itertools import product
 
 from speedy_scraper.models import ScrapeConfig
 from speedy_scraper.taxonomy import location_query_groups, resolve_role, role_query_groups
-from speedy_scraper.text import normalize_text, or_group, quote_term, unique_terms
+from speedy_scraper.text import clean_spaces, normalize_text, or_group, quote_term, unique_terms
 
 LINKEDIN_SITE = "site:linkedin.com/in"
 
@@ -34,6 +34,11 @@ def build_queries(config: ScrapeConfig) -> list[str]:
     companies = unique_terms(config.company_names)
     business_clause = _business_model_clause(config.business_model)
     modifiers = _query_modifiers(config)
+    strict_titles = normalize_text(config.query_mode) == "strict"
+    if strict_titles:
+        # Give every exact title alias its own result budget. Combining aliases
+        # with OR lets the most common wording crowd out the others.
+        role_groups = [[term] for group in role_groups for term in group]
 
     core_discovery = _query_matrix(
         role_groups=role_groups,
@@ -42,6 +47,7 @@ def build_queries(config: ScrapeConfig) -> list[str]:
         companies=[""],
         business_clause=business_clause,
         modifiers=modifiers,
+        strict_titles=strict_titles,
     )
     industry_discovery = _query_matrix(
         role_groups=role_groups,
@@ -50,6 +56,7 @@ def build_queries(config: ScrapeConfig) -> list[str]:
         companies=[""],
         business_clause=business_clause,
         modifiers=modifiers,
+        strict_titles=strict_titles,
     ) if industry_groups else []
     discovery = _weave([(core_discovery, 1), (industry_discovery, 1)])
 
@@ -60,6 +67,7 @@ def build_queries(config: ScrapeConfig) -> list[str]:
         companies=companies,
         business_clause=business_clause,
         modifiers=modifiers,
+        strict_titles=strict_titles,
     )
     industry_company_scoped = _query_matrix(
         role_groups=role_groups,
@@ -68,6 +76,7 @@ def build_queries(config: ScrapeConfig) -> list[str]:
         companies=companies,
         business_clause=business_clause,
         modifiers=modifiers,
+        strict_titles=strict_titles,
     ) if companies and industry_groups else []
     company_scoped = _weave([(core_company_scoped, 1), (industry_company_scoped, 1)])
 
@@ -89,6 +98,7 @@ def _query_matrix(
     companies: list[str],
     business_clause: str,
     modifiers: str,
+    strict_titles: bool,
 ) -> list[str]:
     if not companies:
         return []
@@ -109,7 +119,7 @@ def _query_matrix(
             _join(
                 LINKEDIN_SITE,
                 quote_term(companies[company_index]),
-                or_group(role_groups[role_index]),
+                _role_clause(role_groups[role_index], strict_titles=strict_titles),
                 or_group(location_groups[location_index]),
                 or_group(industry_groups[industry_index]),
                 business_clause,
@@ -117,6 +127,18 @@ def _query_matrix(
             )
         )
     return queries
+
+
+def _role_clause(terms: list[str], *, strict_titles: bool) -> str:
+    """Anchor strict searches to the LinkedIn result title, not snippet mentions."""
+    if not strict_titles:
+        return or_group(terms)
+    clauses = [f'intitle:"{clean_spaces(term)}"' for term in unique_terms(terms)]
+    if not clauses:
+        return ""
+    if len(clauses) == 1:
+        return clauses[0]
+    return "(" + " OR ".join(clauses) + ")"
 
 
 def _industry_query_groups(industries: list[str]) -> list[list[str]]:

@@ -7,6 +7,7 @@ from speedy_scraper.models import RawCandidate, RejectedCandidate, VerifiedLead
 from speedy_scraper.sources import independent_source_families
 from speedy_scraper.taxonomy import (
     canonical_location_from_text,
+    resolve_location,
     resolve_role,
     role_definition_matches,
 )
@@ -252,7 +253,36 @@ def location_match(candidate: RawCandidate, locations: list[str]) -> str:
         canonical = canonical_location_from_text(location, locations)
         if canonical:
             return canonical
-    return canonical_location_from_text(text[:1400], locations)
+        # A labelled current location is authoritative. Do not accept a
+        # requested place that appears later only in employment history or
+        # unrelated blended search text.
+        return ""
+    title_location = canonical_location_from_text(candidate.title, locations)
+    if title_location:
+        return title_location
+    fallback_text = clean_spaces(f"{candidate.title} {candidate.body}")[:600]
+    fallback_location = canonical_location_from_text(fallback_text, locations)
+    if not fallback_location:
+        return ""
+    location_offset = _first_location_offset(fallback_text, locations)
+    preceding_text = normalize_text(fallback_text)[:location_offset]
+    if re.search(
+        r"\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s+\d{4}\b",
+        preceding_text,
+    ):
+        return ""
+    return fallback_location
+
+
+def _first_location_offset(text: str, locations: list[str]) -> int:
+    normalized = normalize_text(text)
+    offsets = [
+        normalized.find(normalize_text(term))
+        for location in locations
+        for term in resolve_location(location).terms
+        if normalize_text(term) and normalized.find(normalize_text(term)) >= 0
+    ]
+    return min(offsets) if offsets else len(normalized)
 
 
 def canonical_location(location: str) -> str:
@@ -299,7 +329,7 @@ def candidate_filter_reason(
         return "excluded_terms"
     if include_terms and not all(term_in_text(evidence, term) for term in include_terms):
         return "required_terms"
-    if not role_matches(candidate.designation, roles):
+    if not candidate_role_matches(candidate, roles):
         return "role"
     if require_target_company and company_names and not any(
         company_matches(candidate.company, company) for company in company_names
@@ -335,8 +365,10 @@ def confidence_score(
     company_evidence: str,
     business_model: str = "Any",
 ) -> int:
-    score = 50
-    if roles and role_matches(candidate.designation, roles):
+    # A clean identity with a verified requested role and location should clear
+    # the default confidence gate even when industry/company filters were not set.
+    score = 60
+    if roles and candidate_role_matches(candidate, roles):
         score += 15
     if company_names and any(company_matches(candidate.company, company) for company in company_names):
         score += 12
@@ -351,6 +383,29 @@ def confidence_score(
     if normalize_text(business_model) not in {"", "any"}:
         score += 4
     return min(99, score)
+
+
+def candidate_role_matches(candidate: RawCandidate, roles: list[str]) -> bool:
+    """Match the current structured title when a search card provides one."""
+    current_title = _structured_current_title(candidate)
+    if current_title:
+        return role_matches(current_title, roles)
+    if (
+        normalize_text(candidate.designation)
+        and normalize_text(candidate.designation) == normalize_text(candidate.company)
+    ):
+        return False
+    # Without a structured card, the result headline is safer than prose in the
+    # body: body snippets routinely contain old positions and unrelated people.
+    if clean_spaces(candidate.title) and not role_matches(candidate.title, roles):
+        return False
+    return role_matches(candidate.designation, roles)
+
+
+def _structured_current_title(candidate: RawCandidate) -> str:
+    text = clean_spaces(f"{candidate.body} {candidate.evidence}")
+    match = re.search(r"\bTitle\s*:\s*([^·•|\n]{2,100})", text, re.IGNORECASE)
+    return clean_spaces(match.group(1)) if match else ""
 
 
 def _clean_identity(candidate: RawCandidate) -> bool:

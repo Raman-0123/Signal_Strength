@@ -1,4 +1,4 @@
-from speedy_scraper.config import config_from_mapping, preset_config
+from speedy_scraper.config import config_from_mapping, load_catalog, preset_config
 from speedy_scraper.models import ScrapeConfig
 from speedy_scraper.query import build_queries
 
@@ -41,6 +41,7 @@ def test_strict_company_queries_never_drop_company_or_prompt_modifiers():
         industries=["FinTech", "SaaS", "Payments", "InsurTech"],
         company_names=["Example Money"],
         require_target_company=True,
+        query_mode="Strict",
         include_terms=["enterprise"],
         exclude_terms=["former"],
         max_queries=100,
@@ -51,6 +52,27 @@ def test_strict_company_queries_never_drop_company_or_prompt_modifiers():
     assert len(queries) >= 2
     assert all('"Example Money"' in query for query in queries)
     assert all("enterprise" in query and "-former" in query for query in queries)
+    assert all("intitle:" in query for query in queries)
+    assert any('intitle:"VP Marketing"' in query for query in queries)
+
+
+def test_strict_cio_queries_anchor_role_to_result_title():
+    config = ScrapeConfig(
+        roles=["CIO"],
+        locations=["Singapore"],
+        industries=[],
+        query_mode="Strict",
+        max_queries=20,
+    )
+
+    queries = build_queries(config)
+
+    assert queries
+    assert all("intitle:" in query for query in queries)
+    assert all("Singapore" in query for query in queries)
+    assert any('intitle:"CIO"' in query for query in queries)
+    assert any('intitle:"Chief Information Officer"' in query for query in queries)
+    assert not any(" OR intitle:" in query for query in queries)
 
 
 def test_generic_roles_do_not_create_broad_queries_beside_specific_roles():
@@ -106,3 +128,22 @@ def test_positive_filter_is_never_emitted_as_a_negative_modifier():
 
     assert any("hiring" in query for query in queries)
     assert not any("-hiring" in query for query in queries)
+
+
+def test_selecting_every_catalog_industry_means_any_industry():
+    catalog = load_catalog()
+    all_industries = sorted(
+        {
+            str(industry)
+            for preset in (catalog.get("presets") or {}).values()
+            if isinstance(preset, dict)
+            for industry in preset.get("industries") or []
+        }
+    )
+
+    config = config_from_mapping(
+        {"roles": ["CIO"], "locations": ["Singapore"], "industries": all_industries},
+        catalog=catalog,
+    )
+
+    assert config.industries == []

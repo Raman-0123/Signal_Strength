@@ -205,6 +205,15 @@ def _search_filter_options() -> tuple[list[str], list[str], list[str]]:
     return role_options, location_options, sorted(industry_values, key=str.casefold)
 
 
+def _effective_industries(selected: list[str], available: list[str]) -> list[str]:
+    """Treat selecting the entire catalog as an unrestricted industry search."""
+    selected_keys = {value.casefold() for value in selected}
+    available_keys = {value.casefold() for value in available}
+    if available_keys and available_keys.issubset(selected_keys):
+        return []
+    return selected
+
+
 def _save_uploads(files: list[object] | None, job_dir: Path) -> list[str]:
     """Persist user-supplied prior exports inside the job's audit directory."""
     saved: list[str] = []
@@ -299,11 +308,11 @@ with st.form("public_lead_search", clear_on_submit=False):
     left, right = st.columns(2, gap="large")
     role_options, location_options, industry_options = _search_filter_options()
     selected_roles = left.multiselect(
-        "Who do you want to find?",
+        "Current job title",
         options=role_options,
-        placeholder="Choose roles or type a custom title",
+        placeholder="For example: CIO",
         accept_new_options=True,
-        help="Choose one or more canonical roles, or type a custom title and press Enter.",
+        help="Only a candidate's current public title is matched. Historical role mentions do not count.",
     )
     companies_text = right.text_area(
         "Companies (optional)",
@@ -312,18 +321,21 @@ with st.form("public_lead_search", clear_on_submit=False):
         help="Leave blank to discover people across all matching companies.",
     )
     selected_locations = left.multiselect(
-        "Locations",
+        "Current location",
         options=location_options,
-        placeholder="Choose locations or type a custom place",
+        placeholder="For example: Singapore",
         accept_new_options=True,
-        help="Candidates must show one of these locations in their public result card. Type a custom place and press Enter if it is not listed.",
+        help="The candidate's current public location must match. Past employment locations do not count.",
     )
     selected_industries = right.multiselect(
-        "Industry keywords (optional)",
+        "Required company industry (optional)",
         options=industry_options,
-        placeholder="Choose industries or type a keyword",
+        placeholder="Leave blank if any industry is acceptable",
         accept_new_options=True,
-        help="Choose from the catalog or type a custom keyword and press Enter.",
+        help=(
+            "If selected, at least one industry must be supported by the profile or company evidence. "
+            "Selecting every industry is treated as Any industry."
+        ),
     )
 
     source_labels = {
@@ -416,7 +428,10 @@ if submitted:
     roles = _items("\n".join(str(item) for item in selected_roles))
     locations = _items("\n".join(str(item) for item in selected_locations))
     companies = _items(companies_text)
-    industries = _items("\n".join(str(item) for item in selected_industries))
+    industries = _effective_industries(
+        _items("\n".join(str(item) for item in selected_industries)),
+        industry_options,
+    )
     include_terms = _items(include_terms_text)
     exclude_terms = _items(exclude_terms_text)
     errors: list[str] = []
@@ -739,7 +754,9 @@ def job_monitor() -> None:
 
     if result.queries:
         with st.expander(f"Focused query plan ({len(result.queries)})", expanded=False):
-            st.caption("Every query includes the selected role, location, industry, and evidence rules that apply to it.")
+            st.caption(
+                "Every query anchors the requested current title and location. Industry clauses are added only when you selected an industry."
+            )
             st.code("\n".join(result.queries), language="text")
 
     if result.leads:
@@ -752,13 +769,15 @@ def job_monitor() -> None:
     if result.rejections:
         rejected_frame = rejections_frame(result.rejections)
         with st.expander(
-            f"Rejected candidates ({len(result.rejections)})",
+            f"Audit only — rejected search results ({len(result.rejections)})",
             expanded=not result.leads,
         ):
-            st.caption("Each row includes the exact filter reason and search evidence.")
+            st.caption(
+                "These rows are not leads. They were found by a search engine but failed the current title, current location, industry, or data-quality checks."
+            )
             st.dataframe(rejected_frame, width="stretch", hide_index=True)
             st.download_button(
-                "Download rejected candidates (CSV)",
+                "Download rejection audit (CSV)",
                 rejected_frame.to_csv(index=False).encode("utf-8"),
                 f"Rejected_Candidates_{job_dir.name}.csv",
                 "text/csv",

@@ -7,6 +7,7 @@ from speedy_scraper.sources import (
     DdgsSource,
     SourceError,
     _blocked_resource_types,
+    _browser_href_resolver,
     _BrowserRuntime,
     _challenge_page,
     _google_ip_mismatch,
@@ -49,7 +50,7 @@ def test_ddgs_no_results_are_not_recorded_as_provider_errors(monkeypatch):
     assert source.search("site:linkedin.com/in \"Example Bank\" CTO", max_results=10) == []
 
 
-def test_ddgs_page_search_uses_duckduckgo_first_and_forwards_page(monkeypatch):
+def test_ddgs_page_search_uses_yahoo_first_and_forwards_page(monkeypatch):
     calls = []
 
     class PagedDDGS:
@@ -71,11 +72,44 @@ def test_ddgs_page_search_uses_duckduckgo_first_and_forwards_page(monkeypatch):
 
     page = source.search_page("site:linkedin.com/in CTO", page=2, max_results=1)
 
-    assert source.backends[0] == "duckduckgo"
-    assert calls[0][1]["backend"] == "duckduckgo"
+    assert source.backends[0] == "yahoo"
+    assert calls[0][1]["backend"] == "yahoo"
     assert calls[0][1]["page"] == 2
+    assert calls[0][1]["region"] == "wt-wt"
     assert page.page == 2
     assert page.has_next is True
+
+
+def test_ddgs_uses_portable_quoted_role_before_intitle_query(monkeypatch):
+    calls = []
+
+    class PortableQueryDDGS:
+        def __init__(self, **_options):
+            pass
+
+        def text(self, query, **_options):
+            calls.append(query)
+            if "intitle:" in query:
+                return []
+            return [
+                {
+                    "title": "Brendan Lee - Global CIO | LinkedIn",
+                    "body": "Location: Singapore · Title: Global CIO · Company: Dyson",
+                    "href": "https://www.linkedin.com/in/brendan-lee/",
+                }
+            ]
+
+    monkeypatch.setitem(sys.modules, "ddgs", SimpleNamespace(DDGS=PortableQueryDDGS))
+    source = DdgsSource(backends=("duckduckgo",))
+    original = 'site:linkedin.com/in intitle:"CIO" "Singapore"'
+
+    results = source.search(original, max_results=10)
+
+    assert calls == ['site:linkedin.com/in "CIO" "Singapore"']
+    assert [result.href for result in results] == [
+        "https://www.linkedin.com/in/brendan-lee/"
+    ]
+    assert results[0].query == original
 
 
 def test_browser_html_parser_extracts_linkedin_cards():
@@ -149,6 +183,83 @@ def test_google_html_parser_extracts_current_result_cards():
 
     assert len(results) == 1
     assert results[0].href == "https://www.linkedin.com/in/asha-rao/"
+
+
+def test_google_html_parser_resolves_opaque_goto_result_links():
+    html = """
+    <div class="tF2Cxc">
+      <a jsname="UWckNb" href="/goto?url=opaque-token">
+        <h3>Hari Mohan - Experienced Customer Success Leader</h3>
+      </a>
+      <div class="YrbPuc">
+        <span>Mumbai, Maharashtra, India</span><span aria-hidden="true">·</span>
+        <span>Director, Customer Success</span><span aria-hidden="true">·</span>
+        <span>Accops</span>
+      </div>
+      <div class="VwiC3b">Mumbai, Maharashtra, India · Director, Customer Success · Accops</div>
+      <a href="/goto?url=read-more-token">Read more</a>
+    </div>
+    """
+
+    results = _parse_search_html(
+        html,
+        query="q",
+        source="google_browser",
+        max_results=10,
+        result_selectors=("div.tF2Cxc",),
+        href_resolver=lambda href: (
+            "https://in.linkedin.com/in/hari-mohan/"
+            if href == "/goto?url=opaque-token"
+            else href
+        ),
+    )
+
+    assert len(results) == 1
+    assert results[0].href == "https://in.linkedin.com/in/hari-mohan/"
+    assert results[0].title == "Hari Mohan - Experienced Customer Success Leader"
+    assert "Mumbai, Maharashtra, India" in results[0].body
+    assert "Company: Accops" in results[0].body
+
+
+def test_google_browser_href_resolver_follows_goto_without_visiting_linkedin():
+    class FakeResponse:
+        headers = {"location": "https://in.linkedin.com/in/jitendra-mangave"}
+
+        def __init__(self):
+            self.disposed = False
+
+        def dispose(self):
+            self.disposed = True
+
+    class FakeRequest:
+        def __init__(self):
+            self.calls = []
+            self.response = FakeResponse()
+
+        def get(self, url, **options):
+            self.calls.append((url, options))
+            return self.response
+
+    request = FakeRequest()
+    page = SimpleNamespace(
+        url="https://www.google.com/search?q=cto",
+        context=SimpleNamespace(request=request),
+    )
+    resolver = _browser_href_resolver(page, source="google_browser")
+
+    assert resolver is not None
+    assert resolver("/goto?url=opaque") == "https://in.linkedin.com/in/jitendra-mangave"
+    assert request.calls == [
+        (
+            "https://www.google.com/goto?url=opaque",
+            {
+                "max_redirects": 0,
+                "fail_on_status_code": False,
+                "timeout": 10000,
+            },
+        )
+    ]
+    assert request.response.disposed is True
 
 
 def test_google_source_factory_requires_explicit_manual_wait_configuration():
