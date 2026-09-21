@@ -1,0 +1,71 @@
+{
+  "version": 3,
+  "phase": "completed",
+  "query_index": 10,
+  "source_index": 0,
+  "page_index": 0,
+  "validation_index": 1,
+  "candidates": [
+    {
+      "name": "Prasad Babu Savarapu, MBA",
+      "designation": "CIO Advisory",
+      "company": "Unknown",
+      "linkedin_url": "https://www.linkedin.com/in/prasad-savarapu/",
+      "title": "Prasad Babu Savarapu, MBA - CIO Advisory LinkedIn · Prasad Babu Savarapu, MBA 3K+ followers",
+      "body": "Prasad Babu Savarapu, MBA - CIO Advisory LinkedIn · Prasad Babu Savarapu, MBA 3K+ followers LinkedIn · Prasad Babu Savarapu, MBA 3K+ followers Invexify. Dec 2020 - Jan 2024 3 years 2 months. Greater Hyderabad Area . Invexify is a data engine for investing and trading. A global data company has ... Read more",
+      "source": "google_browser",
+      "query": "site:linkedin.com/in intitle:\"CIO\" (Hyderabad OR \"Hyderabad, Telangana, India\" OR \"Greater Hyderabad Area\")",
+      "evidence": "Prasad Babu Savarapu, MBA - CIO Advisory LinkedIn · Prasad Babu Savarapu, MBA 3K+ followers Prasad Babu Savarapu, MBA - CIO Advisory LinkedIn · Prasad Babu Savarapu, MBA 3K+ followers LinkedIn · Prasad Babu Savarapu, MBA 3K+ followers Invexify. Dec 2020 - Jan 2024 3 years 2 months. Greater Hyderabad Area . Invexify is a data engine for investing and trading. A global data company has ... Read more",
+      "sources_seen": [
+        "google_browser"
+      ],
+      "queries_seen": [
+        "site:linkedin.com/in intitle:\"CIO\" (Hyderabad OR \"Hyderabad, Telangana, India\" OR \"Greater Hyderabad Area\")"
+      ]
+    }
+  ],
+  "leads": [],
+  "rejections": [
+    {
+      "name": "Prasad Babu Savarapu, MBA",
+      "designation": "CIO Advisory",
+      "company": "Unknown",
+      "linkedin_url": "https://www.linkedin.com/in/prasad-savarapu/",
+      "reason": "location",
+      "source": "google_browser",
+      "evidence": "Prasad Babu Savarapu, MBA - CIO Advisory LinkedIn · Prasad Babu Savarapu, MBA 3K+ followers Prasad Babu Savarapu, MBA - CIO Advisory LinkedIn · Prasad Babu Savarapu, MBA 3K+ followers LinkedIn · Prasad Babu Savarapu, MBA 3K+ followers Invexify. Dec 2020 - Jan 2024 3 years 2 months. Greater Hyderabad Area . Invexify is a data engine for investing and trading. A global data company has ... Read more"
+    }
+  ],
+  "source_errors": [
+    "google_browser: google_browser verification was not completed within 60 seconds; retry from the saved Google page"
+  ],
+  "failed_searches": [
+    {
+      "query_index": 2,
+      "page": 4,
+      "source": "google_browser",
+      "query": "site:linkedin.com/in intitle:\"CTO\" (Hyderabad OR \"Hyderabad, Telangana, India\" OR \"Greater Hyderabad Area\")",
+      "reason": "google_browser verification was not completed within 60 seconds; retry from the saved Google page",
+      "challenge": true
+    }
+  ],
+  "metrics": {
+    "source_searches": 24,
+    "google_browser_results": 130,
+    "duplicates": 129,
+    "candidates_found": 1,
+    "ddgs_results": 0,
+    "google_browser_errors": 1,
+    "rejected_location": 1,
+    "rejected": 1
+  },
+  "company_evidence_cache": {},
+  "disabled_sources": [
+    "google_browser"
+  ],
+  "exhausted_sources": [],
+  "source_failures": {
+    "google_browser": 1,
+    "ddgs": 0
+  }
+}
