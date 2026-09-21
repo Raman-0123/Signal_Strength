@@ -16,6 +16,7 @@ from speedy_scraper.background_jobs import (
 )
 from speedy_scraper.company_pocs import (
     build_company_poc_tasks,
+    company_poc_review_frame,
     load_company_poc_checkpoint,
     run_company_poc_job,
 )
@@ -197,11 +198,64 @@ def test_company_poc_query_is_company_scoped_and_excludes_directory_noise():
     )[0]
 
     assert '"Example Bank"' in task["query"]
-    assert '("VP Marketing" OR "Vice President Marketing"' in task["query"]
+    assert '(intitle:"VP Marketing" OR intitle:"Vice President Marketing"' in task["query"]
     assert '"Singapore"' in task["query"]
     assert '"payments"' in task["query"]
     assert '-"jobs"' in task["query"]
     assert '-"recruiter"' in task["query"]
+
+
+def test_company_poc_groups_related_senior_marketing_roles_per_company():
+    tasks = build_company_poc_tasks(
+        ["Salesforce", "Blackbaud"],
+        ["CMO", "Head of Marketing", "VP Marketing", "Director of Marketing"],
+        ["Hyderabad"],
+    )
+
+    assert len(tasks) == 2
+    salesforce = next(task for task in tasks if task["company"] == "Salesforce")
+    assert salesforce["designations"].split("||") == [
+        "CMO",
+        "Head of Marketing",
+        "VP Marketing",
+        "Director of Marketing",
+    ]
+    assert 'intitle:"Chief Marketing Officer"' in salesforce["query"]
+    assert 'intitle:"Head of Marketing"' in salesforce["query"]
+    assert 'intitle:"VP Marketing"' in salesforce["query"]
+    assert 'intitle:"Director of Marketing"' in salesforce["query"]
+
+
+def test_company_poc_review_queue_keeps_only_same_company_senior_function_matches():
+    common = {
+        "Requested Company": "Salesforce",
+        "Requested Designation": "CMO / Head of Marketing / VP Marketing",
+        "Reason": "designation_mismatch",
+    }
+    frame = company_poc_review_frame(
+        [
+            {
+                **common,
+                "Name": "Relevant Leader",
+                "Designation": "Senior Director, Brand",
+                "Company": "Salesforce",
+            },
+            {
+                **common,
+                "Name": "Wrong Company",
+                "Designation": "VP Marketing",
+                "Company": "Blackbaud",
+            },
+            {
+                **common,
+                "Name": "Wrong Function",
+                "Designation": "Director of Engineering",
+                "Company": "Salesforce",
+            },
+        ]
+    )
+
+    assert frame["Name"].tolist() == ["Relevant Leader"]
 
 
 class WrongRoleSource:

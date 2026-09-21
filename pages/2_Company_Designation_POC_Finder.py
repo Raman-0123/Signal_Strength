@@ -20,6 +20,7 @@ from speedy_scraper.background_jobs import (
     write_json,
 )
 from speedy_scraper.company_pocs import (
+    company_poc_rejection_is_reviewable,
     company_poc_review_frame,
     company_pocs_frame,
     load_company_poc_checkpoint,
@@ -69,10 +70,14 @@ with st.form("company_poc_form"):
         "Company names — one per line", "", height=180
     )
     designations = mid.multiselect(
-        "Designations",
+        "Senior/current designations",
         options=_all_roles,
         default=[],
         placeholder="Select designations...",
+        help=(
+            "Only a candidate's current LinkedIn title is accepted. Related selected roles "
+            "are grouped into one focused search per company to reduce irrelevant results."
+        ),
     )
     locations = right.multiselect(
         "Locations (optional)",
@@ -95,7 +100,7 @@ with st.form("company_poc_form"):
         value=1,
         step=1,
         help=(
-            "One target is each company + designation + location combination. "
+            "One target is each company + related role group + location combination. "
             "Each extra pass uses a different high-signal query variant for every selected provider."
         ),
     )
@@ -445,13 +450,16 @@ def job_monitor() -> None:
     with review_tab:
         review_frame = company_poc_review_frame(rejections)
         if not review_frame.empty:
-            st.caption("Near-matches are reviewable here and are not included in verified exports.")
+            st.caption(
+                "Only same-company senior leaders from the requested function appear here. "
+                "They are not included in verified exports."
+            )
             st.dataframe(review_frame, width="stretch", hide_index=True)
         else:
             st.caption("No reviewable near-matches were recorded.")
         non_reviewable = [
             item for item in rejections
-            if not bool(item.get("Reviewable", str(item.get("Reason") or "") in {"company_mismatch", "designation_mismatch", "invalid_name"}))
+            if not company_poc_rejection_is_reviewable(item)
         ]
         if non_reviewable:
             with st.expander(f"Other rejected candidates ({len(non_reviewable)})"):

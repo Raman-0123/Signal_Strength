@@ -31,7 +31,6 @@ from speedy_scraper.text import (
     any_term_in_text,
     clean_spaces,
     normalize_text,
-    or_group,
     term_in_text,
     unique_terms,
 )
@@ -45,8 +44,9 @@ from speedy_scraper.validator import (
 
 COMPLETED_WITH_WARNINGS = "completed_with_warnings"
 DEFAULT_RETRY_ATTEMPTS = 2
-REVIEWABLE_REASONS = {"company_mismatch", "designation_mismatch", "invalid_name"}
+REVIEWABLE_REASONS = {"designation_mismatch"}
 DEFAULT_QUERY_EXCLUDES = ("jobs", "hiring", "recruiter", "recruitment", "careers")
+TASK_DESIGNATION_SEPARATOR = "||"
 
 
 @dataclass(frozen=True)
@@ -86,23 +86,37 @@ def build_company_poc_tasks(
 ) -> list[dict[str, str]]:
     base_tasks: list[dict[str, str]] = []
     locs = unique_terms(locations) if locations else [""]
+    designation_groups: dict[str, list[str]] = {}
+    for designation in unique_terms(designations):
+        group = resolve_role(designation).query_group or normalize_text(designation)
+        designation_groups.setdefault(group, []).append(designation)
     for company in unique_terms(companies):
-        for designation in unique_terms(designations):
+        for grouped_designations in designation_groups.values():
             for loc in locs:
-                role_clause = or_group(_role_aliases(designation))
+                role_aliases = unique_terms(
+                    [
+                        alias
+                        for designation in grouped_designations
+                        for alias in _query_role_aliases(designation)
+                    ]
+                )
+                role_clause = _title_role_clause(role_aliases)
                 loc_clause = f' "{_safe_quote(loc)}"' if loc else ""
                 include_clause = " ".join(f'"{_safe_quote(term)}"' for term in unique_terms(include_terms or []))
                 excludes = unique_terms([*DEFAULT_QUERY_EXCLUDES, *(exclude_terms or [])])
                 exclude_clause = " ".join(f'-"{_safe_quote(term)}"' for term in excludes)
+                designation_label = " / ".join(grouped_designations)
                 base_tasks.append(
                     {
                         "company": company,
-                        "designation": designation,
+                        "designation": designation_label,
+                        "designations": TASK_DESIGNATION_SEPARATOR.join(grouped_designations),
                         "location": loc,
-                        "query": (
+                        "role_clause": role_clause,
+                        "query": clean_spaces(
                             f'site:linkedin.com/in "{_safe_quote(company)}" '
                             f'{role_clause}{loc_clause} {include_clause} {exclude_clause}'
-                        ).strip(),
+                        ),
                     }
                 )
     passes = max(1, min(int(query_passes or 1), 8))
@@ -126,24 +140,16 @@ def _company_query_variants(task: dict[str, str]) -> list[str]:
     """Create distinct high-signal queries for user-selected search depth."""
     base = str(task.get("query") or "").strip()
     company = _safe_quote(str(task.get("company") or ""))
-    designation = _safe_quote(str(task.get("designation") or ""))
     location = _safe_quote(str(task.get("location") or ""))
     if not base:
         return []
 
     candidates = [
         base,
-        f'{base} "{designation}"',
-        f'{base} intitle:"{designation}"',
-        f'{base} "{company}" "{designation}"',
-        f'{base} "{designation}" "{location}"' if location else f'{base} "{company}"',
-        (
-            f'{base} intitle:"{designation}" "{company}" "{location}"'
-            if location
-            else f'{base} intitle:"{designation}" "{company}"'
-        ),
-        f'{base} "{company}" "{designation}" -jobs -recruiter',
-        f'{base} intitle:"{designation}" -jobs -recruiter',
+        f'{base} "at {company}"',
+        f'{base} "Company: {company}"',
+        f'{base} "{company}" "{location}"' if location else f'{base} "{company}"',
+        f'{base} "Experience: {company}"',
     ]
     return list(dict.fromkeys(" ".join(value.split()) for value in candidates if value.strip()))
 
@@ -593,7 +599,9 @@ def _upsert_retry(
             "task_index": int(task_index),
             "company": str(task.get("company") or ""),
             "designation": str(task.get("designation") or ""),
+            "designations": str(task.get("designations") or ""),
             "location": str(task.get("location") or ""),
+            "role_clause": str(task.get("role_clause") or ""),
             "query": str(task.get("query") or ""),
             "failed_source": failed_source,
             "failed_sources": [failed_source],
@@ -681,7 +689,7 @@ def _consume_results(
         poc, reason = _match_candidate(
             candidate,
             task["company"],
-            task["designation"],
+            _task_designations(task),
             location=task.get("location", ""),
             include_terms=include_terms or [],
             exclude_terms=exclude_terms or [],
@@ -705,7 +713,7 @@ def _consume_results(
                 "Requested Company": task["company"],
                 "Requested Designation": task["designation"],
                 "Reason": reason,
-                "Reviewable": reason in REVIEWABLE_REASONS,
+                "Reviewable": _reviewable_rejection(candidate, task, reason),
             }
         )
 
@@ -737,7 +745,9 @@ def _retry_failed_searches(
         task = {
             "company": str(item.get("company") or ""),
             "designation": str(item.get("designation") or ""),
+            "designations": str(item.get("designations") or ""),
             "location": str(item.get("location") or ""),
+            "role_clause": str(item.get("role_clause") or ""),
             "query": str(item.get("query") or ""),
         }
         attempted = [str(value) for value in item.get("attempted_sources") or []]
@@ -892,9 +902,69 @@ def company_poc_review_frame(rejections: list[dict[str, Any]]) -> pd.DataFrame:
         {column: item.get(column, "") for column in columns}
         for item in rejections
         if isinstance(item, dict)
-        and bool(item.get("Reviewable", str(item.get("Reason") or "") in REVIEWABLE_REASONS))
+        and company_poc_rejection_is_reviewable(item)
     ]
     return pd.DataFrame(rows, columns=columns)
+
+
+def company_poc_rejection_is_reviewable(item: dict[str, Any]) -> bool:
+    """Only surface genuine same-company, same-function senior near-matches."""
+    if str(item.get("Reason") or "") not in REVIEWABLE_REASONS:
+        return False
+    if not company_matches(
+        str(item.get("Company") or ""),
+        str(item.get("Requested Company") or ""),
+    ):
+        return False
+    return _senior_functional_near_match(
+        str(item.get("Designation") or ""),
+        _split_requested_designations(str(item.get("Requested Designation") or "")),
+    )
+
+
+def _reviewable_rejection(candidate, task: dict[str, str], reason: str) -> bool:
+    if reason not in REVIEWABLE_REASONS:
+        return False
+    if not company_matches(candidate.company, task["company"]):
+        return False
+    return _senior_functional_near_match(candidate.designation, _task_designations(task))
+
+
+def _senior_functional_near_match(
+    candidate_designation: str,
+    requested_designations: list[str],
+) -> bool:
+    text = normalize_text(candidate_designation)
+    if not re.search(r"\b(?:chief|cmo|svp|vp|vice president|head|director)\b", text):
+        return False
+    function_terms = {
+        "marketing": {"marketing", "brand", "growth"},
+        "growth": {"growth", "marketing"},
+        "sales": {"sales"},
+        "revenue": {"revenue", "commercial"},
+        "customer_success": {"customer success", "client success"},
+        "customer_experience": {"customer experience", "client experience"},
+        "technology": {"technology", "engineering", "technical"},
+        "information_technology": {"information", "technology", "it"},
+        "finance": {"finance", "financial"},
+        "human_resources": {"human resources", "people", "hr"},
+        "talent_acquisition": {"talent acquisition", "recruiting"},
+    }
+    requested_functions = {
+        resolve_role(requested).function for requested in requested_designations
+    }
+    keywords = {
+        keyword
+        for function in requested_functions
+        for keyword in function_terms.get(function, {function.replace("_", " ")})
+    }
+    return any(term_in_text(candidate_designation, keyword) for keyword in keywords)
+
+
+def _split_requested_designations(value: str) -> list[str]:
+    if TASK_DESIGNATION_SEPARATOR in value:
+        return unique_terms(value.split(TASK_DESIGNATION_SEPARATOR))
+    return unique_terms(value.split(" / "))
 
 
 def write_company_poc_exports(
@@ -915,7 +985,7 @@ def write_company_poc_exports(
 def _match_candidate(
     candidate,
     company: str,
-    designation: str,
+    designation: str | list[str],
     *,
     location: str = "",
     include_terms: list[str] | None = None,
@@ -936,8 +1006,15 @@ def _match_candidate(
     company_strength = company_match_strength(parsed_company, company)
     if not company_strength:
         return None, "company_mismatch"
+    requested_designations = (
+        unique_terms(designation) if isinstance(designation, list) else [designation]
+    )
     parsed_designation = clean_spaces(candidate.designation)
-    role_strength = role_match_strength(parsed_designation, designation)
+    role_scores = [
+        (role_match_strength(parsed_designation, requested), requested)
+        for requested in requested_designations
+    ]
+    role_strength, matched_designation = max(role_scores, default=(0, ""))
     if not role_strength:
         return None, "designation_mismatch"
     if location and not location_match(candidate, [location]):
@@ -956,7 +1033,7 @@ def _match_candidate(
             confidence=min(confidence, 96),
             evidence=evidence,
             requested_company=company,
-            requested_designation=designation,
+            requested_designation=matched_designation,
         ),
         "",
     )
@@ -971,8 +1048,26 @@ def _valid_name(value: str) -> bool:
     )
 
 
-def _role_aliases(designation: str) -> list[str]:
-    return resolve_role(designation).terms
+def _query_role_aliases(designation: str) -> list[str]:
+    """Keep company searches concise while covering the canonical title and main alias."""
+    return resolve_role(designation).terms[:2]
+
+
+def _title_role_clause(aliases: list[str]) -> str:
+    clauses = [f'intitle:"{_safe_quote(alias)}"' for alias in unique_terms(aliases)]
+    if not clauses:
+        return ""
+    if len(clauses) == 1:
+        return clauses[0]
+    return "(" + " OR ".join(clauses) + ")"
+
+
+def _task_designations(task: dict[str, str]) -> list[str]:
+    serialized = clean_spaces(str(task.get("designations") or ""))
+    if serialized:
+        return unique_terms(serialized.split(TASK_DESIGNATION_SEPARATOR))
+    label = clean_spaces(str(task.get("designation") or ""))
+    return unique_terms(label.split(" / "))
 
 
 def _safe_quote(value: str) -> str:

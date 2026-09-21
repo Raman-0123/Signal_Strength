@@ -19,3 +19,6 @@ data/browser_profiles/
 config/ui_preferences.json
 dist/
 build/
+
+# Generated scraper runs: checkpoints, logs, uploaded dedupe inputs, and exports.
+exports/jobs/
