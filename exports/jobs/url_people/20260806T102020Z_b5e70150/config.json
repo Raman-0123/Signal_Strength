@@ -1,8 +1,0 @@
-{
-  "source_url": "https://globalfintechfest.com/speakers",
-  "enrich_missing": true,
-  "sources": [
-    "ddgs"
-  ],
-  "browser_headless": true
-}

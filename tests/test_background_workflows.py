@@ -121,6 +121,39 @@ def test_url_job_stops_and_resumes_after_checkpoint(tmp_path: Path):
     assert speakers[1].linkedin_url.endswith("/bina-shah/")
 
 
+def test_url_job_retries_empty_static_page_with_browser_rendered_people(tmp_path: Path):
+    job_dir = create_job(
+        "url_people",
+        {
+            "source_url": "https://example.com/event",
+            "sources": ["fake"],
+            "enrich_missing": False,
+        },
+        jobs_root=tmp_path,
+    )
+    rendered_html = """
+    <div class="group-content">
+      <article>
+        <a data-hoverpopup='{"text_1":"Alok Rungta","text_2":"MD &amp; CEO, Generali Central Life Insurance"}'>
+          <div class="caption"><h5>Alok Rungta</h5></div>
+        </a>
+      </article>
+    </div>
+    """
+
+    speakers = run_url_people_job(
+        job_dir,
+        fetcher=lambda _url: "<div class='group-content'></div>",
+        renderer=lambda _url, *, headless: rendered_html,
+        source_builder=lambda _names: [],
+    )
+
+    assert [(speaker.name, speaker.company) for speaker in speakers] == [
+        ("Alok Rungta", "Generali Central Life Insurance")
+    ]
+    assert read_status(job_dir)["state"] == "completed"
+
+
 class StopAfterFirstPocSearch:
     name = "fake"
 

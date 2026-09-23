@@ -117,6 +117,28 @@ def test_extracts_visible_linkedin_profile_links_from_generic_html():
     assert speakers[0].company == "Razorpay"
 
 
+def test_extracts_javascript_injected_ajax_speaker_cards():
+    html = r"""
+    <div class="group-content" id="group-18825-container">
+      <article class="col-md-2 gridPadItem speaker-card-paginated">
+        <a data-hoverpopup='{"text_1":"Alok Rungta","text_2":"MD &amp; CEO, Generali Central Life Insurance"}'>
+          <div class="caption"><h5>Alok Rungta</h5><span>MD &amp; CEO, Generali Central Life Insurance</span></div>
+        </a>
+      </article>
+      <article class="col-md-2 gridPadItem">
+        <a><div class="caption"><h5>Deepesh Dhakad</h5><span>CPTO, upGrad</span></div></a>
+      </article>
+    </div>
+    """
+
+    speakers = extract_people_records(html, "https://example.com/event")
+
+    assert [(speaker.name, speaker.designation, speaker.company) for speaker in speakers] == [
+        ("Alok Rungta", "MD & CEO", "Generali Central Life Insurance"),
+        ("Deepesh Dhakad", "CPTO", "upGrad"),
+    ]
+
+
 def test_speaker_queries_start_with_company_and_designation_scoped_profile_search():
     speaker = EventSpeaker(
         speaker_id="1",

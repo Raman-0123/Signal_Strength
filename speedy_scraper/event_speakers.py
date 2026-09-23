@@ -26,6 +26,8 @@ AUTO_MATCH_THRESHOLD = 0.80
 AUTO_MATCH_MARGIN = 0.10
 
 ProgressCallback = Callable[[dict[str, object]], None]
+HtmlFetcher = Callable[[str], str]
+HtmlRenderer = Callable[..., str]
 
 
 class EventSpeakerError(RuntimeError):
@@ -105,8 +107,10 @@ def find_url_people_linkedin_ids(
     browser_headless: bool = True,
     progress: ProgressCallback | None = None,
 ) -> list[EventSpeaker]:
-    html = fetch_public_html(source_url)
-    speakers = extract_people_records(html, source_url)
+    speakers = extract_people_from_url(
+        source_url,
+        browser_headless=browser_headless,
+    )
     _emit(progress, "extracted", extracted=len(speakers), provided=count_status(speakers, "provided"))
     if not enrich_missing:
         return speakers
@@ -155,6 +159,37 @@ def find_url_people_linkedin_ids(
     return enriched
 
 
+def extract_people_from_url(
+    source_url: str,
+    *,
+    fetcher: HtmlFetcher | None = None,
+    renderer: HtmlRenderer | None = None,
+    browser_headless: bool = True,
+) -> list[EventSpeaker]:
+    """Extract people from static HTML, then retry with a rendered browser page.
+
+    Many event sites ship an empty speaker container and populate it through
+    JavaScript after page load. The browser path is intentionally a fallback so
+    ordinary server-rendered pages keep using the faster HTTP fetch.
+    """
+    fetch = fetcher or fetch_public_html
+    render = renderer or fetch_rendered_people_html
+    static_error: Exception | None = None
+    try:
+        return extract_people_records(fetch(source_url), source_url)
+    except (EventSpeakerError, NoSpeakersFoundError) as exc:
+        static_error = exc
+
+    try:
+        rendered_html = render(source_url, headless=browser_headless)
+        return extract_people_records(rendered_html, source_url)
+    except Exception as exc:
+        raise NoSpeakersFoundError(
+            "No people were found in the initial HTML or the browser-rendered page. "
+            f"Initial attempt: {static_error}. Rendered attempt: {exc}"
+        ) from exc
+
+
 def fetch_public_html(source_url: str) -> str:
     current = validate_public_source_url(source_url)
     opener = urllib.request.build_opener(_NoRedirectHandler)
@@ -187,6 +222,94 @@ def fetch_public_html(source_url: str) -> str:
         current = final_url
         return payload.decode(charset, errors="replace")
     raise EventSpeakerError("Too many redirects while fetching event page")
+
+
+def fetch_rendered_people_html(source_url: str, *, headless: bool = True) -> str:
+    """Render a public page and expand supported JavaScript speaker pagination."""
+    current = validate_public_source_url(source_url)
+    try:
+        from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
+        from playwright.sync_api import sync_playwright
+    except Exception as exc:  # pragma: no cover - environment issue
+        raise EventSpeakerError(f"Playwright is not available: {exc}") from exc
+
+    browser = None
+    context = None
+    try:
+        playwright = sync_playwright().start()
+        browser = playwright.chromium.launch(
+            headless=headless,
+            args=["--disable-blink-features=AutomationControlled"],
+        )
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 AppleWebKit/537.36 Chrome/124 Safari/537.36",
+        )
+        page = context.new_page()
+        page.goto(current, wait_until="domcontentloaded", timeout=60_000)
+        try:
+            page.wait_for_function(
+                """() =>
+                    document.querySelector('.group-content article') ||
+                    document.querySelector('article[class*="speaker"]') ||
+                    document.querySelector('[class*="speaker-card"]') ||
+                    document.querySelector('a[href*="linkedin.com/in/"]')
+                """,
+                timeout=20_000,
+            )
+        except PlaywrightTimeoutError:
+            pass
+        _expand_dynamic_speaker_pagination(page)
+        return page.content()
+    except Exception as exc:
+        raise EventSpeakerError(f"Could not render dynamic people page: {exc}") from exc
+    finally:
+        if context is not None:
+            context.close()
+        if browser is not None:
+            browser.close()
+        if "playwright" in locals():
+            playwright.stop()
+
+
+def _expand_dynamic_speaker_pagination(page: Any) -> None:
+    """Expand ET-style scroll pagination when the page exposes its loader."""
+    try:
+        page.wait_for_function(
+            """() => window.speakerPagination &&
+                Object.keys(window.speakerPagination.groupPaginationState || {}).length > 0
+            """,
+            timeout=10_000,
+        )
+    except Exception:
+        return
+
+    for _ in range(100):
+        pending = page.evaluate(
+            """() => Object.entries(
+                window.speakerPagination?.groupPaginationState || {}
+            ).filter(([, state]) => state && state.hasMore).map(([id]) => id)"""
+        )
+        if not pending:
+            return
+        before = page.locator(".group-content article, .independent-content article").count()
+        page.evaluate(
+            """(ids) => ids.forEach((id) =>
+                window.speakerPagination.loadNextPageForGroup(id)
+            )""",
+            pending,
+        )
+        try:
+            page.wait_for_function(
+                """() => Object.values(
+                    window.speakerPagination?.groupPaginationState || {}
+                ).every((state) => !state || !state.isLoading)""",
+                timeout=12_000,
+            )
+        except Exception:
+            return
+        after = page.locator(".group-content article, .independent-content article").count()
+        if after <= before:
+            return
 
 
 def validate_public_source_url(source_url: str) -> str:
@@ -428,6 +551,9 @@ def _people_datasets(html: str) -> list[tuple[str, list[dict[str, Any]]]]:
     divi_rows = _divi_speaker_overlay_datasets(html)
     if divi_rows:
         datasets.append(("divi_speaker_overlay", divi_rows))
+    ajax_rows = _ajax_speaker_card_datasets(html)
+    if ajax_rows:
+        datasets.append(("ajax_speaker_cards", ajax_rows))
     # Generic HTML speaker card grids (repeated article/li/div with heading+text)
     if not datasets:
         card_rows = _html_speaker_card_datasets(html)
@@ -804,7 +930,7 @@ def _person_name(raw: dict[str, Any]) -> str:
 
 def _valid_person_name(value: str) -> bool:
     key = normalize_text(value)
-    if key in {"", "linkedin", "speaker", "profile", "team", "person"}:
+    if key in {"", "linkedin", "speaker", "speakers", "profile", "team", "person"}:
         return False
     words = key.split()
     return 1 <= len(words) <= 8 and not any(char.isdigit() for char in value)
@@ -1064,6 +1190,64 @@ _OVERLAY_CLASS_TOKENS = (
 )
 
 
+def _ajax_speaker_card_datasets(html: str) -> list[dict[str, Any]]:
+    """Extract cards injected into event-page group containers through AJAX."""
+    soup = BeautifulSoup(html, "html.parser")
+    rows: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for card in soup.select(".group-content article, .independent-content article"):
+        anchor = card.select_one("a[data-hoverpopup]")
+        payload: dict[str, Any] = {}
+        if anchor is not None:
+            try:
+                decoded = json.loads(str(anchor.get("data-hoverpopup") or "{}"))
+                if isinstance(decoded, dict):
+                    payload = decoded
+            except (TypeError, ValueError, json.JSONDecodeError):
+                pass
+
+        heading = card.find(["h1", "h2", "h3", "h4", "h5"])
+        name = clean_spaces(
+            str(payload.get("text_1") or "")
+            or (heading.get_text(" ", strip=True) if heading else "")
+        )
+        if not _valid_person_name(name):
+            continue
+        key = normalize_text(name)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        headline = clean_spaces(str(payload.get("text_2") or ""))
+        if not headline:
+            caption = card.select_one(".caption span")
+            headline = caption.get_text(" ", strip=True) if caption else ""
+        designation, company = _split_event_speaker_headline(headline)
+
+        rows.append(
+            {
+                "name": name,
+                "designation": designation,
+                "company": company,
+                "sourceEvidence": f"ajax_speaker_card:{name}",
+            }
+        )
+    return rows
+
+
+def _split_event_speaker_headline(value: str) -> tuple[str, str]:
+    text = clean_spaces(value)
+    if not text:
+        return "", ""
+    if " at " in text:
+        designation, company = text.rsplit(" at ", 1)
+        return clean_spaces(designation), clean_spaces(company)
+    if "," in text:
+        designation, company = text.rsplit(",", 1)
+        return clean_spaces(designation), clean_spaces(company)
+    return text, ""
+
+
 def _divi_speaker_overlay_datasets(html: str) -> list[dict[str, Any]]:
     """Extract speaker records from Divi/Elementor overlay-card pages.
 
@@ -1080,6 +1264,12 @@ def _divi_speaker_overlay_datasets(html: str) -> list[dict[str, Any]]:
     cards = soup.select(selector)
 
     for card in cards:
+        # ET-style AJAX pagination adds this generic state class to cards that
+        # are already handled by _ajax_speaker_card_datasets. Treating it as a
+        # standalone semantic speaker-card class creates duplicate, incomplete
+        # people records.
+        if "speaker-card-paginated" in (card.get("class") or []):
+            continue
         headings = [
             el.get_text(" ", strip=True)
             for el in card.find_all(["h1", "h2", "h3", "h4", "h5", "strong"])

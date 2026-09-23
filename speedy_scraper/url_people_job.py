@@ -16,8 +16,9 @@ from speedy_scraper.event_speakers import (
     EventSpeaker,
     count_status,
     enrich_speaker,
-    extract_people_records,
+    extract_people_from_url,
     fetch_public_html,
+    fetch_rendered_people_html,
     write_speaker_exports,
 )
 from speedy_scraper.linkedin import normalize_linkedin_url
@@ -33,12 +34,14 @@ from speedy_scraper.text import normalize_text
 
 Fetcher = Callable[[str], str]
 SourceBuilder = Callable[[list[str]], list[SearchSource]]
+Renderer = Callable[..., str]
 
 
 def run_url_people_job(
     job_dir: Path | str,
     *,
     fetcher: Fetcher | None = None,
+    renderer: Renderer | None = None,
     source_builder: SourceBuilder | None = None,
 ) -> list[EventSpeaker]:
     path = Path(job_dir)
@@ -46,6 +49,7 @@ def run_url_people_job(
     if not isinstance(config, dict):
         raise ValueError("Invalid URL people job config")
     fetch = fetcher or fetch_public_html
+    render = renderer or fetch_rendered_people_html
     build = source_builder or build_sources
     checkpoint_path = path / "checkpoint.json"
     checkpoint = read_json(checkpoint_path, default={})
@@ -70,11 +74,31 @@ def run_url_people_job(
             existing_people = load_existing_people_keys(existing_files)
             seen_people: set[str] = set()
             speakers: list[EventSpeaker] = []
+            extraction_errors: list[str] = []
             for url in source_urls:
+                update_status(
+                    path,
+                    state="running",
+                    workflow="url_people",
+                    job_id=path.name,
+                    processed=0,
+                    total=0,
+                    message=f"Fetching and extracting people from {url}",
+                )
                 try:
-                    page_html = fetch(url)
-                    page_speakers = extract_people_records(page_html, url)
+                    with JobHeartbeat(
+                        path,
+                        activity="Fetching and rendering the people list",
+                        current_source_url=url,
+                    ):
+                        page_speakers = extract_people_from_url(
+                            url,
+                            fetcher=fetch,
+                            renderer=render,
+                            browser_headless=bool(config.get("browser_headless", True)),
+                        )
                 except Exception as exc:
+                    extraction_errors.append(f"{url}: {exc}")
                     update_status(
                         path,
                         state="running",
@@ -97,8 +121,10 @@ def run_url_people_job(
                         speakers.append(sp)
 
             if not speakers:
+                detail = " ".join(extraction_errors)
                 raise ValueError(
                     "No speakers could be extracted from any of the provided URLs."
+                    + (f" Details: {detail}" if detail else "")
                 )
             next_index = 0
             _save_checkpoint(checkpoint_path, speakers, next_index)
