@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ipaddress
 import json
+import re
 import socket
 import urllib.error
 import urllib.parse
@@ -176,7 +177,16 @@ def extract_people_from_url(
     render = renderer or fetch_rendered_people_html
     static_error: Exception | None = None
     try:
-        return extract_people_records(fetch(source_url), source_url)
+        static_html = fetch(source_url)
+        static_people = extract_people_records(static_html, source_url)
+        # A server-rendered first batch is still incomplete when the page exposes
+        # a Load more link or a page-based people paginator. Render those pages
+        # and merge them instead of returning the first batch early.
+        if not _has_people_pagination(static_html):
+            return static_people
+        rendered_html = render(source_url, headless=browser_headless)
+        rendered_people = extract_people_records(rendered_html, source_url)
+        return _merge_people_records([*static_people, *rendered_people])
     except (EventSpeakerError, NoSpeakersFoundError) as exc:
         static_error = exc
 
@@ -258,8 +268,8 @@ def fetch_rendered_people_html(source_url: str, *, headless: bool = True) -> str
             )
         except PlaywrightTimeoutError:
             pass
-        _expand_dynamic_speaker_pagination(page)
-        return page.content()
+        page_snapshots = _expand_dynamic_speaker_pagination(page)
+        return "\n".join(page_snapshots or [page.content()])
     except Exception as exc:
         raise EventSpeakerError(f"Could not render dynamic people page: {exc}") from exc
     finally:
@@ -271,8 +281,13 @@ def fetch_rendered_people_html(source_url: str, *, headless: bool = True) -> str
             playwright.stop()
 
 
-def _expand_dynamic_speaker_pagination(page: Any) -> None:
-    """Expand ET-style scroll pagination when the page exposes its loader."""
+def _expand_dynamic_speaker_pagination(page: Any) -> list[str]:
+    """Collect all visible and page-based people batches from an event page."""
+    snapshots = [page.content()]
+
+    # ET-style pagination is an in-place AJAX loader used by several event
+    # templates. Keep the existing JS path, but do not return before checking
+    # for a normal "Load more" link afterward.
     try:
         page.wait_for_function(
             """() => window.speakerPagination &&
@@ -281,35 +296,94 @@ def _expand_dynamic_speaker_pagination(page: Any) -> None:
             timeout=10_000,
         )
     except Exception:
-        return
+        pass
+    else:
+        for _ in range(100):
+            pending = page.evaluate(
+                """() => Object.entries(
+                    window.speakerPagination?.groupPaginationState || {}
+                ).filter(([, state]) => state && state.hasMore).map(([id]) => id)"""
+            )
+            if not pending:
+                break
+            before = page.locator(".group-content article, .independent-content article").count()
+            page.evaluate(
+                """(ids) => ids.forEach((id) =>
+                    window.speakerPagination.loadNextPageForGroup(id)
+                )""",
+                pending,
+            )
+            try:
+                page.wait_for_function(
+                    """() => Object.values(
+                        window.speakerPagination?.groupPaginationState || {}
+                    ).every((state) => !state || !state.isLoading)""",
+                    timeout=12_000,
+                )
+            except Exception:
+                break
+            after = page.locator(".group-content article, .independent-content article").count()
+            if after <= before:
+                break
+        snapshots = [page.content()]
 
+    # Singapore FinTech Festival currently exposes a normal link such as
+    # /speakers?featured=0&page=2. Navigate through it and retain every HTML
+    # snapshot because some sites replace the previous batch on navigation.
+    visited = {page.url}
     for _ in range(100):
-        pending = page.evaluate(
-            """() => Object.entries(
-                window.speakerPagination?.groupPaginationState || {}
-            ).filter(([, state]) => state && state.hasMore).map(([id]) => id)"""
-        )
-        if not pending:
-            return
-        before = page.locator(".group-content article, .independent-content article").count()
-        page.evaluate(
-            """(ids) => ids.forEach((id) =>
-                window.speakerPagination.loadNextPageForGroup(id)
-            )""",
-            pending,
-        )
+        load_more = page.locator("a").filter(has_text=re.compile(r"load\s*more", re.IGNORECASE)).first
+        if load_more.count() == 0:
+            break
+        href = load_more.get_attribute("href")
+        if href:
+            next_url = urllib.parse.urljoin(page.url, href)
+            if next_url in visited:
+                break
+            visited.add(next_url)
+            page.goto(next_url, wait_until="domcontentloaded", timeout=60_000)
+        else:
+            load_more.click(timeout=15_000)
         try:
             page.wait_for_function(
-                """() => Object.values(
-                    window.speakerPagination?.groupPaginationState || {}
-                ).every((state) => !state || !state.isLoading)""",
-                timeout=12_000,
+                """() => document.querySelector('article') ||
+                    document.querySelector('[class*="speaker"]')""",
+                timeout=20_000,
             )
         except Exception:
-            return
-        after = page.locator(".group-content article, .independent-content article").count()
-        if after <= before:
-            return
+            pass
+        snapshots.append(page.content())
+    return snapshots
+
+
+def _has_people_pagination(html: str) -> bool:
+    soup = BeautifulSoup(html, "html.parser")
+    for anchor in soup.find_all("a", href=True):
+        text = clean_spaces(anchor.get_text(" ", strip=True))
+        href = str(anchor.get("href") or "")
+        if re.search(r"load\s*more", text, re.IGNORECASE):
+            return True
+        if re.search(r"(?:^|[?&])page=\d+", href, re.IGNORECASE):
+            return True
+    return False
+
+
+def _merge_people_records(people: list[EventSpeaker]) -> list[EventSpeaker]:
+    """Deduplicate people from multiple pagination snapshots."""
+    merged: dict[str, EventSpeaker] = {}
+    for speaker in people:
+        canonical = normalize_linkedin_url(speaker.linkedin_url)
+        key = canonical or f"{normalize_text(speaker.name)}|{normalize_text(speaker.company)}"
+        current = merged.get(key)
+        quality = sum(bool(value) for value in (speaker.designation, speaker.company, speaker.country, canonical))
+        current_quality = (
+            sum(bool(value) for value in (current.designation, current.company, current.country, current.linkedin_url))
+            if current
+            else -1
+        )
+        if current is None or quality > current_quality:
+            merged[key] = speaker
+    return list(merged.values())
 
 
 def validate_public_source_url(source_url: str) -> str:
@@ -420,9 +494,9 @@ def enrich_speaker(
                         message=str(exc),
                     )
                 continue
-        decision = choose_speaker_match(speaker, results)
-        if decision.match_status == "matched":
-            return decision
+        # Keep collecting all query variants. A single result page can contain
+        # a plausible same-name person; ranking the complete candidate pool is
+        # safer than accepting whichever provider answered first.
     return choose_speaker_match(speaker, results)
 
 
@@ -432,43 +506,66 @@ def speaker_queries(
     include_terms: list[str] | None = None,
     exclude_terms: list[str] | None = None,
 ) -> list[str]:
-    name_unquoted = clean_spaces(speaker.name)
-    name_quoted = _quote(speaker.name)
+    name_variants = _speaker_name_variants(speaker.name)
     queries: list[str] = []
     include_clause = " ".join(
         _quote(term) for term in (include_terms or []) if clean_spaces(term)
     )
-    default_excludes = ("jobs", "hiring", "recruiter", "recruitment", "careers")
+    default_excludes = (
+        "jobs",
+        "hiring",
+        "recruiter",
+        "recruitment",
+        "careers",
+        "company page",
+    )
     excludes = list(dict.fromkeys([*default_excludes, *(exclude_terms or [])]))
     exclude_clause = " ".join(
         f'-{_quote(term)}' for term in excludes if clean_spaces(term)
     )
     company_clause = _quote(speaker.company) if speaker.company else ""
     designation_clause = _quote(speaker.designation) if speaker.designation else ""
+    country_clause = _quote(speaker.country) if speaker.country else ""
+    profile_clause = "site:linkedin.com/in -site:linkedin.com/company/ -site:linkedin.com/jobs/"
 
-    # Keep the first browser searches highly selective: the speaker name,
-    # company and designation together identify the intended person page. The
-    # later variants recover profiles whose Google snippet omits one field.
-    for name in [name_quoted, name_unquoted]:
+    # Start with the strongest identity combination, then recover profiles whose
+    # public snippet omits a title, company, or country. All variants retain the
+    # personal-profile constraint and noise exclusions.
+    for name in name_variants:
+        name_clause = _quote(name)
         if company_clause and designation_clause:
             queries.append(
-                f"site:linkedin.com/in {name} {company_clause} {designation_clause} "
-                f"{include_clause} {exclude_clause}"
+                f"{profile_clause} {name_clause} {company_clause} {designation_clause} "
+                f"{country_clause} {include_clause} {exclude_clause}"
             )
         if company_clause:
             queries.append(
-                f"site:linkedin.com/in {name} {company_clause} "
+                f"{profile_clause} {name_clause} {company_clause} {country_clause} "
                 f"{include_clause} {exclude_clause}"
             )
         if designation_clause:
             queries.append(
-                f"site:linkedin.com/in {name} {designation_clause} "
+                f"{profile_clause} {name_clause} {designation_clause} {country_clause} "
                 f"{include_clause} {exclude_clause}"
             )
         queries.append(
-            f"site:linkedin.com/in {name} {include_clause} {exclude_clause}"
+            f"{profile_clause} {name_clause} {country_clause} {include_clause} {exclude_clause}"
         )
     return list(dict.fromkeys(" ".join(query.split()) for query in queries if query.strip()))
+
+
+def _speaker_name_variants(value: str) -> list[str]:
+    """Return search-safe variants without losing the displayed event name."""
+    original = clean_spaces(value)
+    if not original:
+        return []
+    stripped = re.sub(
+        r"^(?:h\.e\.?|her excellency|his excellency|prof\.?|dr\.?|sir|mr\.?|mrs\.?|ms\.?)\s+",
+        "",
+        original,
+        flags=re.IGNORECASE,
+    )
+    return list(dict.fromkeys(item for item in (original, clean_spaces(stripped)) if item))
 
 
 def choose_speaker_match(speaker: EventSpeaker, results: Iterable[SearchResult]) -> EventSpeaker:
@@ -1124,8 +1221,14 @@ def _name_score(source: str, candidate: str) -> tuple[float, str]:
 
 
 def _name_tokens(value: str) -> list[str]:
-    honorifics = {"dr", "mr", "mrs", "ms", "prof", "shri", "smt"}
-    return [token for token in normalize_text(value).split() if token not in honorifics]
+    normalized = normalize_text(value)
+    normalized = re.sub(
+        r"^(?:h\s+e|her excellency|his excellency|prof|dr|sir|mr|mrs|ms)\s+",
+        "",
+        normalized,
+    )
+    honorifics = {"shri", "smt"}
+    return [token for token in normalized.split() if token not in honorifics]
 
 
 def _designation_matches(designation: str, candidate_text: str) -> bool:

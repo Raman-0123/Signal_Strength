@@ -7,6 +7,7 @@ from speedy_scraper.event_speakers import (
     EventSpeakerError,
     choose_speaker_match,
     extract_event_speakers,
+    extract_people_from_url,
     extract_people_records,
     speaker_queries,
     speakers_frame,
@@ -139,6 +140,26 @@ def test_extracts_javascript_injected_ajax_speaker_cards():
     ]
 
 
+def test_pagination_is_rendered_when_static_page_exposes_load_more():
+    first_batch = """
+    <section class="speakers">
+      <article class="speaker-card"><h3>Asha Rao</h3><p>CTO, Razorpay</p></article>
+      <a href="/speakers?featured=0&amp;page=2">Load more</a>
+    </section>
+    """
+    all_batches = first_batch + """
+      <article class="speaker-card"><h3>Meera Iyer</h3><p>CIO, PhonePe</p></article>
+    """
+
+    speakers = extract_people_from_url(
+        "https://example.com/speakers",
+        fetcher=lambda _url: first_batch,
+        renderer=lambda _url, headless=True: all_batches,
+    )
+
+    assert [speaker.name for speaker in speakers] == ["Asha Rao", "Meera Iyer"]
+
+
 def test_speaker_queries_start_with_company_and_designation_scoped_profile_search():
     speaker = EventSpeaker(
         speaker_id="1",
@@ -157,6 +178,8 @@ def test_speaker_queries_start_with_company_and_designation_scoped_profile_searc
 
     assert queries[0].startswith('site:linkedin.com/in "Asha Rao" "Razorpay"')
     assert '"Chief Technology Officer"' in queries[0]
+    assert '"India"' in queries[0]
+    assert '-site:linkedin.com/company/' in queries[0]
     assert '-"jobs"' in queries[0]
     assert '-"recruiter"' in queries[0]
 
@@ -188,6 +211,35 @@ def test_chooses_confident_public_search_match():
     )
     assert decision.match_status == "matched"
     assert decision.linkedin_url == "https://www.linkedin.com/in/asha-rao/"
+
+
+def test_honorifics_from_event_cards_do_not_break_name_matching():
+    speaker = EventSpeaker(
+        speaker_id="1",
+        name="H.E. Chea Serey",
+        designation="Governor",
+        company="National Bank of Cambodia",
+        country="Cambodia",
+        linkedin_url="",
+        match_status="not_found",
+        confidence=0.0,
+        match_evidence="",
+        source_url="https://www.fintechfestival.sg/speakers",
+    )
+    decision = choose_speaker_match(
+        speaker,
+        [
+            SearchResult(
+                title="Chea Serey - Governor - National Bank of Cambodia | LinkedIn",
+                body="Public profile.",
+                href="https://www.linkedin.com/in/chea-serey/",
+                source="fixture",
+                query="q",
+            )
+        ],
+    )
+    assert decision.match_status == "matched"
+    assert decision.linkedin_url.endswith("/chea-serey/")
 
 
 def test_ambiguous_match_keeps_linkedin_blank():

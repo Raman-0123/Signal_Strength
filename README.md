@@ -114,6 +114,26 @@ designations one per line. It searches each exact company-role pair, exports onl
 evidence-backed personal LinkedIn profiles, and supports the same Stop/Resume
 workflow. Its checkpoints live under `exports/jobs/company_pocs/`.
 
+### Singapore FinTech Festival speaker workflow
+
+For the 2026 Singapore FinTech Festival speakers page, use the **URL People
+LinkedIn Finder** with:
+
+```text
+https://www.fintechfestival.sg/speakers
+```
+
+Use Google browser plus DDGS (and Bing browser if Google is challenged). The
+page currently exposes a paginated **Load more** link; the URL workflow detects
+that pagination, collects every speaker batch, deduplicates the people, and then
+searches public result pages for personal LinkedIn `/in/` URLs. It does not log
+in to LinkedIn or scrape private profile content.
+
+The query templates and match rules live in
+`speedy_scraper/event_speakers.py` (`speaker_queries`, `choose_speaker_match`).
+The URL/page controls live in `pages/1_URL_LinkedIn_Finder.py`, and the
+checkpointed worker is `speedy_scraper/url_people_job.py`.
+
 Company/role matching is candidate-scoped: a company or designation mentioned
 only in a related-result snippet does not count. Expanded roles preserve their
 function and seniority (for example, `VP Customer Success` does not match a CX
