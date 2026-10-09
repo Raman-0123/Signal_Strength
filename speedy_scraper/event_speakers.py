@@ -172,6 +172,10 @@ def extract_people_from_url(
     Many event sites ship an empty speaker container and populate it through
     JavaScript after page load. The browser path is intentionally a fallback so
     ordinary server-rendered pages keep using the faster HTTP fetch.
+
+    For paginated sites (like the Singapore FinTech Festival), all pages are
+    fetched via HTTP first to avoid triggering browser CAPTCHAs. The browser
+    path is used only when the static HTML yields no results.
     """
     fetch = fetcher or fetch_public_html
     render = renderer or fetch_rendered_people_html
@@ -180,10 +184,22 @@ def extract_people_from_url(
         static_html = fetch(source_url)
         static_people = extract_people_records(static_html, source_url)
         # A server-rendered first batch is still incomplete when the page exposes
-        # a Load more link or a page-based people paginator. Render those pages
-        # and merge them instead of returning the first batch early.
+        # a Load more link or a page-based people paginator. Try HTTP-level
+        # pagination first (faster and avoids CAPTCHA) before falling back to
+        # a browser render.
         if not _has_people_pagination(static_html):
             return static_people
+        # Attempt HTTP-level pagination: fetch all subsequent pages via HTTP
+        http_pages = _fetch_all_paginated_pages(source_url, static_html, fetch)
+        if http_pages:
+            all_html_pages = [static_html] + http_pages
+            all_people: list[EventSpeaker] = []
+            for page_html in all_html_pages:
+                all_people.extend(extract_people_records(page_html, source_url))
+            merged = _merge_people_records(all_people)
+            if merged:
+                return merged
+        # If HTTP pagination didn't yield more results, fall back to browser
         rendered_html = render(source_url, headless=browser_headless)
         rendered_people = extract_people_records(rendered_html, source_url)
         return _merge_people_records([*static_people, *rendered_people])
@@ -365,7 +381,78 @@ def _has_people_pagination(html: str) -> bool:
             return True
         if re.search(r"(?:^|[?&])page=\d+", href, re.IGNORECASE):
             return True
+    # SFF-style: total-page attribute on the wrapper div
+    wrapper = soup.select_one("[total-page]")
+    if wrapper:
+        try:
+            total = int(wrapper.get("total-page", "0"))
+            if total > 1:
+                return True
+        except (ValueError, TypeError):
+            pass
     return False
+
+
+def _fetch_all_paginated_pages(
+    source_url: str,
+    first_page_html: str,
+    fetcher: HtmlFetcher,
+) -> list[str]:
+    """Fetch all remaining pagination pages via HTTP.
+
+    Looks for:
+      1. A 'Load more' link with a page=N parameter
+      2. A total-page attribute on the wrapper div
+    Returns a list of HTML strings for pages 2..N.
+    """
+    soup = BeautifulSoup(first_page_html, "html.parser")
+
+    # Determine total pages from the wrapper attribute
+    total_pages = 0
+    wrapper = soup.select_one("[total-page]")
+    if wrapper:
+        try:
+            total_pages = int(wrapper.get("total-page", "0"))
+        except (ValueError, TypeError):
+            total_pages = 0
+
+    # Find the pagination URL template from the Load more link
+    next_url_template = ""
+    for anchor in soup.find_all("a", href=True):
+        href = str(anchor.get("href") or "")
+        text = clean_spaces(anchor.get_text(" ", strip=True))
+        if re.search(r"load\s*more", text, re.IGNORECASE) or re.search(r"[?&]page=\d+", href):
+            # Extract the URL and replace the page number with a placeholder
+            full_url = urllib.parse.urljoin(source_url, href)
+            next_url_template = re.sub(r"([?&]page=)\d+", r"\g<1>{page}", full_url)
+            # If we don't know total pages, try to infer from the URL
+            page_match = re.search(r"[?&]page=(\d+)", href)
+            if page_match and total_pages < 2:
+                total_pages = max(total_pages, int(page_match.group(1)) + 10)  # fetch more
+            break
+
+    if not next_url_template or total_pages < 2:
+        return []
+
+    additional_pages: list[str] = []
+    for page_num in range(2, total_pages + 1):
+        page_url = next_url_template.format(page=page_num)
+        try:
+            page_html = fetcher(page_url)
+            # Check if the page has any speaker items
+            page_soup = BeautifulSoup(page_html, "html.parser")
+            has_speakers = bool(
+                page_soup.select("div.ssf_speakers_item")
+                or page_soup.select("article")
+                or page_soup.select("[class*='speaker']")
+            )
+            if not has_speakers:
+                break
+            additional_pages.append(page_html)
+        except Exception:
+            break
+
+    return additional_pages
 
 
 def _merge_people_records(people: list[EventSpeaker]) -> list[EventSpeaker]:
@@ -506,52 +593,83 @@ def speaker_queries(
     include_terms: list[str] | None = None,
     exclude_terms: list[str] | None = None,
 ) -> list[str]:
+    """Generate search queries for finding a speaker's LinkedIn profile.
+
+    Uses a graduated strategy from most-specific to least-specific:
+      1. Name + Company (strongest signal — company disambiguates common names)
+      2. Name + Designation (fallback when company isn't in the LinkedIn snippet)
+      3. Name only (last resort — relies on ranking to disambiguate)
+
+    Each query targets personal profiles via ``site:linkedin.com/in`` and
+    excludes company pages. The exclude list is kept minimal to avoid
+    over-constraining the query, which causes search engines to return zero
+    results for legitimate profiles.
+    """
     name_variants = _speaker_name_variants(speaker.name)
     queries: list[str] = []
     include_clause = " ".join(
         _quote(term) for term in (include_terms or []) if clean_spaces(term)
     )
-    default_excludes = (
-        "jobs",
-        "hiring",
-        "recruiter",
-        "recruitment",
-        "careers",
-        "company page",
-    )
-    excludes = list(dict.fromkeys([*default_excludes, *(exclude_terms or [])]))
-    exclude_clause = " ".join(
-        f'-{_quote(term)}' for term in excludes if clean_spaces(term)
-    )
+    # Keep exclusions minimal — long exclude lists cause search engines to
+    # return zero results. The site: constraint already limits to /in/ profiles.
+    custom_excludes = [term for term in (exclude_terms or []) if clean_spaces(term)]
+    exclude_clause = " ".join(f'-{_quote(term)}' for term in custom_excludes) if custom_excludes else ""
     company_clause = _quote(speaker.company) if speaker.company else ""
     designation_clause = _quote(speaker.designation) if speaker.designation else ""
+    # Use short designation keywords for queries (full designation is often too long)
+    short_designation = _short_designation(speaker.designation) if speaker.designation else ""
+    short_desig_clause = _quote(short_designation) if short_designation else ""
     country_clause = _quote(speaker.country) if speaker.country else ""
-    profile_clause = "site:linkedin.com/in -site:linkedin.com/company/ -site:linkedin.com/jobs/"
+    # Simpler site constraint — personal profiles only
+    site_clause = "site:linkedin.com/in"
 
-    # Start with the strongest identity combination, then recover profiles whose
-    # public snippet omits a title, company, or country. All variants retain the
-    # personal-profile constraint and noise exclusions.
     for name in name_variants:
         name_clause = _quote(name)
-        if company_clause and designation_clause:
-            queries.append(
-                f"{profile_clause} {name_clause} {company_clause} {designation_clause} "
-                f"{country_clause} {include_clause} {exclude_clause}"
-            )
+        # Query 1: Name + Company (most effective for disambiguating)
         if company_clause:
             queries.append(
-                f"{profile_clause} {name_clause} {company_clause} {country_clause} "
-                f"{include_clause} {exclude_clause}"
+                f"{site_clause} {name_clause} {company_clause} {include_clause} {exclude_clause}"
             )
-        if designation_clause:
+        # Query 2: Name + Short designation (when LinkedIn shows title but not company)
+        if short_desig_clause and short_desig_clause != company_clause:
             queries.append(
-                f"{profile_clause} {name_clause} {designation_clause} {country_clause} "
-                f"{include_clause} {exclude_clause}"
+                f"{site_clause} {name_clause} {short_desig_clause} {include_clause} {exclude_clause}"
             )
+        # Query 3: Name + Company + Designation (if both available, for precision)
+        if company_clause and short_desig_clause:
+            queries.append(
+                f"{site_clause} {name_clause} {company_clause} {short_desig_clause} {include_clause} {exclude_clause}"
+            )
+        # Query 4: Name only (fallback — relies on ranking)
         queries.append(
-            f"{profile_clause} {name_clause} {country_clause} {include_clause} {exclude_clause}"
+            f"{site_clause} {name_clause} {include_clause} {exclude_clause}"
         )
+        # Query 5: Name + Country (if we have location data)
+        if country_clause:
+            queries.append(
+                f"{site_clause} {name_clause} {country_clause} {include_clause} {exclude_clause}"
+            )
     return list(dict.fromkeys(" ".join(query.split()) for query in queries if query.strip()))
+
+
+def _short_designation(designation: str) -> str:
+    """Extract the core role keyword(s) from a designation.
+
+    Long designations like "Regional Industry Director, Financial Institutions
+    Group, Asia & Pacific" get truncated to the first meaningful role phrase
+    to keep search queries short and effective.
+    """
+    text = clean_spaces(designation)
+    if not text:
+        return ""
+    # Take only the first part before a comma (the core role)
+    first_part = text.split(",")[0].strip()
+    # If still too long (>40 chars), take just the role keywords
+    if len(first_part) > 40:
+        role_words = first_part.split()[:4]  # Max 4 words
+        return " ".join(role_words)
+    return first_part
+
 
 
 def _speaker_name_variants(value: str) -> list[str]:
@@ -644,6 +762,10 @@ def _people_datasets(html: str) -> list[tuple[str, list[dict[str, Any]]]]:
         if source_text:
             datasets.extend(_marker_datasets(source_text))
     datasets.extend(_json_ld_datasets(html))
+    # SFF-style speaker cards (ssf_speakers_item with title/designation/company)
+    sff_rows = _sff_speaker_card_datasets(html)
+    if sff_rows:
+        datasets.append(("sff_speaker_cards", sff_rows))
     # Divi/Elementor speaker-overlay cards (e.g. marketing-interactive.com)
     divi_rows = _divi_speaker_overlay_datasets(html)
     if divi_rows:
@@ -1270,6 +1392,133 @@ def _with_match(
 def _emit(progress: ProgressCallback | None, event: str, **payload: object) -> None:
     if progress:
         progress({"event": event, **payload})
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Parser: Singapore FinTech Festival (SFF) speaker cards
+# Pattern: div.ssf_speakers_item
+#   Featured speakers: h4 → name, .ssf_speakers_designation p → "Designation, Company"
+#   Non-featured:      p  → name, .ssf_speakers_designation p → "Designation, <b>Company</b>"
+#   Honorifics are in span.salutation inside the name element
+# Found on: fintechfestival.sg/speakers
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def _sff_speaker_card_datasets(html: str) -> list[dict[str, Any]]:
+    """Extract speaker records from SFF-style speaker card pages.
+
+    The Singapore FinTech Festival website uses a custom HubSpot template
+    with two card layouts:
+
+    **Featured speakers** (``div.ssf_speakers_item.f-grid-item``):
+    - Name in ``<h4>`` inside ``.ssf_speakers_title``
+    - Designation+Company as a single comma-separated string in
+      ``.ssf_speakers_designation p`` (e.g. "Co-founder & CEO, Sierra")
+
+    **Non-featured speakers** (``div.ssf_speakers_item.grid-item``):
+    - Name in ``<p>`` inside ``.ssf_speakers_title``
+    - Designation in ``.ssf_speakers_designation p`` text, with Company
+      inside a ``<b>`` child element
+
+    Honorifics like H.E., Prof., Dr., Sir are in ``<span class="salutation">``
+    and are preserved in the name for display but stripped for search queries.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    items = soup.select("div.ssf_speakers_item")
+    if not items:
+        return []
+
+    rows: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    for item in items:
+        # ── Name ──────────────────────────────────────────────────────
+        title_div = item.select_one(".ssf_speakers_title")
+        if title_div is None:
+            continue
+
+        # Featured speakers use h4; non-featured use p
+        name_el = title_div.select_one("h4") or title_div.select_one("p")
+        if name_el is None:
+            continue
+
+        name = clean_spaces(name_el.get_text(" ", strip=True))
+        if not name or not _valid_person_name(name):
+            continue
+
+        # Deduplicate by normalized name
+        key = normalize_text(name)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        # ── Designation & Company ─────────────────────────────────────
+        designation = ""
+        company = ""
+        desig_div = item.select_one(".ssf_speakers_designation")
+        if desig_div:
+            desig_p = desig_div.select_one("p")
+            if desig_p:
+                # Non-featured cards: company is inside <b> tag
+                company_b = desig_p.select_one("b")
+                if company_b:
+                    company = clean_spaces(company_b.get_text(strip=True))
+                    # Get designation text (everything before the <b> tag)
+                    # Clone the element to avoid mutating the soup
+                    desig_text_parts = []
+                    for child in desig_p.children:
+                        if child is company_b or getattr(child, "name", None) == "b":
+                            break
+                        text = child.get_text(strip=True) if hasattr(child, "get_text") else str(child).strip()
+                        if text:
+                            desig_text_parts.append(text)
+                    designation = clean_spaces(" ".join(desig_text_parts)).rstrip(",").strip()
+                else:
+                    # Featured cards: "Designation, Company" in a single string
+                    full_text = clean_spaces(desig_p.get_text(" ", strip=True))
+                    designation, company = _split_sff_designation(full_text)
+
+        # ── Speaker slug URL ──────────────────────────────────────────
+        speaker_link = item.select_one("a[href*='speaker=']")
+        speaker_href = str(speaker_link.get("href", "")) if speaker_link else ""
+        speaker_id = ""
+        if speaker_href:
+            match = re.search(r"speaker=([^&]+)", speaker_href)
+            if match:
+                speaker_id = match.group(1)
+
+        rows.append(
+            {
+                "name": name,
+                "designation": designation,
+                "company": company,
+                "speakerId": speaker_id,
+                "sourceEvidence": f"sff_speaker_card:{name}",
+            }
+        )
+
+    return rows
+
+
+def _split_sff_designation(value: str) -> tuple[str, str]:
+    """Split an SFF featured speaker designation string into (designation, company).
+
+    Featured speakers store both in a single comma-separated string:
+      "Co-founder & Chief Executive Officer, Sierra & Chairman, OpenAI"
+      "Governor, National Bank of Cambodia"
+      "Chairman, Banking Circle"
+
+    Strategy: split on the *last* comma, since the company name rarely contains
+    commas but the designation often does (e.g. "Co-founder & CEO, Sierra & Chairman").
+    """
+    text = clean_spaces(value)
+    if not text:
+        return "", ""
+    if "," not in text:
+        return text, ""
+    # Split on the last comma
+    parts = text.rsplit(",", 1)
+    return clean_spaces(parts[0]), clean_spaces(parts[1])
 
 
 # ─────────────────────────────────────────────────────────────────────────────
